@@ -1,0 +1,28 @@
+{
+  "name": "Alpha_System_OptiForge",
+  "version": "1.0.0",
+  "lockfileVersion": 3,
+  "requires": true,
+  "description": "Alpha System OptiForge",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "packages": {},
+  "devDependencies": {
+    "electron": "^29.4.6",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.alpha-system-optiforge.app",
+    "productName": "OptiForge Launcher",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "icon.ico"
+    }
+  }
+}

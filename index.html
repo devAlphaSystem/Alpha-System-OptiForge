@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AlphaSystem - OptiForge</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-color: #1e1e2f;
+        --sidebar-bg: #27293d;
+        --header-bg: #343450;
+        --card-bg: #2a2d3e;
+        --card-border: #44475a;
+        --text-color: #f8f8f2;
+        --accent-color: #50fa7b;
+        --hover-bg: #3e4057;
+        --active-bg: #8be9fd;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        overflow: hidden;
+      }
+
+      .container {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+      }
+
+      .sidebar {
+        width: 240px;
+        background: var(--sidebar-bg);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar img {
+        font-size: 22px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .nav {
+        list-style: none;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .nav li {
+        margin-bottom: 15px;
+      }
+
+      .nav li:last-child {
+        margin-top: auto;
+      }
+
+      .nav li a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        color: var(--text-color);
+        transition: background 0.3s;
+      }
+
+      .nav li a i {
+        margin-right: 10px;
+        font-size: 18px;
+      }
+
+      .nav li a:hover,
+      .nav li a.active {
+        background: var(--hover-bg);
+      }
+
+      .main-content {
+        flex: 1;
+        background: var(--bg-color);
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      .tab {
+        display: none;
+      }
+
+      .tab.active {
+        display: block;
+      }
+
+      .section {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        transition: transform 0.2s;
+      }
+
+      .section:hover {
+        transform: scale(1.01);
+      }
+
+      .section-header {
+        background: var(--header-bg);
+        padding: 15px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-header h3 {
+        font-size: 18px;
+      }
+
+      .section-header .btn-group {
+        display: flex;
+        gap: 8px;
+      }
+
+      .section-header button {
+        background: var(--accent-color);
+        border: none;
+        padding: 6px 10px;
+        font-size: 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .section-header button:hover {
+        background: var(--active-bg);
+      }
+
+      .section-content {
+        padding: 15px 20px;
+        display: none;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .section-content.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .checkbox-group label {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        margin-right: 10px;
+        width: 16px;
+        height: 16px;
+        accent-color: var(--accent-color);
+      }
+
+      .apply-btn {
+        margin-top: 15px;
+        background: var(--accent-color);
+        border: none;
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .apply-btn:hover {
+        background: var(--active-bg);
+      }
+
+      .about-section {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        padding: 20px;
+      }
+
+      .about-section h3 {
+        margin-bottom: 15px;
+      }
+
+      .about-section p {
+        margin-bottom: 10px;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+
+      .about-section a {
+        color: var(--accent-color);
+        text-decoration: none;
+      }
+
+      .about-section a:hover {
+        text-decoration: underline;
+      }
+
+      .main-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .main-content::-webkit-scrollbar-track {
+        background: var(--bg-color);
+      }
+
+      .main-content::-webkit-scrollbar-thumb {
+        background: var(--sidebar-bg);
+        border-radius: 4px;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          overflow-x: auto;
+        }
+
+        .nav {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+        }
+
+        .nav li {
+          margin-bottom: 0;
+        }
+
+        .main-content {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <img src="logo.png">
+        <ul class="nav">
+          <li> <a href="#" data-tab="optimizationsTab" class="active"> <i class="fa fa-sliders-h"></i> Optimizations </a> </li>
+          <li> <a href="#" data-tab="appsTab"> <i class="fa fa-window-maximize"></i> Apps </a> </li>
+          <li> <a href="#" data-tab="aboutTab"> <i class="fa fa-info-circle"></i> About </a></li>
+        </ul>
+      </div>
+
+      <div class="main-content">
+        <div class="tab active" id="optimizationsTab">
+          <div class="section" id="privacySection">
+            <div class="section-header">
+              <h3>Privacy Optimizations</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="privacy1" checked> Disables Activity History</label>
+                <label><input type="checkbox" value="privacy2" checked> Disables Location & Maps</label>
+                <label><input type="checkbox" value="privacy3" checked> Disables Telemetry</label>
+                <label><input type="checkbox" value="privacy4" checked> Disables Feedback & Errors</label>
+                <label><input type="checkbox" value="privacy5" checked> Disables Ink Workspace</label>
+                <label><input type="checkbox" value="privacy6" checked> Disables Advertising</label>
+                <label><input type="checkbox" value="privacy7" checked> Disables Account Info</label>
+                <label><input type="checkbox" value="privacy8" checked> Disables Input Data</label>
+                <label><input type="checkbox" value="privacy9" checked> Disables Speech Recognition</label>
+                <label><input type="checkbox" value="privacy10" checked> Disables Inking & Typing</label>
+                <label><input type="checkbox" value="privacy11" checked> Disables Remote Assistance</label>
+                <label><input type="checkbox" value="privacy12" checked> Disables Device Metadata</label>
+                <label><input type="checkbox" value="privacy13" checked> Disables Consumer Features</label>
+                <label><input type="checkbox" value="privacy14" checked> Disables Background Apps</label>
+                <label><input type="checkbox" value="privacy15" checked> Disables Cortana</label>
+                <label><input type="checkbox" value="privacy16" checked> Disables WiFi Sense</label>
+                <label><input type="checkbox" value="privacy17" checked> Disables Maintenance</label>
+                <label><input type="checkbox" value="privacy18" checked> Disables Push Install</label>
+                <label><input type="checkbox" value="privacy19" checked> Disables Ads</label>
+                <label><input type="checkbox" value="privacy20" checked> Disables Lock Screen</label>
+                <label><input type="checkbox" value="privacy21" checked> Disables Bitlocker</label>
+                <label><input type="checkbox" value="privacy22" checked> Disables TCG Activation</label>
+                <label><input type="checkbox" value="privacy23" checked> Disables Restart Sign-on</label>
+              </div>
+              <button class="apply-btn" id="applyPrivacyBtn"> <i class="fa fa-check"></i> Apply Privacy </button>
+            </div>
+          </div>
+
+          <div class="section" id="gamingSection">
+            <div class="section-header">
+              <h3>Gaming Optimizations</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="gaming1" checked> Enables Game Mode</label>
+                <label><input type="checkbox" value="gaming2" checked> Disables Game Bar & DVR</label>
+                <label><input type="checkbox" value="gaming3" checked> Disables Xbox Launch</label>
+                <label><input type="checkbox" value="gaming4" checked> Disables Variable Refresh</label>
+                <label><input type="checkbox" value="gaming5" checked> Enables Windowed Optimizations</label>
+                <label><input type="checkbox" value="gaming6" checked> Enables Nvidia Sharpening</label>
+                <label><input type="checkbox" value="gaming7" checked> Improves Multimedia</label>
+                <label><input type="checkbox" value="gaming8" checked> Adjusts Network</label>
+                <label><input type="checkbox" value="gaming9" checked> Increases CPU/GPU Priority</label>
+                <label><input type="checkbox" value="gaming10" checked> Sets High Scheduling</label>
+                <label><input type="checkbox" value="gaming11" checked> Enables GPU Scheduling</label>
+                <label><input type="checkbox" value="gaming12" checked> Adjusts Win32 Priority</label>
+                <label><input type="checkbox" value="gaming13" checked> Disables Storage Sense</label>
+              </div>
+              <button class="apply-btn" id="applyGamingBtn"> <i class="fa fa-check"></i> Apply Gaming </button>
+            </div>
+          </div>
+
+          <div class="section" id="updatesSection">
+            <div class="section-header">
+              <h3>Update Optimizations</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="updates1" checked> Disables Auto Updates</label>
+                <label><input type="checkbox" value="updates2" checked> Delays Feature Updates</label>
+                <label><input type="checkbox" value="updates3" checked> Delays Security Updates</label>
+                <label><input type="checkbox" value="updates4" checked> Disables Upgrade Block</label>
+                <label><input type="checkbox" value="updates5" checked> Disables Delivery Optimization</label>
+                <label><input type="checkbox" value="updates6" checked> Disables Store Updates</label>
+                <label><input type="checkbox" value="updates7" checked> Disables Auto Archive</label>
+              </div>
+              <button class="apply-btn" id="applyUpdatesBtn"> <i class="fa fa-check"></i> Apply Updates </button>
+            </div>
+          </div>
+
+          <div class="section" id="powerSection">
+            <div class="section-header">
+              <h3>Power Settings</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="power1" checked> Applies Ultimate Power Plan</label>
+                <label><input type="checkbox" value="power2" checked> Disables Hibernate/Sleep</label>
+                <label><input type="checkbox" value="power3" checked> Unparks CPU</label>
+                <label><input type="checkbox" value="power4" checked> Disables Throttling</label>
+                <label><input type="checkbox" value="power5" checked> Disables USB Suspend</label>
+                <label><input type="checkbox" value="power6" checked> Disables PCIe LSM</label>
+                <label><input type="checkbox" value="power7" checked> Sets CPU 100%</label>
+                <label><input type="checkbox" value="power8" checked> Sets Brightness 100%</label>
+                <label><input type="checkbox" value="power9" checked> Disables Battery Saver</label>
+                <label><input type="checkbox" value="power10" checked> Disables Critical Battery</label>
+              </div>
+              <button class="apply-btn" id="applyPowerBtn"> <i class="fa fa-check"></i> Apply Power </button>
+            </div>
+          </div>
+
+          <div class="section" id="servicesSection">
+            <div class="section-header">
+              <h3>Windows Services</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="services1" checked> Disables AllJoyn</label>
+                <label><input type="checkbox" value="services2" checked> Disables App Virtualization</label>
+                <label><input type="checkbox" value="services3" checked> Disables Assigned Access</label>
+                <label><input type="checkbox" value="services4" checked> Disables Telemetry</label>
+                <label><input type="checkbox" value="services5" checked> Disables Dialog Blocking</label>
+                <label><input type="checkbox" value="services6" checked> Disables Net.Tcp Sharing</label>
+                <label><input type="checkbox" value="services7" checked> Disables Remote Access</label>
+                <label><input type="checkbox" value="services8" checked> Disables Remote Registry</label>
+                <label><input type="checkbox" value="services9" checked> Disables UX Virtualization</label>
+                <label><input type="checkbox" value="services10" checked> Disables Shared Protection</label>
+                <label><input type="checkbox" value="services11" checked> Disables OpenSSH Agent</label>
+                <label><input type="checkbox" value="services12" checked> Disables Time Zone Updater</label>
+                <label><input type="checkbox" value="services13" checked> Disables Update Health</label>
+              </div>
+              <button class="apply-btn" id="applyServicesBtn"> <i class="fa fa-check"></i> Apply Services </button>
+            </div>
+          </div>
+
+          <div class="section" id="maintenanceSection">
+            <div class="section-header">
+              <h3>Maintenance Optimizations</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="maintenance1" checked> Clean Temporary Files</label>
+                <label><input type="checkbox" value="maintenance2" checked> Clean Prefetch Folder</label>
+                <label><input type="checkbox" value="maintenance3" checked> Clear Windows Update Cache</label>
+                <label><input type="checkbox" value="maintenance4" checked> Defragment Drive C:</label>
+                <label><input type="checkbox" value="maintenance5" checked> Disable Window Animations</label>
+              </div>
+              <button class="apply-btn" id="applyMaintenanceBtn"> <i class="fa fa-check"></i> Apply Maintenance </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab" id="appsTab">
+          <div class="section" id="recommendedAppsSection">
+            <div class="section-header">
+              <h3>Install Recommended Apps</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="rec_vlc" checked> VLC Media Player</label>
+                <label><input type="checkbox" value="rec_7zip" checked> 7‑Zip</label>
+                <label><input type="checkbox" value="rec_notepadpp" checked> Notepad++</label>
+                <label><input type="checkbox" value="rec_powertoys" checked> PowerToys</label>
+                <label><input type="checkbox" value="rec_chrome" checked> Google Chrome</label>
+              </div>
+              <button class="apply-btn" id="applyRecommendedAppsBtn"> <i class="fa fa-check"></i> Install Apps </button>
+            </div>
+          </div>
+
+          <div class="section" id="removeAppsSection">
+            <div class="section-header">
+              <h3>Remove Windows Apps</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="apps_calc" checked> Calculator</label>
+                <label><input type="checkbox" value="apps_onedrive" checked> OneDrive</label>
+                <label><input type="checkbox" value="apps_xbox" checked> Xbox</label>
+                <label><input type="checkbox" value="apps_newoutlook" checked> New Outlook</label>
+                <label><input type="checkbox" value="apps_recall" checked> Recall</label>
+                <label><input type="checkbox" value="apps_groovemusic" checked> Groove Music</label>
+                <label><input type="checkbox" value="apps_teams" checked> Microsoft Teams</label>
+                <label><input type="checkbox" value="apps_mstore" checked> Microsoft Store</label>
+                <label><input type="checkbox" value="apps_photos" checked> Photos</label>
+                <label><input type="checkbox" value="apps_snipsketch" checked> Snip & Sketch</label>
+                <label><input type="checkbox" value="apps_paint" checked> Paint</label>
+                <label><input type="checkbox" value="apps_movietv" checked> Movies & TV</label>
+                <label><input type="checkbox" value="apps_edge" checked> Microsoft Edge</label>
+              </div>
+              <button class="apply-btn" id="applyRemoveAppsBtn"> <i class="fa fa-check"></i> Remove Apps </button>
+            </div>
+          </div>
+
+          <div class="section" id="uselessBloatwareSection">
+            <div class="section-header">
+              <h3>Useless Bloatware</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="apps_ub_mail" checked> Mail & Calendar</label>
+                <label><input type="checkbox" value="apps_ub_maps" checked> Maps</label>
+                <label><input type="checkbox" value="apps_ub_skype" checked> Skype</label>
+                <label><input type="checkbox" value="apps_ub_getstarted" checked> Get Started</label>
+                <label><input type="checkbox" value="apps_ub_meetnow" checked> Meet Now</label>
+                <label><input type="checkbox" value="apps_ub_phonelink" checked> Phone Link</label>
+                <label><input type="checkbox" value="apps_ub_gethelp" checked> Get Help</label>
+                <label><input type="checkbox" value="apps_ub_family" checked> Microsoft Family</label>
+                <label><input type="checkbox" value="apps_ub_paint3d" checked> Paint 3D</label>
+                <label><input type="checkbox" value="apps_ub_feedback" checked> Feedback Hub</label>
+                <label><input type="checkbox" value="apps_ub_copilotstore" checked> Copilot (Store)</label>
+                <label><input type="checkbox" value="apps_ub_clipchamp" checked> Clipchamp</label>
+                <label><input type="checkbox" value="apps_ub_onenote" checked> OneNote</label>
+                <label><input type="checkbox" value="apps_ub_quickassist" checked> Quick Assist</label>
+                <label><input type="checkbox" value="apps_ub_solitaire" checked> Solitaire Collection</label>
+                <label><input type="checkbox" value="apps_ub_powerautomate" checked> Power Automate</label>
+                <label><input type="checkbox" value="apps_ub_alarms" checked> Alarms & Clock</label>
+                <label><input type="checkbox" value="apps_ub_copilotprov" checked> Copilot Provider</label>
+                <label><input type="checkbox" value="apps_ub_camera" checked> Camera</label>
+                <label><input type="checkbox" value="apps_ub_weather" checked> Weather</label>
+                <label><input type="checkbox" value="apps_ub_3dviewer" checked> 3D Viewer</label>
+                <label><input type="checkbox" value="apps_ub_stickynotes" checked> Sticky Notes</label>
+                <label><input type="checkbox" value="apps_ub_bing" checked> Bing Search</label>
+                <label><input type="checkbox" value="apps_ub_todo" checked> To Do</label>
+                <label><input type="checkbox" value="apps_ub_mixedreality" checked> Mixed Reality</label>
+                <label><input type="checkbox" value="apps_ub_officehub" checked> Office Hub</label>
+                <label><input type="checkbox" value="apps_ub_people" checked> People</label>
+                <label><input type="checkbox" value="apps_ub_copilot" checked> Copilot</label>
+                <label><input type="checkbox" value="apps_ub_devhome" checked> Dev Home</label>
+                <label><input type="checkbox" value="apps_ub_soundrecorder" checked> Sound Recorder</label>
+                <label><input type="checkbox" value="apps_ub_cortana" checked> Cortana</label>
+                <label><input type="checkbox" value="apps_ub_news" checked> News</label>
+              </div>
+              <button class="apply-btn" id="applyUselessBloatwareBtn"> <i class="fa fa-check"></i> Remove Bloatware </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab" id="aboutTab">
+          <div class="about-section">
+            <h3>About AlphaSystem - OptiForge</h3>
+            <p><strong>Version:</strong> 1.0-0</p>
+            <p><strong>Developed by:</strong> AlphaSystem</p>
+            <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
+            <p><strong>Key Features:</strong> Adaptive system profiling, one-click optimizations, automated maintenance, and customizable settings for gaming, updates, and power management.</p>
+            <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>
+            <p><strong>Disclaimer:</strong> Use OptiForge at your own risk. Always back up your data before applying any system modifications. The developers are not liable for any adverse effects.</p>
+            <p><strong>Contact:</strong> support@alphasystem.dev</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.alphasystem.dev/plugins/easy-notification-system/latest/script-min.js"></script>
+    <script src="renderer.js"></script>
+  </body>
+
+</html>
