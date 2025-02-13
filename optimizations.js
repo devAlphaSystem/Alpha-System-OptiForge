@@ -78,36 +78,34 @@ const powerOptions = [
   { id: "power2", command: 'powercfg /hibernate off; reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f', comment: "Disabling Hibernate, Sleep, and Fast Boot", onerror: "Failed to disable Hibernate/Sleep/Fast Boot" },
   { id: "power3", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\54533251-82be-4824-96c1-47b60b740d00\\0cc5b647-c1df-4637-891a-dec35c318583" /v ValueMax /t REG_DWORD /d 100 /f', comment: "Unparking CPU Cores", onerror: "Failed to unpark CPU cores" },
   { id: "power4", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling" /v PowerThrottlingOff /t REG_DWORD /d 1 /f', comment: "Disabling Power Throttling", onerror: "Failed to disable Power Throttling" },
-  { id: "power5", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_USB 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_USB 0', comment: "Disabling USB Selective Suspend", onerror: "Failed to disable USB Selective Suspend" },
-  { id: "power6", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_PCIEXPRESS 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PCIEXPRESS 0', comment: "Disabling PCI Express Link State Power Management", onerror: "Failed to disable PCI Express power management" },
-  { id: "power7", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 100; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 100; powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 100; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 100', comment: "Setting Processor State Always at 100%", onerror: "Failed to set processor state to 100%" },
-  { id: "power8", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\7516b95f-f776-4464-8c53-06167f40cc99\\aded5e82-b909-4619-9949-f5d71dac0bcb" /v ValueMax /t REG_DWORD /d 100 /f', comment: "Setting Display Brightness to 100%", onerror: "Failed to set display brightness to 100%" },
-  { id: "power9", command: 'echo "Battery Saver will be disabled"', comment: "Disabling Battery Saver", onerror: "Failed to disable Battery Saver" },
-  { id: "power10", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\e73a048d-bf27-4f12-9731-8b2076e8891f\\637ea02f-bbcb-4015-8e2c-a1c7b9c0b546" /v ValueMax /t REG_DWORD /d 0 /f', comment: "Disabling Critical Battery Actions", onerror: "Failed to disable Critical Battery Actions" },
-  { id: "power11", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_VIDEO ADAPTBRIGHT 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_VIDEO ADAPTBRIGHT 0', comment: "Disabling Adaptive Brightness", onerror: "Failed to disable Adaptive Brightness" }
+  { id: "power5", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ee12f906-d277-404b-b6da-e5fa1a576df5 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ee12f906-d277-404b-b6da-e5fa1a576df5 0', comment: "Disabling PCI Express Link State Power Management", onerror: "Failed to disable PCI Express power management" },
+  { id: "power6", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR 893dee8e-2bef-41e0-89c6-b55d0929964c 100; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR 893dee8e-2bef-41e0-89c6-b55d0929964c 100; powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR bc5038f7-23e0-4960-96da-33abaf5935ec 100; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR bc5038f7-23e0-4960-96da-33abaf5935ec 100', comment: "Setting Processor State Always at 100%", onerror: "Failed to set processor state to 100%" },
+  { id: "power7", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\7516b95f-f776-4464-8c53-06167f40cc99\\aded5e82-b909-4619-9949-f5d71dac0bcb" /v ValueMax /t REG_DWORD /d 100 /f', comment: "Setting Display Brightness to 100%", onerror: "Failed to set display brightness to 100%" },
+  { id: "power8", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\e73a048d-bf27-4f12-9731-8b2076e8891f\\637ea02f-bbcb-4015-8e2c-a1c7b9c0b546" /v ValueMax /t REG_DWORD /d 0 /f', comment: "Disabling Critical Battery Actions", onerror: "Failed to disable Critical Battery Actions" },
+  { id: "power9", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_VIDEO 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_VIDEO 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0', comment: "Disabling Adaptive Brightness", onerror: "Failed to disable Adaptive Brightness" }
 ];
 
 const servicesOptions = [
-  { id: "services1", command: 'sc config "AJRouter" start= disabled', comment: "Disabling AllJoyn Router Service", onerror: "Failed to disable AllJoyn Router Service" },
-  { id: "services2", command: 'sc config "AppVClient" start= disabled', comment: "Disabling Application Virtualization Client", onerror: "Failed to disable Application Virtualization Client" },
-  { id: "services3", command: 'sc config "AssignedAccessManagerSvc" start= disabled', comment: "Disabling Assigned Access Manager Service", onerror: "Failed to disable Assigned Access Manager Service" },
-  { id: "services4", command: 'sc config "DiagTrack" start= disabled', comment: "Disabling Connected User Experiences and Telemetry", onerror: "Failed to disable Connected User Experiences and Telemetry" },
-  { id: "services5", command: 'sc config "DialogBlockingService" start= disabled', comment: "Disabling Dialog Blocking Service", onerror: "Failed to disable Dialog Blocking Service" },
-  { id: "services6", command: 'sc config "NetTcpPortSharing" start= disabled', comment: "Disabling Net.Tcp Port Sharing Service", onerror: "Failed to disable Net.Tcp Port Sharing Service" },
-  { id: "services7", command: 'sc config "RemoteAccess" start= disabled', comment: "Disabling Remote Access Connection Manager", onerror: "Failed to disable Remote Access Connection Manager" },
-  { id: "services8", command: 'sc config "RemoteRegistry" start= disabled', comment: "Disabling Remote Registry Service", onerror: "Failed to disable Remote Registry Service" },
-  { id: "services9", command: 'sc config "UevAgentService" start= disabled', comment: "Disabling User Experience Virtualization Service", onerror: "Failed to disable User Experience Virtualization Service" },
-  { id: "services10", command: 'sc config "shpamsvc" start= disabled', comment: "Disabling Shared Protection Access Manager", onerror: "Failed to disable Shared Protection Access Manager" },
-  { id: "services11", command: 'sc config "ssh-agent" start= disabled', comment: "Disabling OpenSSH Authentication Agent", onerror: "Failed to disable OpenSSH Authentication Agent" },
-  { id: "services12", command: 'sc config "tzautoupdate" start= disabled', comment: "Disabling Auto Time Zone Updater", onerror: "Failed to disable Auto Time Zone Updater" },
-  { id: "services13", command: 'sc config "uhssvc" start= disabled', comment: "Disabling Microsoft Update Health Service", onerror: "Failed to disable Microsoft Update Health Service" },
-  { id: "services14", command: 'sc config "Spooler" start= disabled', comment: "Disabling Print Spooler Service", onerror: "Failed to disable Print Spooler Service" },
-  { id: "services15", command: 'sc config "bthserv" start= disabled', comment: "Disabling Bluetooth Support Service", onerror: "Failed to disable Bluetooth Support Service" },
-  { id: "services16", command: 'sc config "TermService" start= disabled', comment: "Disabling Remote Desktop Services", onerror: "Failed to disable Remote Desktop Services" }
+  { id: "services1", command: 'sc.exe config "AJRouter" start=disabled', comment: "Disabling AllJoyn Router Service", onerror: "Failed to disable AllJoyn Router Service" },
+  { id: "services2", command: 'sc.exe config "AppVClient" start=disabled', comment: "Disabling Application Virtualization Client", onerror: "Failed to disable Application Virtualization Client" },
+  { id: "services3", command: 'sc.exe config "AssignedAccessManagerSvc" start=disabled', comment: "Disabling Assigned Access Manager Service", onerror: "Failed to disable Assigned Access Manager Service" },
+  { id: "services4", command: 'sc.exe config "DiagTrack" start=disabled', comment: "Disabling Connected User Experiences and Telemetry", onerror: "Failed to disable Connected User Experiences and Telemetry" },
+  { id: "services5", command: 'sc.exe config "DialogBlockingService" start=disabled', comment: "Disabling Dialog Blocking Service", onerror: "Failed to disable Dialog Blocking Service" },
+  { id: "services6", command: 'sc.exe config "NetTcpPortSharing" start=disabled', comment: "Disabling Net.Tcp Port Sharing Service", onerror: "Failed to disable Net.Tcp Port Sharing Service" },
+  { id: "services7", command: 'sc.exe config "RemoteAccess" start=disabled', comment: "Disabling Remote Access Connection Manager", onerror: "Failed to disable Remote Access Connection Manager" },
+  { id: "services8", command: 'sc.exe config "RemoteRegistry" start=disabled', comment: "Disabling Remote Registry Service", onerror: "Failed to disable Remote Registry Service" },
+  { id: "services9", command: 'sc.exe config "UevAgentService" start=disabled', comment: "Disabling User Experience Virtualization Service", onerror: "Failed to disable User Experience Virtualization Service" },
+  { id: "services10", command: 'sc.exe config "shpamsvc" start=disabled', comment: "Disabling Shared Protection Access Manager", onerror: "Failed to disable Shared Protection Access Manager" },
+  { id: "services11", command: 'sc.exe config "ssh-agent" start=disabled', comment: "Disabling OpenSSH Authentication Agent", onerror: "Failed to disable OpenSSH Authentication Agent" },
+  { id: "services12", command: 'sc.exe config "tzautoupdate" start=disabled', comment: "Disabling Auto Time Zone Updater", onerror: "Failed to disable Auto Time Zone Updater" },
+  { id: "services13", command: 'sc.exe config "uhssvc" start=disabled', comment: "Disabling Microsoft Update Health Service", onerror: "Failed to disable Microsoft Update Health Service" },
+  { id: "services14", command: 'sc.exe config "Spooler" start=disabled', comment: "Disabling Print Spooler Service", onerror: "Failed to disable Print Spooler Service" },
+  { id: "services15", command: 'sc.exe config "bthserv" start=disabled', comment: "Disabling Bluetooth Support Service", onerror: "Failed to disable Bluetooth Support Service" },
+  { id: "services16", command: 'sc.exe config "TermService" start=disabled', comment: "Disabling Remote Desktop Services", onerror: "Failed to disable Remote Desktop Services" }
 ];
 
 const wrapCommand = (opt) => {
-  return `${opt.command};`;
+  return opt.command;
 };
 
 function executeCommands(command, event, responseChannel) {
@@ -121,7 +119,7 @@ function executeCommands(command, event, responseChannel) {
     outputData += "ERROR: " + data.toString().trim() + "\n";
   });
   psProcess.on('error', (error) => {
-    log("Process error: ${error}", 'error');
+    log("Process error: " + error, 'error');
     event.reply(responseChannel, { success: false, message: error.toString() });
   });
   psProcess.on('close', (code) => {

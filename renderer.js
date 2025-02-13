@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+const os = require('os');
 
 window.addEventListener('DOMContentLoaded', () => {
   const notifier = window.EasyNotificationInstance;
@@ -403,47 +404,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  let recommendedAppsStartNotificationId = null;
-  const applyRecommendedAppsBtn = document.getElementById('applyRecommendedAppsBtn');
-  applyRecommendedAppsBtn.addEventListener('click', () => {
-    const checkboxes = document.querySelectorAll('#recommendedAppsSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach(chk => { if (chk.checked) selected.push(chk.value); });
-    console.info("Recommended Apps selected:", selected);
-
-    recommendedAppsStartNotificationId = notifier.createNotification({
-      title: 'Recommended Apps',
-      message: 'Executing installation of recommended apps...',
-      type: 'info',
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send('apply-recommended-apps', selected);
-  });
-  ipcRenderer.on('recommended-apps-response', (event, arg) => {
-    console.info("Recommended Apps Response:", arg);
-    if (recommendedAppsStartNotificationId) {
-      notifier.dismissNotification(recommendedAppsStartNotificationId);
-      recommendedAppsStartNotificationId = null;
-    }
-    if (arg && arg.error) {
-      notifier.createNotification({
-        title: 'Recommended Apps',
-        message: `Error: ${arg.error}`,
-        type: 'danger'
-      });
-    } else {
-      notifier.createNotification({
-        title: 'Recommended Apps',
-        message: 'Recommended apps installed successfully.',
-        type: 'success'
-      });
-    }
-  });
-
   let systemToolsNotificationId = null;
   const applySystemToolsBtn = document.getElementById('applySystemToolsBtn');
   applySystemToolsBtn.addEventListener('click', () => {
@@ -659,4 +619,131 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  function formatUptime(seconds) {
+    const days = Math.floor(seconds / (3600 * 24));
+    seconds %= 3600 * 24;
+    const hours = Math.floor(seconds / 3600);
+    seconds %= 3600;
+    const minutes = Math.floor(seconds / 60);
+    seconds = Math.floor(seconds % 60);
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  function createCollapsibleSection(title, infoObject) {
+    const section = document.createElement('div');
+    section.classList.add('section');
+
+    const header = document.createElement('div');
+    header.classList.add('section-header');
+    const h3 = document.createElement('h3');
+    h3.textContent = title;
+    header.appendChild(h3);
+    section.appendChild(header);
+
+    const content = document.createElement('div');
+    content.classList.add('section-content');
+    content.style.display = 'none';
+
+    const list = document.createElement('ul');
+    list.style.listStyleType = 'none';
+    list.style.padding = '0';
+
+    for (const key in infoObject) {
+      const li = document.createElement('li');
+      li.style.margin = '5px 0';
+      li.textContent = `${key}: ${infoObject[key]}`;
+      list.appendChild(li);
+    }
+
+    content.appendChild(list);
+    section.appendChild(content);
+
+    header.addEventListener('click', (e) => {
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+        content.classList.remove('active');
+      } else {
+        content.style.display = 'block';
+        content.classList.add('active');
+      }
+    });
+
+    return section;
+  }
+
+  const systemInfoTab = document.getElementById('systemInfoTab');
+  if (systemInfoTab) {
+    const generalInfo = {
+      'OS Type': os.type(),
+      'Platform': os.platform(),
+      'OS Release': os.release(),
+      'Architecture': os.arch(),
+      'Hostname': os.hostname(),
+      'Uptime': formatUptime(os.uptime()),
+      'Temporary Directory': os.tmpdir()
+    };
+
+    const cpus = os.cpus();
+    const cpuInfo = {};
+    if (cpus && cpus.length > 0) {
+      cpuInfo['Model'] = cpus[0].model;
+      cpuInfo['Speed (MHz)'] = cpus[0].speed;
+      cpuInfo['Number of Cores'] = cpus.length;
+
+      const times = cpus[0].times;
+      cpuInfo['User Time'] = `${times.user} ms`;
+      cpuInfo['System Time'] = `${times.sys} ms`;
+      cpuInfo['Idle Time'] = `${times.idle} ms`;
+      cpuInfo['IRQ Time'] = `${times.irq} ms`;
+    } else {
+      cpuInfo['Info'] = 'No CPU data available.';
+    }
+
+    const memoryInfo = {
+      'Total Memory': formatBytes(os.totalmem()),
+      'Free Memory': formatBytes(os.freemem())
+    };
+
+    const networkObj = {};
+    const networkInterfaces = os.networkInterfaces();
+    for (const iface in networkInterfaces) {
+      const addresses = networkInterfaces[iface].map(addr => `${addr.address} (${addr.family})${addr.internal ? ' [Internal]' : ''}`);
+      networkObj[iface] = addresses.join(', ');
+    }
+
+    const user = os.userInfo();
+    const userInfo = {
+      'Username': user.username,
+      'Home Directory': user.homedir,
+      'Shell': user.shell || 'N/A'
+    };
+
+    const versionInfo = {};
+    for (const key in process.versions) {
+      versionInfo[key] = process.versions[key];
+    }
+
+    const generalSection = createCollapsibleSection('General Information', generalInfo);
+    const cpuSection = createCollapsibleSection('CPU Information', cpuInfo);
+    const memSection = createCollapsibleSection('Memory Information', memoryInfo);
+    const netSection = createCollapsibleSection('Network Interfaces', networkObj);
+    const userSection = createCollapsibleSection('User Information', userInfo);
+    const versSection = createCollapsibleSection('Process Versions', versionInfo);
+
+    systemInfoTab.appendChild(generalSection);
+    systemInfoTab.appendChild(cpuSection);
+    systemInfoTab.appendChild(memSection);
+    systemInfoTab.appendChild(netSection);
+    systemInfoTab.appendChild(userSection);
+    systemInfoTab.appendChild(versSection);
+  }
 });

@@ -281,6 +281,7 @@
           <li> <a href="#" data-tab="appsTab"> <i class="fa fa-window-maximize"></i> Apps & Bloatware </a> </li>
           <li> <a href="#" data-tab="commandsTab"> <i class="fa fa-terminal"></i> System Tools </a> </li>
           <li> <a href="#" data-tab="advancedTab"> <i class="fa fa-cogs"></i> Advanced </a> </li>
+          <li> <a href="#" data-tab="systemInfoTab"> <i class="fa fa-desktop"></i> System Information </a> </li>
           <li> <a href="#" data-tab="aboutTab"> <i class="fa fa-info-circle"></i> About </a></li>
         </ul>
       </div>
@@ -392,13 +393,11 @@
                 <label><input type="checkbox" value="power2" checked> Disable Hibernate/Sleep</label>
                 <label><input type="checkbox" value="power3" checked> Unparks CPU</label>
                 <label><input type="checkbox" value="power4" checked> Disable Throttling</label>
-                <label><input type="checkbox" value="power5" checked> Disable USB Suspend</label>
-                <label><input type="checkbox" value="power6" checked> Disable PCIe LSM</label>
-                <label><input type="checkbox" value="power7" checked> Sets CPU 100%</label>
-                <label><input type="checkbox" value="power8" checked> Sets Brightness 100%</label>
-                <label><input type="checkbox" value="power9" checked> Disable Battery Saver</label>
-                <label><input type="checkbox" value="power10" checked> Disable Critical Battery</label>
-                <label><input type="checkbox" value="power11" checked> Disable Adaptive Brightness</label>
+                <label><input type="checkbox" value="power5" checked> Disable PCIe LSM</label>
+                <label><input type="checkbox" value="power6" checked> Sets CPU 100%</label>
+                <label><input type="checkbox" value="power7" checked> Sets Brightness 100%</label>
+                <label><input type="checkbox" value="power8" checked> Disable Critical Battery</label>
+                <label><input type="checkbox" value="power9" checked> Disable Adaptive Brightness</label>
               </div>
               <button class="apply-btn" id="applyPowerBtn"> <i class="fa fa-check"></i> Apply Power </button>
             </div>
@@ -437,32 +436,6 @@
         </div>
 
         <div class="tab" id="appsTab">
-          <div class="section" id="recommendedAppsSection">
-            <div class="section-header">
-              <h3>Install Recommended Apps</h3>
-              <div class="btn-group">
-                <button class="select-all">Select All</button>
-                <button class="deselect-all">Deselect All</button>
-              </div>
-            </div>
-            <div class="section-content">
-              <div class="checkbox-group">
-                <label><input type="checkbox" value="rec_vlc" checked> VLC Media Player</label>
-                <label><input type="checkbox" value="rec_7zip" checked> 7‑Zip</label>
-                <label><input type="checkbox" value="rec_notepadpp" checked> Notepad++</label>
-                <label><input type="checkbox" value="rec_powertoys" checked> PowerToys</label>
-                <label><input type="checkbox" value="rec_chrome" checked> Google Chrome</label>
-                <label><input type="checkbox" value="rec_slack" checked> Slack</label>
-                <label><input type="checkbox" value="rec_zoom" checked> Zoom</label>
-                <label><input type="checkbox" value="rec_spotify" checked> Spotify</label>
-                <label><input type="checkbox" value="rec_firefox" checked> Firefox</label>
-                <label><input type="checkbox" value="rec_discord" checked> Discord</label>
-                <label><input type="checkbox" value="rec_vscode" checked> Visual Studio Code</label>
-              </div>
-              <button class="apply-btn" id="applyRecommendedAppsBtn"> <i class="fa fa-check"></i> Install Apps </button>
-            </div>
-          </div>
-
           <div class="section" id="removeAppsSection">
             <div class="section-header">
               <h3>Remove Windows Apps</h3>
@@ -596,13 +569,12 @@
                 <label><input type="checkbox" value="maintenance1" checked> Clear Temporary Files</label>
                 <label><input type="checkbox" value="maintenance2" checked> Clear Prefetch Folder</label>
                 <label><input type="checkbox" value="maintenance3" checked> Clear Windows Update Cache</label>
-                <label><input type="checkbox" value="maintenance4" checked> Defragment Drive C:</label>
-                <label><input type="checkbox" value="maintenance5" checked> Disable Window Animations</label>
-                <label><input type="checkbox" value="maintenance6" checked> Clear Recycle Bin</label>
-                <label><input type="checkbox" value="maintenance7" checked> Clear Windows Event Logs</label>
-                <label><input type="checkbox" value="maintenance8" checked> Clear CBS Logs</label>
-                <label><input type="checkbox" value="maintenance9" checked> Clear Thumbnail Cache</label>
-                <label><input type="checkbox" value="maintenance10" checked> Clear WinSxS Folder</label>
+                <label><input type="checkbox" value="maintenance4" checked> Disable Window Animations</label>
+                <label><input type="checkbox" value="maintenance5" checked> Clear Recycle Bin</label>
+                <label><input type="checkbox" value="maintenance6" checked> Clear Windows Event Logs</label>
+                <label><input type="checkbox" value="maintenance7" checked> Clear CBS Logs</label>
+                <label><input type="checkbox" value="maintenance8" checked> Clear Thumbnail Cache</label>
+                <label><input type="checkbox" value="maintenance9" checked> Clear WinSxS Folder</label>
               </div>
               <button class="apply-btn" id="applyMaintenanceBtn"> <i class="fa fa-check"></i> Apply Maintenance </button>
             </div>
@@ -671,10 +643,12 @@
           </div>
         </div>
 
+        <div class="tab" id="systemInfoTab"></div>
+
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <h3>About AlphaSystem - OptiForge</h3>
-            <p><strong>Version:</strong> 1.1-1</p>
+            <p><strong>Version:</strong> 1.1-2</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Key Features:</strong> Adaptive system profiling, one-click optimizations, automated maintenance, and customizable settings for gaming, updates, and power management.</p>

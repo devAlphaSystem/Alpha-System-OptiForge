@@ -73,22 +73,8 @@ const uselessBloatwareOptions = [
   { id: "apps_ub_whiteboard", command: 'Get-AppxPackage -Name Microsoft.Whiteboard -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Microsoft Whiteboard", onerror: "Failed to remove Microsoft Whiteboard" }
 ];
 
-const recommendedAppsOptions = [
-  { id: "rec_vlc", command: 'winget install --id=VideoLAN.VLC -e', comment: "Installing VLC Media Player", onerror: "Failed to install VLC Media Player" },
-  { id: "rec_7zip", command: 'winget install --id=7zip.7zip -e', comment: "Installing 7‑Zip", onerror: "Failed to install 7‑Zip" },
-  { id: "rec_notepadpp", command: 'winget install --id=Notepad++.Notepad++ -e', comment: "Installing Notepad++", onerror: "Failed to install Notepad++" },
-  { id: "rec_powertoys", command: 'winget install --id=Microsoft.PowerToys -e', comment: "Installing Microsoft PowerToys", onerror: "Failed to install Microsoft PowerToys" },
-  { id: "rec_chrome", command: 'winget install --id=Google.Chrome -e', comment: "Installing Google Chrome", onerror: "Failed to install Google Chrome" },
-  { id: "rec_slack", command: 'winget install --id=SlackTechnologies.Slack -e', comment: "Installing Slack", onerror: "Failed to install Slack" },
-  { id: "rec_zoom", command: 'winget install --id=Zoom.Zoom -e', comment: "Installing Zoom", onerror: "Failed to install Zoom" },
-  { id: "rec_spotify", command: 'winget install --id=Spotify.Spotify -e', comment: "Installing Spotify", onerror: "Failed to install Spotify" },
-  { id: "rec_firefox", command: 'winget install --id=Mozilla.Firefox -e', comment: "Installing Firefox", onerror: "Failed to install Firefox" },
-  { id: "rec_discord", command: 'winget install --id=Discord.Discord -e', comment: "Installing Discord", onerror: "Failed to install Discord" },
-  { id: "rec_vscode", command: 'winget install --id=Microsoft.VisualStudioCode -e', comment: "Installing Visual Studio Code", onerror: "Failed to install Visual Studio Code" }
-];
-
 const wrapCommand = (opt) => {
-  return `${opt.command};`;
+  return opt.command;
 };
 
 function executeCommands(command, event, responseChannel) {
@@ -102,7 +88,7 @@ function executeCommands(command, event, responseChannel) {
     outputData += "ERROR: " + data.toString().trim() + "\n";
   });
   psProcess.on('error', (error) => {
-    log("Process error: ${error}", 'error');
+    log("Process error: " + error, 'error');
     event.reply(responseChannel, { success: false, message: error.toString() });
   });
   psProcess.on('close', (code) => {
@@ -123,11 +109,4 @@ ipcMain.on('apply-useless-bloatware', (event, selectedIds) => {
   const commands = uselessBloatwareOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
   const psCommand = commands.join(";");
   executeCommands(psCommand, event, 'useless-bloatware-response');
-});
-
-ipcMain.on('apply-recommended-apps', (event, selectedIds) => {
-  log("Received apply-recommended-apps with data: " + JSON.stringify(selectedIds));
-  const commands = recommendedAppsOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'recommended-apps-response');
 });

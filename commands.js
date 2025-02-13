@@ -34,20 +34,19 @@ const networkToolsOptions = [
 ];
 
 const maintenanceOptions = [
-  { id: "maintenance1", command: 'Remove-Item -Path "$env:TEMP\\*" -Recurse -Force', comment: "Cleaning temporary files", onerror: "Failed to clean temporary files" },
-  { id: "maintenance2", command: 'Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force', comment: "Cleaning prefetch folder", onerror: "Failed to clean prefetch folder" },
-  { id: "maintenance3", command: 'Stop-Service wuauserv; Remove-Item -Path "C:\\Windows\\SoftwareDistribution\\Download\\*" -Recurse -Force; Start-Service wuauserv', comment: "Clearing Windows Update cache", onerror: "Failed to clear Windows Update cache" },
-  { id: "maintenance4", command: 'defrag C: -w', comment: "Defragmenting drive C:", onerror: "Failed to defragment drive C:" },
-  { id: "maintenance5", command: 'reg add "HKCU\\Control Panel\\Desktop" /v MinAnimate /t REG_SZ /d 0 /f', comment: "Disabling window animations", onerror: "Failed to disable window animations" },
-  { id: "maintenance6", command: 'Clear-RecycleBin -Force', comment: "Clearing the Recycle Bin", onerror: "Failed to clear the Recycle Bin" },
-  { id: "maintenance7", command: 'wevtutil el | ForEach-Object { wevtutil cl $_ }', comment: "Clearing all Windows Event Logs", onerror: "Failed to clear Windows Event Logs" },
-  { id: "maintenance8", command: 'Remove-Item -Path "C:\\Windows\\Logs\\CBS\\*" -Recurse -Force', comment: "Cleaning CBS Logs", onerror: "Failed to clean CBS logs" },
-  { id: "maintenance9", command: 'Remove-Item -Path "$env:LOCALAPPDATA\\Microsoft\\Windows\\Explorer\\thumbcache_*.db" -Force -ErrorAction SilentlyContinue', comment: "Clearing Thumbnail Cache", onerror: "Failed to clear Thumbnail Cache" },
-  { id: "maintenance10", command: 'Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase', comment: "Cleaning WinSxS folder", onerror: "Failed to clean WinSxS folder" }
+  { id: "maintenance1", command: 'Remove-Item -Path "$env:TEMP\\*" -Recurse -Force -ErrorAction SilentlyContinue', comment: "Cleaning temporary files", onerror: "Failed to clean temporary files" },
+  { id: "maintenance2", command: 'Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force -ErrorAction SilentlyContinue', comment: "Cleaning prefetch folder", onerror: "Failed to clean prefetch folder" },
+  { id: "maintenance3", command: 'Stop-Service wuauserv -ErrorAction SilentlyContinue; ' + 'Remove-Item -Path "C:\\Windows\\SoftwareDistribution\\Download\\*" -Recurse -Force -ErrorAction SilentlyContinue; ' + 'Start-Service wuauserv -ErrorAction SilentlyContinue', comment: "Clearing Windows Update cache", onerror: "Failed to clear Windows Update cache" },
+  { id: "maintenance4", command: 'reg add "HKCU\\Control Panel\\Desktop" /v MinAnimate /t REG_SZ /d 0 /f', comment: "Disabling window animations", onerror: "Failed to disable window animations" },
+  { id: "maintenance5", command: 'Clear-RecycleBin -DriveLetter C -Force', comment: "Clearing the Recycle Bin", onerror: "Failed to clear the Recycle Bin" },
+  { id: "maintenance6", command: 'wevtutil el | ForEach-Object { wevtutil cl "$_" }', comment: "Clearing all Windows Event Logs", onerror: "Failed to clear Windows Event Logs" },
+  { id: "maintenance7", command: 'Remove-Item -Path "C:\\Windows\\Logs\\CBS\\*" -Recurse -Force', comment: "Cleaning CBS Logs", onerror: "Failed to clean CBS logs" },
+  { id: "maintenance8", command: 'Remove-Item -Path "$env:LOCALAPPDATA\\Microsoft\\Windows\\Explorer\\thumbcache_*.db" -Force -ErrorAction SilentlyContinue', comment: "Clearing Thumbnail Cache", onerror: "Failed to clear Thumbnail Cache" },
+  { id: "maintenance9", command: 'Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase', comment: "Cleaning WinSxS folder", onerror: "Failed to clean WinSxS folder" }
 ];
 
 const wrapCommand = (opt) => {
-  return `${opt.command};`;
+  return opt.command;
 };
 
 function executeCommands(command, event, responseChannel) {
@@ -61,7 +60,7 @@ function executeCommands(command, event, responseChannel) {
     outputData += "ERROR: " + data.toString().trim() + "\n";
   });
   psProcess.on('error', (error) => {
-    log(`Process error: ${error}`, 'error');
+    log("Process error: " + error, 'error');
     event.reply(responseChannel, { success: false, message: error.toString() });
   });
   psProcess.on('close', (code) => {
