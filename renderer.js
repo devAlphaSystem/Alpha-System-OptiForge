@@ -64,10 +64,14 @@ window.addEventListener('DOMContentLoaded', () => {
     'updatesSection',
     'powerSection',
     'servicesSection',
-    'maintenanceSection',
+    'recommendedAppsSection',
     'removeAppsSection',
     'uselessBloatwareSection',
-    'recommendedAppsSection'
+    'systemToolsSection',
+    'networkToolsSection',
+    'maintenanceSection',
+    'advancedSystemTweaksSection',
+    'advancedNetworkTweaksSection'
   ];
   sectionsToSetup.forEach(setupSelectButtons);
 
@@ -435,6 +439,222 @@ window.addEventListener('DOMContentLoaded', () => {
       notifier.createNotification({
         title: 'Recommended Apps',
         message: 'Recommended apps installed successfully.',
+        type: 'success'
+      });
+    }
+  });
+
+  let systemToolsNotificationId = null;
+  const applySystemToolsBtn = document.getElementById('applySystemToolsBtn');
+  applySystemToolsBtn.addEventListener('click', () => {
+    const checkboxes = document.querySelectorAll('#systemToolsSection .section-content input[type="checkbox"]');
+    const selected = [];
+    checkboxes.forEach(chk => { if (chk.checked) selected.push(chk.value); });
+    console.info("System Tools selected:", selected);
+
+    systemToolsNotificationId = notifier.createNotification({
+      title: 'System Tools',
+      message: 'Executing system tools...',
+      type: 'info',
+      displayTime: 0,
+      persistent: true,
+      hasProgressBar: false,
+      showTimerBar: false,
+    });
+
+    ipcRenderer.send('apply-system-tools', selected);
+  });
+  ipcRenderer.on('system-tools-response', (event, arg) => {
+    console.info("System Tools Response:", arg);
+    if (systemToolsNotificationId) {
+      notifier.dismissNotification(systemToolsNotificationId);
+      systemToolsNotificationId = null;
+    }
+    if (arg && arg.error) {
+      notifier.createNotification({
+        title: 'System Tools',
+        message: `Error: ${arg.error}`,
+        type: 'danger'
+      });
+    } else {
+      notifier.createNotification({
+        title: 'System Tools',
+        message: 'System tools executed successfully.',
+        type: 'success'
+      });
+    }
+  });
+
+  let networkToolsNotificationId = null;
+  const applyNetworkToolsBtn = document.getElementById('applyNetworkToolsBtn');
+  applyNetworkToolsBtn.addEventListener('click', () => {
+    const checkboxes = document.querySelectorAll('#networkToolsSection .section-content input[type="checkbox"]');
+    const selected = [];
+    checkboxes.forEach(chk => { if (chk.checked) selected.push(chk.value); });
+    console.info("Network Tools selected:", selected);
+
+    networkToolsNotificationId = notifier.createNotification({
+      title: 'Network Tools',
+      message: 'Executing network tools...',
+      type: 'info',
+      displayTime: 0,
+      persistent: true,
+      hasProgressBar: false,
+      showTimerBar: false,
+    });
+
+    ipcRenderer.send('apply-network-tools', selected);
+  });
+  ipcRenderer.on('network-tools-response', (event, arg) => {
+    console.info("Network Tools Response:", arg);
+    if (networkToolsNotificationId) {
+      notifier.dismissNotification(networkToolsNotificationId);
+      networkToolsNotificationId = null;
+    }
+    if (arg && arg.error) {
+      notifier.createNotification({
+        title: 'Network Tools',
+        message: `Error: ${arg.error}`,
+        type: 'danger'
+      });
+    } else {
+      notifier.createNotification({
+        title: 'Network Tools',
+        message: 'Network tools executed successfully.',
+        type: 'success'
+      });
+    }
+  });
+
+  let customCommandNotificationId = null;
+  const executeCustomCommandBtn = document.getElementById('executeCustomCommandBtn');
+  executeCustomCommandBtn.addEventListener('click', () => {
+    const customCommandInput = document.getElementById('customCommandInput');
+    const customCmd = customCommandInput.value;
+    if (!customCmd.trim()) {
+      notifier.createNotification({
+        title: 'Custom Command',
+        message: 'Please enter a command to execute.',
+        type: 'warning'
+      });
+      return;
+    }
+    console.info("Executing custom command:", customCmd);
+
+    customCommandNotificationId = notifier.createNotification({
+      title: 'Custom Command',
+      message: 'Executing custom command...',
+      type: 'info',
+      displayTime: 0,
+      persistent: true,
+      hasProgressBar: false,
+      showTimerBar: false,
+    });
+
+    ipcRenderer.send('execute-custom-command', customCmd);
+  });
+  ipcRenderer.on('custom-command-response', (event, arg) => {
+    console.info("Custom Command Response:", arg);
+    if (customCommandNotificationId) {
+      notifier.dismissNotification(customCommandNotificationId);
+      customCommandNotificationId = null;
+    }
+    if (arg && arg.error) {
+      notifier.createNotification({
+        title: 'Custom Command',
+        message: `Error: ${arg.error}`,
+        type: 'danger'
+      });
+    } else {
+      notifier.createNotification({
+        title: 'Custom Command',
+        message: 'Custom command executed successfully.',
+        type: 'success'
+      });
+    }
+  });
+
+  let advancedSystemStartNotificationId = null;
+  const applyAdvancedSystemTweaksBtn = document.getElementById('applyAdvancedSystemTweaksBtn');
+  if (applyAdvancedSystemTweaksBtn) {
+    applyAdvancedSystemTweaksBtn.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('#advancedSystemTweaksSection .section-content input[type="checkbox"]');
+      const selected = [];
+      checkboxes.forEach(chk => { if (chk.checked) selected.push(chk.value); });
+      console.info("Advanced System Tweaks selected:", selected);
+
+      advancedSystemStartNotificationId = notifier.createNotification({
+        title: 'Advanced System Tweaks',
+        message: 'Executing advanced system tweaks...',
+        type: 'info',
+        displayTime: 0,
+        persistent: true,
+        hasProgressBar: false,
+        showTimerBar: false,
+      });
+
+      ipcRenderer.send('apply-advanced-system-tweaks', selected);
+    });
+  }
+  ipcRenderer.on('advanced-system-tweaks-response', (event, arg) => {
+    console.info("Advanced System Tweaks Response:", arg);
+    if (advancedSystemStartNotificationId) {
+      notifier.dismissNotification(advancedSystemStartNotificationId);
+      advancedSystemStartNotificationId = null;
+    }
+    if (arg && arg.error) {
+      notifier.createNotification({
+        title: 'Advanced System Tweaks',
+        message: `Error: ${arg.error}`,
+        type: 'danger'
+      });
+    } else {
+      notifier.createNotification({
+        title: 'Advanced System Tweaks',
+        message: 'Advanced system tweaks completed successfully.',
+        type: 'success'
+      });
+    }
+  });
+
+  let advancedNetworkStartNotificationId = null;
+  const applyAdvancedNetworkTweaksBtn = document.getElementById('applyAdvancedNetworkTweaksBtn');
+  if (applyAdvancedNetworkTweaksBtn) {
+    applyAdvancedNetworkTweaksBtn.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('#advancedNetworkTweaksSection .section-content input[type="checkbox"]');
+      const selected = [];
+      checkboxes.forEach(chk => { if (chk.checked) selected.push(chk.value); });
+      console.info("Advanced Network Tweaks selected:", selected);
+
+      advancedNetworkStartNotificationId = notifier.createNotification({
+        title: 'Advanced Network Tweaks',
+        message: 'Executing advanced network tweaks...',
+        type: 'info',
+        displayTime: 0,
+        persistent: true,
+        hasProgressBar: false,
+        showTimerBar: false,
+      });
+
+      ipcRenderer.send('apply-advanced-network-tweaks', selected);
+    });
+  }
+  ipcRenderer.on('advanced-network-tweaks-response', (event, arg) => {
+    console.info("Advanced Network Tweaks Response:", arg);
+    if (advancedNetworkStartNotificationId) {
+      notifier.dismissNotification(advancedNetworkStartNotificationId);
+      advancedNetworkStartNotificationId = null;
+    }
+    if (arg && arg.error) {
+      notifier.createNotification({
+        title: 'Advanced Network Tweaks',
+        message: `Error: ${arg.error}`,
+        type: 'danger'
+      });
+    } else {
+      notifier.createNotification({
+        title: 'Advanced Network Tweaks',
+        message: 'Advanced network tweaks completed successfully.',
         type: 'success'
       });
     }

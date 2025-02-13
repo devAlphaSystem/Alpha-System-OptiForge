@@ -41,7 +41,9 @@ const privacyOptions = [
   { id: "privacy20", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v RotatingLockScreenEnabled /t REG_DWORD /d 0 /f', comment: "Disabling Lock Screen Features & Slideshows", onerror: "Failed to disable Lock Screen Slideshows" },
   { id: "privacy21", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\BitLocker" /v DisableAutoEncryption /t REG_DWORD /d 1 /f', comment: "Disabling Automatic Bitlocker Drive Encryption", onerror: "Failed to disable Bitlocker AutoEncryption" },
   { id: "privacy22", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\EnhancedStorageDevices" /v TCGSecurityActivationDisabled /t REG_DWORD /d 1 /f', comment: "Disabling TCG Security Device Activation", onerror: "Failed to disable TCG Security Activation" },
-  { id: "privacy23", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v DisableAutomaticRestartSignOn /t REG_DWORD /d 1 /f', comment: "Disabling Automatic Restart Sign‐on", onerror: "Failed to disable Automatic Restart Sign‐on" }
+  { id: "privacy23", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v DisableAutomaticRestartSignOn /t REG_DWORD /d 1 /f', comment: "Disabling Automatic Restart Sign‐on", onerror: "Failed to disable Automatic Restart Sign‐on" },
+  { id: "privacy24", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent" /v DisableWindowsSpotlightFeatures /t REG_DWORD /d 1 /f', comment: "Disabling Windows Spotlight on Lock Screen", onerror: "Failed to disable Windows Spotlight" },
+  { id: "privacy25", command: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-338387Enabled /t REG_DWORD /d 0 /f', comment: "Disabling Windows Tips and Tricks", onerror: "Failed to disable Windows Tips" }
 ];
 
 const gamingOptions = [
@@ -57,7 +59,8 @@ const gamingOptions = [
   { id: "gaming10", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile\\Tasks\\Games" /v "Scheduling Category" /t REG_SZ /d High /f', comment: "Setting Scheduling Category to High", onerror: "Failed to set scheduling category" },
   { id: "gaming11", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\GraphicsDrivers" /v HwSchMode /t REG_DWORD /d 2 /f', comment: "Enabling Hardware-Accelerated GPU Scheduling", onerror: "Failed to enable GPU scheduling" },
   { id: "gaming12", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl" /v Win32PrioritySeparation /t REG_DWORD /d 38 /f', comment: "Adjusting Win32 Priority Separation", onerror: "Failed to adjust Win32 priority separation" },
-  { id: "gaming13", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\StorageSense" /v AllowStorageSenseGlobal /t REG_DWORD /d 0 /f', comment: "Disabling Storage Sense", onerror: "Failed to disable Storage Sense" }
+  { id: "gaming13", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\StorageSense" /v AllowStorageSenseGlobal /t REG_DWORD /d 0 /f', comment: "Disabling Storage Sense", onerror: "Failed to disable Storage Sense" },
+  { id: "gaming14", command: 'reg add "HKCU\\System\\GameConfigStore" /v GameDVR_FSEBehaviorMode /t REG_DWORD /d 2 /f', comment: "Disabling Fullscreen Optimizations", onerror: "Failed to disable Fullscreen Optimizations" }
 ];
 
 const updatesOptions = [
@@ -73,14 +76,15 @@ const updatesOptions = [
 const powerOptions = [
   { id: "power1", command: 'powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 99999999-9999-9999-9999-999999999999; powercfg /setactive 99999999-9999-9999-9999-999999999999', comment: "Applying Ultimate Power Plan (Max Performance)", onerror: "Failed to set Ultimate Power Plan" },
   { id: "power2", command: 'powercfg /hibernate off; reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f', comment: "Disabling Hibernate, Sleep, and Fast Boot", onerror: "Failed to disable Hibernate/Sleep/Fast Boot" },
-  { id: "power3", command: 'reg add "HKLM\\SYSTEM\\ControlSet001\\Control\\Power\\PowerSettings\\54533251-82be-4824-96c1-47b60b740d00\\0cc5b647-c1df-4637-891a-dec35c318583" /v ValueMax /t REG_DWORD /d 100 /f', comment: "Unparking CPU Cores", onerror: "Failed to unpark CPU cores" },
+  { id: "power3", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\54533251-82be-4824-96c1-47b60b740d00\\0cc5b647-c1df-4637-891a-dec35c318583" /v ValueMax /t REG_DWORD /d 100 /f', comment: "Unparking CPU Cores", onerror: "Failed to unpark CPU cores" },
   { id: "power4", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling" /v PowerThrottlingOff /t REG_DWORD /d 1 /f', comment: "Disabling Power Throttling", onerror: "Failed to disable Power Throttling" },
   { id: "power5", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_USB 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_USB 0', comment: "Disabling USB Selective Suspend", onerror: "Failed to disable USB Selective Suspend" },
   { id: "power6", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_PCIEXPRESS 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PCIEXPRESS 0', comment: "Disabling PCI Express Link State Power Management", onerror: "Failed to disable PCI Express power management" },
   { id: "power7", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 100; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 100; powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 100; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 100', comment: "Setting Processor State Always at 100%", onerror: "Failed to set processor state to 100%" },
   { id: "power8", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\7516b95f-f776-4464-8c53-06167f40cc99\\aded5e82-b909-4619-9949-f5d71dac0bcb" /v ValueMax /t REG_DWORD /d 100 /f', comment: "Setting Display Brightness to 100%", onerror: "Failed to set display brightness to 100%" },
   { id: "power9", command: 'echo "Battery Saver will be disabled"', comment: "Disabling Battery Saver", onerror: "Failed to disable Battery Saver" },
-  { id: "power10", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\e73a048d-bf27-4f12-9731-8b2076e8891f\\637ea02f-bbcb-4015-8e2c-a1c7b9c0b546" /v ValueMax /t REG_DWORD /d 0 /f', comment: "Disabling Critical Battery Actions", onerror: "Failed to disable Critical Battery Actions" }
+  { id: "power10", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\e73a048d-bf27-4f12-9731-8b2076e8891f\\637ea02f-bbcb-4015-8e2c-a1c7b9c0b546" /v ValueMax /t REG_DWORD /d 0 /f', comment: "Disabling Critical Battery Actions", onerror: "Failed to disable Critical Battery Actions" },
+  { id: "power11", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_VIDEO ADAPTBRIGHT 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_VIDEO ADAPTBRIGHT 0', comment: "Disabling Adaptive Brightness", onerror: "Failed to disable Adaptive Brightness" }
 ];
 
 const servicesOptions = [
@@ -96,22 +100,14 @@ const servicesOptions = [
   { id: "services10", command: 'sc config "shpamsvc" start= disabled', comment: "Disabling Shared Protection Access Manager", onerror: "Failed to disable Shared Protection Access Manager" },
   { id: "services11", command: 'sc config "ssh-agent" start= disabled', comment: "Disabling OpenSSH Authentication Agent", onerror: "Failed to disable OpenSSH Authentication Agent" },
   { id: "services12", command: 'sc config "tzautoupdate" start= disabled', comment: "Disabling Auto Time Zone Updater", onerror: "Failed to disable Auto Time Zone Updater" },
-  { id: "services13", command: 'sc config "uhssvc" start= disabled', comment: "Disabling Microsoft Update Health Service", onerror: "Failed to disable Microsoft Update Health Service" }
+  { id: "services13", command: 'sc config "uhssvc" start= disabled', comment: "Disabling Microsoft Update Health Service", onerror: "Failed to disable Microsoft Update Health Service" },
+  { id: "services14", command: 'sc config "Spooler" start= disabled', comment: "Disabling Print Spooler Service", onerror: "Failed to disable Print Spooler Service" },
+  { id: "services15", command: 'sc config "bthserv" start= disabled', comment: "Disabling Bluetooth Support Service", onerror: "Failed to disable Bluetooth Support Service" },
+  { id: "services16", command: 'sc config "TermService" start= disabled', comment: "Disabling Remote Desktop Services", onerror: "Failed to disable Remote Desktop Services" }
 ];
 
-const maintenanceOptions = [
-  { id: "maintenance1", command: 'Remove-Item -Path "$env:TEMP\\*" -Recurse -Force', comment: "Cleaning temporary files", onerror: "Failed to clean temporary files" },
-  { id: "maintenance2", command: 'Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force', comment: "Cleaning prefetch folder", onerror: "Failed to clean prefetch folder" },
-  { id: "maintenance3", command: 'Stop-Service wuauserv; Remove-Item -Path "C:\\Windows\\SoftwareDistribution\\Download\\*" -Recurse -Force; Start-Service wuauserv', comment: "Clearing Windows Update cache", onerror: "Failed to clear Windows Update cache" },
-  { id: "maintenance4", command: 'defrag C: -w', comment: "Defragmenting drive C:", onerror: "Failed to defragment drive C:" },
-  { id: "maintenance5", command: 'reg add "HKCU\\Control Panel\\Desktop" /v MinAnimate /t REG_SZ /d 0 /f', comment: "Disabling window animations", onerror: "Failed to disable window animations" }
-];
-
-const escapeAmpersands = (str) => str.replace(/&/g, '`&');
 const wrapCommand = (opt) => {
-  const safeComment = escapeAmpersands(opt.comment);
-  const safeOnError = escapeAmpersands(opt.onerror);
-  return `echo "${safeComment}"; ${opt.command}; if (-not $?) { echo "${safeOnError}" }`;
+  return `${opt.command};`;
 };
 
 function executeCommands(command, event, responseChannel) {
@@ -123,6 +119,10 @@ function executeCommands(command, event, responseChannel) {
   });
   psProcess.stderr.on('data', (data) => {
     outputData += "ERROR: " + data.toString().trim() + "\n";
+  });
+  psProcess.on('error', (error) => {
+    log("Process error: ${error}", 'error');
+    event.reply(responseChannel, { success: false, message: error.toString() });
   });
   psProcess.on('close', (code) => {
     log("Process closed with code: " + code);
@@ -163,11 +163,4 @@ ipcMain.on('apply-services-optimizations', (event, selectedIds) => {
   const commands = servicesOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
   const psCommand = commands.join(";");
   executeCommands(psCommand, event, 'services-optimizations-response');
-});
-
-ipcMain.on('apply-maintenance-optimizations', (event, selectedIds) => {
-  log("Received apply-maintenance-optimizations with data: " + JSON.stringify(selectedIds));
-  const commands = maintenanceOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'maintenance-optimizations-response');
 });

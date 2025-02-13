@@ -31,7 +31,8 @@ const removeAppsOptions = [
   { id: "apps_snipsketch", command: 'Get-AppxPackage -Name Microsoft.ScreenSketch -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Snip & Sketch", onerror: "Failed to remove Snip & Sketch" },
   { id: "apps_paint", command: 'Get-AppxPackage -Name Microsoft.MSPaint -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Paint", onerror: "Failed to remove Paint" },
   { id: "apps_movietv", command: 'Get-AppxPackage -Name Microsoft.ZuneVideo -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Movies & TV", onerror: "Failed to remove Movies & TV" },
-  { id: "apps_edge", command: 'Get-AppxPackage -Name Microsoft.MicrosoftEdge -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Microsoft Edge", onerror: "Failed to remove Microsoft Edge" }
+  { id: "apps_edge", command: 'Get-AppxPackage -Name Microsoft.MicrosoftEdge -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Microsoft Edge", onerror: "Failed to remove Microsoft Edge" },
+  { id: "apps_xboxcore", command: 'Get-AppxPackage -Name Microsoft.XboxApp -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Xbox Core App", onerror: "Failed to remove Xbox Core App" }
 ];
 
 const uselessBloatwareOptions = [
@@ -43,7 +44,7 @@ const uselessBloatwareOptions = [
   { id: "apps_ub_phonelink", command: 'Get-AppxPackage -Name Microsoft.YourPhone -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Phone Link", onerror: "Failed to remove Phone Link" },
   { id: "apps_ub_gethelp", command: 'Get-AppxPackage -Name Microsoft.GetHelp -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Get Help", onerror: "Failed to remove Get Help" },
   { id: "apps_ub_family", command: 'Get-AppxPackage -Name MicrosoftCorporationII.MicrosoftFamily -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Microsoft Family", onerror: "Failed to remove Microsoft Family" },
-  { id: "apps_ub_paint3d", command: 'Get-AppxPackage -Name Microsoft.MSPaint -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Paint 3D", onerror: "Failed to remove Paint 3D" },
+  { id: "apps_ub_paint3d", command: 'Get-AppxPackage -Name Microsoft.Paint3D -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Paint 3D", onerror: "Failed to remove Paint 3D" },
   { id: "apps_ub_feedback", command: 'Get-AppxPackage -Name Microsoft.WindowsFeedbackHub -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Feedback Hub", onerror: "Failed to remove Feedback Hub" },
   { id: "apps_ub_copilotstore", command: 'Get-AppxPackage -Name Microsoft.Copilot_8wekyb3d8bbwe -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Copilot (Store)", onerror: "Failed to remove Copilot (Store)" },
   { id: "apps_ub_clipchamp", command: 'Get-AppxPackage -Name Clipchamp.Clipchamp -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Clipchamp", onerror: "Failed to remove Clipchamp" },
@@ -66,22 +67,28 @@ const uselessBloatwareOptions = [
   { id: "apps_ub_devhome", command: 'Get-AppxPackage -Name Microsoft.Windows.DevHome -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Dev Home", onerror: "Failed to remove Dev Home" },
   { id: "apps_ub_soundrecorder", command: 'Get-AppxPackage -Name Microsoft.WindowsSoundRecorder -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Sound Recorder", onerror: "Failed to remove Sound Recorder" },
   { id: "apps_ub_cortana", command: 'Get-AppxPackage -Name Microsoft.549981C3F5F10 -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Cortana", onerror: "Failed to remove Cortana" },
-  { id: "apps_ub_news", command: 'Get-AppxPackage -Name Microsoft.WindowsFeedbackHub -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing News", onerror: "Failed to remove News" }
+  { id: "apps_ub_news", command: 'Get-AppxPackage -Name Microsoft.BingNews -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing News", onerror: "Failed to remove News" },
+  { id: "apps_ub_xboxgamebar", command: 'Get-AppxPackage -Name Microsoft.XboxGamingOverlay -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Xbox Game Bar", onerror: "Failed to remove Xbox Game Bar" },
+  { id: "apps_ub_3dbuilder", command: 'Get-AppxPackage -Name Microsoft.3DBuilder -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing 3D Builder", onerror: "Failed to remove 3D Builder" },
+  { id: "apps_ub_whiteboard", command: 'Get-AppxPackage -Name Microsoft.Whiteboard -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Microsoft Whiteboard", onerror: "Failed to remove Microsoft Whiteboard" }
 ];
 
 const recommendedAppsOptions = [
   { id: "rec_vlc", command: 'winget install --id=VideoLAN.VLC -e', comment: "Installing VLC Media Player", onerror: "Failed to install VLC Media Player" },
-  { id: "rec_7zip", command: 'winget install --id=7zip.7zip -e', comment: "Installing 7-Zip", onerror: "Failed to install 7-Zip" },
+  { id: "rec_7zip", command: 'winget install --id=7zip.7zip -e', comment: "Installing 7‑Zip", onerror: "Failed to install 7‑Zip" },
   { id: "rec_notepadpp", command: 'winget install --id=Notepad++.Notepad++ -e', comment: "Installing Notepad++", onerror: "Failed to install Notepad++" },
   { id: "rec_powertoys", command: 'winget install --id=Microsoft.PowerToys -e', comment: "Installing Microsoft PowerToys", onerror: "Failed to install Microsoft PowerToys" },
-  { id: "rec_chrome", command: 'winget install --id=Google.Chrome -e', comment: "Installing Google Chrome", onerror: "Failed to install Google Chrome" }
+  { id: "rec_chrome", command: 'winget install --id=Google.Chrome -e', comment: "Installing Google Chrome", onerror: "Failed to install Google Chrome" },
+  { id: "rec_slack", command: 'winget install --id=SlackTechnologies.Slack -e', comment: "Installing Slack", onerror: "Failed to install Slack" },
+  { id: "rec_zoom", command: 'winget install --id=Zoom.Zoom -e', comment: "Installing Zoom", onerror: "Failed to install Zoom" },
+  { id: "rec_spotify", command: 'winget install --id=Spotify.Spotify -e', comment: "Installing Spotify", onerror: "Failed to install Spotify" },
+  { id: "rec_firefox", command: 'winget install --id=Mozilla.Firefox -e', comment: "Installing Firefox", onerror: "Failed to install Firefox" },
+  { id: "rec_discord", command: 'winget install --id=Discord.Discord -e', comment: "Installing Discord", onerror: "Failed to install Discord" },
+  { id: "rec_vscode", command: 'winget install --id=Microsoft.VisualStudioCode -e', comment: "Installing Visual Studio Code", onerror: "Failed to install Visual Studio Code" }
 ];
 
-const escapeAmpersands = (str) => str.replace(/&/g, '`&');
 const wrapCommand = (opt) => {
-  const safeComment = escapeAmpersands(opt.comment);
-  const safeOnError = escapeAmpersands(opt.onerror);
-  return `echo "${safeComment}"; ${opt.command}; if (-not $?) { echo "${safeOnError}" }`;
+  return `${opt.command};`;
 };
 
 function executeCommands(command, event, responseChannel) {
@@ -93,6 +100,10 @@ function executeCommands(command, event, responseChannel) {
   });
   psProcess.stderr.on('data', (data) => {
     outputData += "ERROR: " + data.toString().trim() + "\n";
+  });
+  psProcess.on('error', (error) => {
+    log("Process error: ${error}", 'error');
+    event.reply(responseChannel, { success: false, message: error.toString() });
   });
   psProcess.on('close', (code) => {
     log("Process closed with code: " + code);

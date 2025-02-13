@@ -46,6 +46,8 @@ app.whenReady().then(() => {
 
   require('./optimizations');
   require('./apps');
+  require('./commands');
+  require('./advanced');
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
