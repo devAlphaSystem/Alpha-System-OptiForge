@@ -45,20 +45,14 @@ const maintenanceOptions = [
   { id: "maintenance9", command: 'Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase', comment: "Cleaning WinSxS folder", onerror: "Failed to clean WinSxS folder" }
 ];
 
-const wrapCommand = (opt) => {
-  return opt.command;
-};
+const wrapCommand = (opt) => opt.command;
 
 function executeCommands(command, event, responseChannel) {
   log("Executing command: " + command);
   let outputData = "";
   const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
-  psProcess.stdout.on('data', (data) => {
-    outputData += data.toString().trim() + "\n";
-  });
-  psProcess.stderr.on('data', (data) => {
-    outputData += "ERROR: " + data.toString().trim() + "\n";
-  });
+  psProcess.stdout.on('data', (data) => { outputData += data.toString().trim() + "\n"; });
+  psProcess.stderr.on('data', (data) => { outputData += "ERROR: " + data.toString().trim() + "\n"; });
   psProcess.on('error', (error) => {
     log("Process error: " + error, 'error');
     event.reply(responseChannel, { success: false, message: error.toString() });

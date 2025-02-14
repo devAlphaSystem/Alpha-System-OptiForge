@@ -73,20 +73,14 @@ const uselessBloatwareOptions = [
   { id: "apps_ub_whiteboard", command: 'Get-AppxPackage -Name Microsoft.Whiteboard -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Microsoft Whiteboard", onerror: "Failed to remove Microsoft Whiteboard" }
 ];
 
-const wrapCommand = (opt) => {
-  return opt.command;
-};
+const wrapCommand = (opt) => opt.command;
 
 function executeCommands(command, event, responseChannel) {
   log("Executing command: " + command);
   let outputData = "";
   const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
-  psProcess.stdout.on('data', (data) => {
-    outputData += data.toString().trim() + "\n";
-  });
-  psProcess.stderr.on('data', (data) => {
-    outputData += "ERROR: " + data.toString().trim() + "\n";
-  });
+  psProcess.stdout.on('data', (data) => { outputData += data.toString().trim() + "\n"; });
+  psProcess.stderr.on('data', (data) => { outputData += "ERROR: " + data.toString().trim() + "\n"; });
   psProcess.on('error', (error) => {
     log("Process error: " + error, 'error');
     event.reply(responseChannel, { success: false, message: error.toString() });

@@ -27,9 +27,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: true
+      devTools: false
     },
-    transparent: true,
     resizable: false,
     maximizable: false,
     fullscreenable: false,

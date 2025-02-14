@@ -44,20 +44,14 @@ const advancedNetworkTweaksOptions = [
   { id: "adv_net10", command: 'dism /online /norestart /disable-feature /featurename:SMB1Protocol', comment: "Disabling SMB1 Protocol", onerror: "Failed to disable SMB1 Protocol" }
 ];
 
-const wrapCommand = (opt) => {
-  return opt.command;
-};
+const wrapCommand = (opt) => opt.command;
 
 function executeCommands(command, event, responseChannel) {
   log("Executing command: " + command);
   let outputData = "";
   const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
-  psProcess.stdout.on('data', (data) => {
-    outputData += data.toString().trim() + "\n";
-  });
-  psProcess.stderr.on('data', (data) => {
-    outputData += "ERROR: " + data.toString().trim() + "\n";
-  });
+  psProcess.stdout.on('data', (data) => { outputData += data.toString().trim() + "\n"; });
+  psProcess.stderr.on('data', (data) => { outputData += "ERROR: " + data.toString().trim() + "\n"; });
   psProcess.on('error', (error) => {
     log("Process error: " + error, 'error');
     event.reply(responseChannel, { success: false, message: error.toString() });

@@ -91,11 +91,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-privacy-optimizations', selected);
   });
+
   ipcRenderer.on('privacy-optimizations-response', (event, arg) => {
     console.info("Privacy Optimizations Response:", arg);
     if (privacyStartNotificationId) {
@@ -132,11 +133,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-gaming-optimizations', selected);
   });
+
   ipcRenderer.on('gaming-optimizations-response', (event, arg) => {
     console.info("Gaming Optimizations Response:", arg);
     if (gamingStartNotificationId) {
@@ -173,11 +175,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-updates-optimizations', selected);
   });
+
   ipcRenderer.on('updates-optimizations-response', (event, arg) => {
     console.info("Updates Optimizations Response:", arg);
     if (updatesStartNotificationId) {
@@ -214,11 +217,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-power-optimizations', selected);
   });
+
   ipcRenderer.on('power-optimizations-response', (event, arg) => {
     console.info("Power Optimizations Response:", arg);
     if (powerStartNotificationId) {
@@ -255,11 +259,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-services-optimizations', selected);
   });
+
   ipcRenderer.on('services-optimizations-response', (event, arg) => {
     console.info("Services Optimizations Response:", arg);
     if (servicesStartNotificationId) {
@@ -296,11 +301,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-maintenance-optimizations', selected);
   });
+
   ipcRenderer.on('maintenance-optimizations-response', (event, arg) => {
     console.info("Maintenance Optimizations Response:", arg);
     if (maintenanceStartNotificationId) {
@@ -337,11 +343,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-remove-apps', selected);
   });
+
   ipcRenderer.on('remove-apps-response', (event, arg) => {
     console.info("Remove Apps Response:", arg);
     if (removeAppsStartNotificationId) {
@@ -378,11 +385,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-useless-bloatware', selected);
   });
+
   ipcRenderer.on('useless-bloatware-response', (event, arg) => {
     console.info("Useless Bloatware Response:", arg);
     if (bloatwareStartNotificationId) {
@@ -419,11 +427,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-system-tools', selected);
   });
+
   ipcRenderer.on('system-tools-response', (event, arg) => {
     console.info("System Tools Response:", arg);
     if (systemToolsNotificationId) {
@@ -460,11 +469,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('apply-network-tools', selected);
   });
+
   ipcRenderer.on('network-tools-response', (event, arg) => {
     console.info("Network Tools Response:", arg);
     if (networkToolsNotificationId) {
@@ -508,11 +518,12 @@ window.addEventListener('DOMContentLoaded', () => {
       displayTime: 0,
       persistent: true,
       hasProgressBar: false,
-      showTimerBar: false,
+      showTimerBar: false
     });
 
     ipcRenderer.send('execute-custom-command', customCmd);
   });
+
   ipcRenderer.on('custom-command-response', (event, arg) => {
     console.info("Custom Command Response:", arg);
     if (customCommandNotificationId) {
@@ -550,12 +561,13 @@ window.addEventListener('DOMContentLoaded', () => {
         displayTime: 0,
         persistent: true,
         hasProgressBar: false,
-        showTimerBar: false,
+        showTimerBar: false
       });
 
       ipcRenderer.send('apply-advanced-system-tweaks', selected);
     });
   }
+
   ipcRenderer.on('advanced-system-tweaks-response', (event, arg) => {
     console.info("Advanced System Tweaks Response:", arg);
     if (advancedSystemStartNotificationId) {
@@ -593,12 +605,13 @@ window.addEventListener('DOMContentLoaded', () => {
         displayTime: 0,
         persistent: true,
         hasProgressBar: false,
-        showTimerBar: false,
+        showTimerBar: false
       });
 
       ipcRenderer.send('apply-advanced-network-tweaks', selected);
     });
   }
+
   ipcRenderer.on('advanced-network-tweaks-response', (event, arg) => {
     console.info("Advanced Network Tweaks Response:", arg);
     if (advancedNetworkStartNotificationId) {
@@ -667,7 +680,7 @@ window.addEventListener('DOMContentLoaded', () => {
     content.appendChild(list);
     section.appendChild(content);
 
-    header.addEventListener('click', (e) => {
+    header.addEventListener('click', () => {
       if (content.style.display === 'block') {
         content.style.display = 'none';
         content.classList.remove('active');
@@ -698,7 +711,6 @@ window.addEventListener('DOMContentLoaded', () => {
       cpuInfo['Model'] = cpus[0].model;
       cpuInfo['Speed (MHz)'] = cpus[0].speed;
       cpuInfo['Number of Cores'] = cpus.length;
-
       const times = cpus[0].times;
       cpuInfo['User Time'] = `${times.user} ms`;
       cpuInfo['System Time'] = `${times.sys} ms`;

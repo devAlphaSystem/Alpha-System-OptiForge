@@ -104,20 +104,14 @@ const servicesOptions = [
   { id: "services16", command: 'sc.exe config "TermService" start=disabled', comment: "Disabling Remote Desktop Services", onerror: "Failed to disable Remote Desktop Services" }
 ];
 
-const wrapCommand = (opt) => {
-  return opt.command;
-};
+const wrapCommand = (opt) => opt.command;
 
 function executeCommands(command, event, responseChannel) {
   log("Executing command: " + command);
   let outputData = "";
   const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
-  psProcess.stdout.on('data', (data) => {
-    outputData += data.toString().trim() + "\n";
-  });
-  psProcess.stderr.on('data', (data) => {
-    outputData += "ERROR: " + data.toString().trim() + "\n";
-  });
+  psProcess.stdout.on('data', (data) => { outputData += data.toString().trim() + "\n"; });
+  psProcess.stderr.on('data', (data) => { outputData += "ERROR: " + data.toString().trim() + "\n"; });
   psProcess.on('error', (error) => {
     log("Process error: " + error, 'error');
     event.reply(responseChannel, { success: false, message: error.toString() });
