@@ -131,3 +131,61 @@ ipcMain.on('apply-useless-bloatware', (event, selectedIds) => {
   const commands = uselessBloatwareOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
   executeCommands(commands, event, 'useless-bloatware-response');
 });
+
+ipcMain.handle('check-remove-app-status', async (event, appId) => {
+  const option = removeAppsOptions.find(opt => opt.id === appId);
+  if (!option) {
+    return { installed: false };
+  }
+  const match = option.command.match(/-Name\s+(['"])?([^\s'"]+)\1/);
+  if (!match) {
+    return { installed: false };
+  }
+  const pattern = match[2];
+  const checkCmd = `Get-AppxPackage -Name ${pattern} -ErrorAction SilentlyContinue`;
+  return new Promise((resolve) => {
+    let outputData = "";
+    const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', checkCmd]);
+    psProcess.stdout.on('data', (data) => {
+      outputData += data.toString().trim();
+    });
+    psProcess.stderr.on('data', (data) => {
+      outputData += data.toString().trim();
+    });
+    psProcess.on('close', (code) => {
+      resolve({ installed: outputData.length > 0 });
+    });
+    psProcess.on('error', () => {
+      resolve({ installed: false });
+    });
+  });
+});
+
+ipcMain.handle('check-app-status', async (event, appId) => {
+  const option = uselessBloatwareOptions.find(opt => opt.id === appId);
+  if (!option) {
+    return { installed: false };
+  }
+  const match = option.command.match(/-Name\s+(['"])?([^\s'"]+)\1/);
+  if (!match) {
+    return { installed: false };
+  }
+  const pattern = match[2];
+  const checkCmd = `Get-AppxPackage -Name ${pattern} -ErrorAction SilentlyContinue`;
+  return new Promise((resolve) => {
+    let outputData = "";
+    const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', checkCmd]);
+    psProcess.stdout.on('data', (data) => {
+      outputData += data.toString().trim();
+    });
+    psProcess.stderr.on('data', (data) => {
+      outputData += data.toString().trim();
+    });
+    psProcess.on('close', (code) => {
+      resolve({ installed: outputData.length > 0 });
+    });
+    psProcess.on('error', () => {
+      resolve({ installed: false });
+    });
+  });
+});

@@ -1,6 +1,46 @@
 const { ipcRenderer } = require('electron');
 const os = require('os');
 
+async function updateRemoveAppsStatus(labelEl, appId) {
+  let circle = labelEl.querySelector('.status-circle');
+  if (!circle) {
+    circle = document.createElement('span');
+    circle.className = 'status-circle';
+    const checkbox = labelEl.querySelector('input[type="checkbox"]');
+    if (checkbox) {
+      checkbox.insertAdjacentElement('afterend', circle);
+    } else {
+      labelEl.insertBefore(circle, labelEl.firstChild);
+    }
+  }
+  try {
+    const result = await ipcRenderer.invoke('check-remove-app-status', appId);
+    circle.style.backgroundColor = result.installed ? 'green' : 'red';
+  } catch (error) {
+    circle.style.backgroundColor = 'gray';
+  }
+}
+
+async function updateBloatwareStatus(labelEl, appId) {
+  let circle = labelEl.querySelector('.status-circle');
+  if (!circle) {
+    circle = document.createElement('span');
+    circle.className = 'status-circle';
+    const checkbox = labelEl.querySelector('input[type="checkbox"]');
+    if (checkbox) {
+      checkbox.insertAdjacentElement('afterend', circle);
+    } else {
+      labelEl.insertBefore(circle, labelEl.firstChild);
+    }
+  }
+  try {
+    const result = await ipcRenderer.invoke('check-app-status', appId);
+    circle.style.backgroundColor = result.installed ? 'green' : 'red';
+  } catch (error) {
+    circle.style.backgroundColor = 'gray';
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const notifier = window.EasyNotificationInstance;
 
@@ -20,6 +60,22 @@ window.addEventListener('DOMContentLoaded', () => {
         targetTab.classList.add('active');
       }
     });
+  });
+
+  const removeAppsLabels = document.querySelectorAll('#removeAppsSection .checkbox-group label');
+  removeAppsLabels.forEach(label => {
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    if (checkbox && checkbox.value) {
+      updateRemoveAppsStatus(label, checkbox.value);
+    }
+  });
+
+  const bloatwareLabels = document.querySelectorAll('#uselessBloatwareSection .checkbox-group label');
+  bloatwareLabels.forEach(label => {
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    if (checkbox && checkbox.value) {
+      updateBloatwareStatus(label, checkbox.value);
+    }
   });
 
   const sections = document.querySelectorAll('.section');

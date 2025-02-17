@@ -377,6 +377,15 @@
           padding: 10px;
         }
       }
+
+      .status-circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 0 16px 0 8px;
+        vertical-align: middle;
+      }
     </style>
   </head>
 
@@ -907,7 +916,7 @@
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <img src="logo.png" />
-            <p><strong>Version:</strong> 1.3-6</p>
+            <p><strong>Version:</strong> 1.3-7</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>
@@ -933,9 +942,7 @@
     <script src="renderer.js"></script>
 
     <script>
-      // CommandMapping - Show commands at info icon hover
       const commandMapping = {
-        // Privacy Options
         privacy1: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f',
         privacy2: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\LocationAndSensors" /v DisableLocation /t REG_DWORD /d 1 /f; reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Maps" /v AutoUpdateEnabled /t REG_DWORD /d 0 /f',
         privacy3: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f',
@@ -962,7 +969,6 @@
         privacy24: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent" /v DisableWindowsSpotlightFeatures /t REG_DWORD /d 1 /f',
         privacy25: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-338387Enabled /t REG_DWORD /d 0 /f',
 
-        // Gaming Options
         gaming1: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\GameMode" /v AutoGameModeEnabled /t REG_DWORD /d 1 /f',
         gaming2: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f',
         gaming3: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameBar" /v UseNexusForGameBarEnabled /t REG_DWORD /d 0 /f',
@@ -978,7 +984,6 @@
         gaming13: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\StorageSense" /v AllowStorageSenseGlobal /t REG_DWORD /d 0 /f',
         gaming14: 'reg add "HKCU\\System\\GameConfigStore" /v GameDVR_FSEBehaviorMode /t REG_DWORD /d 2 /f',
 
-        // Updates Options
         updates1: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU" /v NoAutoUpdate /t REG_DWORD /d 1 /f',
         updates2: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsUpdate\\AU" /v DeferFeatureUpdatesPeriodInDays /t REG_DWORD /d 365 /f',
         updates3: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsUpdate\\AU" /v DeferQualityUpdatesPeriodInDays /t REG_DWORD /d 7 /f',
@@ -987,7 +992,6 @@
         updates6: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsStore" /v AutoDownload /t REG_DWORD /d 2 /f',
         updates7: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Appx" /v AllowAutomaticAppArchiving /t REG_DWORD /d 0 /f',
 
-        // Power Options
         power1: 'powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 99999999-9999-9999-9999-999999999999; powercfg /setactive 99999999-9999-9999-9999-999999999999',
         power2: 'powercfg /hibernate off; reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f',
         power3: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\54533251-82be-4824-96c1-47b60b740d00\\0cc5b647-c1df-4637-891a-dec35c318583" /v ValueMax /t REG_DWORD /d 100 /f',
@@ -998,7 +1002,6 @@
         power8: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\e73a048d-bf27-4f12-9731-8b2076e8891f\\637ea02f-bbcb-4015-8e2c-a1c7b9c0b546" /v ValueMax /t REG_DWORD /d 0 /f',
         power9: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_VIDEO 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_VIDEO 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0',
 
-        // Services Options
         services1: 'sc.exe config "AJRouter" start=disabled',
         services2: 'sc.exe config "AppVClient" start=disabled',
         services3: 'sc.exe config "AssignedAccessManagerSvc" start=disabled',
@@ -1016,7 +1019,6 @@
         services15: 'sc.exe config "bthserv" start=disabled',
         services16: 'sc.exe config "TermService" start=disabled',
 
-        // Remove Apps Options
         apps_calc: 'Get-AppxPackage -Name Microsoft.WindowsCalculator -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
         apps_onedrive: 'Get-AppxPackage -Name *OneDrive* -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
         apps_xbox: 'Get-AppxPackage -Name *Xbox* -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
@@ -1032,7 +1034,6 @@
         apps_edge: 'Get-AppxPackage -Name Microsoft.MicrosoftEdge -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
         apps_xboxcore: 'Get-AppxPackage -Name Microsoft.XboxApp -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
 
-        // Useless Bloatware Options
         apps_ub_mail: 'Get-AppxPackage -Name *Mail* -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
         apps_ub_maps: 'Get-AppxPackage -Name Microsoft.WindowsMaps -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
         apps_ub_skype: 'Get-AppxPackage -Name Microsoft.SkypeApp -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
@@ -1069,20 +1070,17 @@
         apps_ub_3dbuilder: 'Get-AppxPackage -Name Microsoft.3DBuilder -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
         apps_ub_whiteboard: 'Get-AppxPackage -Name Microsoft.Whiteboard -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers',
 
-        // System Tools Options
         sys_disk_cleanup: 'cleanmgr /sagerun:1',
         sys_sfc: 'sfc /scannow',
         sys_dism: 'Dism.exe /Online /Cleanup-Image /RestoreHealth',
         sys_defrag: 'defrag C: -w',
         sys_perfmon: 'perfmon.exe',
 
-        // Network Tools Options
         net_flush_dns: 'ipconfig /flushdns',
         net_reset_adapters: 'netsh int ip reset',
         net_release_ip: 'ipconfig /release',
         net_renew_ip: 'ipconfig /renew',
 
-        // Maintenance Options
         maintenance1: 'Remove-Item -Path "$env:TEMP\\*" -Recurse -Force -ErrorAction SilentlyContinue',
         maintenance2: 'Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force -ErrorAction SilentlyContinue',
         maintenance3: 'Stop-Service wuauserv -ErrorAction SilentlyContinue; Remove-Item -Path "C:\\Windows\\SoftwareDistribution\\Download\\*" -Recurse -Force -ErrorAction SilentlyContinue; Start-Service wuauserv -ErrorAction SilentlyContinue',
@@ -1093,7 +1091,6 @@
         maintenance8: 'Remove-Item -Path "$env:LOCALAPPDATA\\Microsoft\\Windows\\Explorer\\thumbcache_*.db" -Force -ErrorAction SilentlyContinue',
         maintenance9: 'Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase',
 
-        // System Tweaks Options
         adv_sys1: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 1 /f',
         adv_sys2: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f',
         adv_sys3: 'sc.exe config "SysMain" start=disabled',
@@ -1104,7 +1101,6 @@
         adv_sys8: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0',
         adv_sys9: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f',
 
-        // Network Tweaks Options
         adv_net1: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\QoS\\Parameters" /v Enabled /t REG_DWORD /d 1 /f',
         adv_net2: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 0 /f',
         adv_net3: 'netsh int tcp set global autotuninglevel=normal',
@@ -1115,7 +1111,6 @@
         adv_net8: 'netsh int tcp set global autotuninglevel=disabled',
         adv_net9: 'dism /online /norestart /disable-feature /featurename:SMB1Protocol',
 
-        // Windows Fixes Mapping
         reset_windows_update: 'net stop wuauserv && net stop cryptSvc && net stop bits && net stop msiserver && del /f /s /q %windir%\\SoftwareDistribution\\*.* > nul && rmdir /s /q %windir%\\SoftwareDistribution && md %windir%\\SoftwareDistribution && del /f /s /q %windir%\\System32\\catroot2\\*.* > nul && rmdir /s /q %windir%\\System32\\catroot2 && md %windir%\\System32\\catroot2 && regsvr32 /s wuaueng.dll && regsvr32 /s wuapi.dll && regsvr32 /s wups.dll && regsvr32 /s wups2.dll && regsvr32 /s wuwebv.dll && regsvr32 /s wuauserv.dll && regsvr32 /s wucltux.dll && regsvr32 /s wuaueng1.dll && netsh winsock reset && netsh winsock reset proxy && net start wuauserv && net start cryptSvc && net start bits && net start msiserver && sfc /scannow && DISM /Online /Cleanup-Image /RestoreHealth',
         reset_windows_store: 'wsreset.exe && powershell -Command "Get-AppXPackage -AllUsers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register \'$($_.InstallLocation)\\AppXManifest.xml\'}"',
         reset_network: 'netsh int ip reset && netsh winsock reset && ipconfig /flushdns',
