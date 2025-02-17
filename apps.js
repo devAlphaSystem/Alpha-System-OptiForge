@@ -73,34 +73,61 @@ const uselessBloatwareOptions = [
   { id: "apps_ub_whiteboard", command: 'Get-AppxPackage -Name Microsoft.Whiteboard -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers', comment: "Removing Microsoft Whiteboard", onerror: "Failed to remove Microsoft Whiteboard" }
 ];
 
-const wrapCommand = (opt) => opt.command;
+const wrapCommand = (opt) => {
+  return opt.command.replace(/&&/g, ';');
+};
 
-function executeCommands(command, event, responseChannel) {
-  log("Executing command: " + command);
-  let outputData = "";
-  const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
-  psProcess.stdout.on('data', (data) => { outputData += data.toString().trim() + "\n"; });
-  psProcess.stderr.on('data', (data) => { outputData += "ERROR: " + data.toString().trim() + "\n"; });
-  psProcess.on('error', (error) => {
-    log("Process error: " + error, 'error');
-    event.reply(responseChannel, { success: false, message: error.toString() });
+function executeCommand(command) {
+  return new Promise((resolve, reject) => {
+    log("Executing command: " + command);
+    let outputData = "";
+    const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
+    psProcess.stdout.on('data', (data) => {
+      const output = data.toString().trim();
+      outputData += output + "\n";
+      log(`Output: ${output}`);
+    });
+    psProcess.stderr.on('data', (data) => {
+      const errorOutput = data.toString().trim();
+      outputData += "ERROR: " + errorOutput + "\n";
+      log(`Error: ${errorOutput}`, 'error');
+    });
+    psProcess.on('error', (error) => {
+      log("Process error: " + error, 'error');
+      reject(error);
+    });
+    psProcess.on('close', (code) => {
+      log("Process closed with code: " + code);
+      if (code === 0) {
+        resolve({ success: true, command, message: outputData });
+      } else {
+        resolve({ success: false, command, message: outputData || `Process exited with code ${code}` });
+      }
+    });
   });
-  psProcess.on('close', (code) => {
-    log("Process closed with code: " + code);
-    event.reply(responseChannel, { success: code === 0, message: outputData || `Process exited with code ${code}` });
-  });
+}
+
+async function executeCommands(commands, event, responseChannel) {
+  const results = [];
+  for (const command of commands) {
+    try {
+      const result = await executeCommand(command);
+      results.push(result);
+    } catch (err) {
+      results.push({ success: false, command, message: err.toString() });
+    }
+  }
+  event.reply(responseChannel, results);
 }
 
 ipcMain.on('apply-remove-apps', (event, selectedIds) => {
   log("Received apply-remove-apps with data: " + JSON.stringify(selectedIds));
   const commands = removeAppsOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'remove-apps-response');
+  executeCommands(commands, event, 'remove-apps-response');
 });
 
 ipcMain.on('apply-useless-bloatware', (event, selectedIds) => {
   log("Received apply-useless-bloatware with data: " + JSON.stringify(selectedIds));
   const commands = uselessBloatwareOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'useless-bloatware-response');
+  executeCommands(commands, event, 'useless-bloatware-response');
 });

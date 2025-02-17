@@ -38,6 +38,7 @@ const systemTweaksOptions = [
   { id: "adv_sys9", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0', comment: "Enabling Disk Write Caching", onerror: "Failed to enable disk write caching" },
   { id: "adv_sys10", command: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f', comment: "Disabling Background App Refresh", onerror: "Failed to disable background app refresh" }
 ];
+
 const networkToolsOptions = [
   { id: "net_flush_dns", command: 'ipconfig /flushdns', comment: "Flushing DNS Cache", onerror: "Failed to flush DNS Cache" },
   { id: "net_reset_adapters", command: 'netsh int ip reset', comment: "Resetting Network Adapters", onerror: "Failed to reset Network Adapters" },
@@ -70,57 +71,81 @@ const powerOptions = [
   { id: "power9", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_VIDEO 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_VIDEO 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0', comment: "Disabling Adaptive Brightness", onerror: "Failed to disable Adaptive Brightness" }
 ];
 
-const wrapCommand = (opt) => opt.command;
+const wrapCommand = (opt) => {
+  return opt.command.replace(/&&/g, ';');
+};
 
-function executeCommands(command, event, responseChannel) {
-  log("Executing command: " + command);
-  let outputData = "";
-  const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
-  psProcess.stdout.on('data', (data) => { outputData += data.toString().trim() + "\n"; });
-  psProcess.stderr.on('data', (data) => { outputData += "ERROR: " + data.toString().trim() + "\n"; });
-  psProcess.on('error', (error) => {
-    log("Process error: " + error, 'error');
-    event.reply(responseChannel, { success: false, message: error.toString() });
+function executeCommand(command) {
+  return new Promise((resolve, reject) => {
+    log("Executing command: " + command);
+    let outputData = "";
+    const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
+    psProcess.stdout.on('data', (data) => {
+      const output = data.toString().trim();
+      outputData += output + "\n";
+      log(`Output: ${output}`);
+    });
+    psProcess.stderr.on('data', (data) => {
+      const errorOutput = data.toString().trim();
+      outputData += "ERROR: " + errorOutput + "\n";
+      log(`Error: ${errorOutput}`, 'error');
+    });
+    psProcess.on('error', (error) => {
+      log("Process error: " + error, 'error');
+      reject(error);
+    });
+    psProcess.on('close', (code) => {
+      log("Process closed with code: " + code);
+      if (code === 0) {
+        resolve({ success: true, command, message: outputData });
+      } else {
+        resolve({ success: false, command, message: outputData || `Process exited with code ${code}` });
+      }
+    });
   });
-  psProcess.on('close', (code) => {
-    log("Process closed with code: " + code);
-    event.reply(responseChannel, { success: code === 0, message: outputData || `Process exited with code ${code}` });
-  });
+}
+
+async function executeCommands(commands, event, responseChannel) {
+  const results = [];
+  for (const command of commands) {
+    try {
+      const result = await executeCommand(command);
+      results.push(result);
+    } catch (err) {
+      results.push({ success: false, command, message: err.toString() });
+    }
+  }
+  event.reply(responseChannel, results);
 }
 
 ipcMain.on('apply-system-tools', (event, selectedIds) => {
   log("Received apply-system-tools with data: " + JSON.stringify(selectedIds));
   const commands = systemToolsOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'system-tools-response');
+  executeCommands(commands, event, 'system-tools-response');
 });
 
 ipcMain.on('apply-system-tweaks', (event, selectedIds) => {
   log("Received apply-system-tweaks with data: " + JSON.stringify(selectedIds));
   const commands = systemTweaksOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'system-tweaks-response');
+  executeCommands(commands, event, 'system-tweaks-response');
 });
 
 ipcMain.on('apply-network-tools', (event, selectedIds) => {
   log("Received apply-network-tools with data: " + JSON.stringify(selectedIds));
   const commands = networkToolsOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'network-tools-response');
+  executeCommands(commands, event, 'network-tools-response');
 });
 
 ipcMain.on('apply-network-tweaks', (event, selectedIds) => {
   log("Received apply-network-tweaks with data: " + JSON.stringify(selectedIds));
   const commands = networkTweaksOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'network-tweaks-response');
+  executeCommands(commands, event, 'network-tweaks-response');
 });
 
 ipcMain.on('apply-power-optimizations', (event, selectedIds) => {
   log("Received apply-power-optimizations with data: " + JSON.stringify(selectedIds));
   const commands = powerOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'power-optimizations-response');
+  executeCommands(commands, event, 'power-optimizations-response');
 });
 
 ipcMain.on('execute-custom-command', (event, customCmd) => {

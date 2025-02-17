@@ -104,55 +104,79 @@ const maintenanceOptions = [
   { id: "maintenance9", command: 'Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase', comment: "Cleaning WinSxS folder", onerror: "Failed to clean WinSxS folder" }
 ];
 
-const wrapCommand = (opt) => opt.command;
+const wrapCommand = (opt) => {
+  return opt.command.replace(/&&/g, ';');
+};
 
-function executeCommands(command, event, responseChannel) {
-  log("Executing command: " + command);
-  let outputData = "";
-  const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
-  psProcess.stdout.on('data', (data) => { outputData += data.toString().trim() + "\n"; });
-  psProcess.stderr.on('data', (data) => { outputData += "ERROR: " + data.toString().trim() + "\n"; });
-  psProcess.on('error', (error) => {
-    log("Process error: " + error, 'error');
-    event.reply(responseChannel, { success: false, message: error.toString() });
+function executeCommand(command) {
+  return new Promise((resolve, reject) => {
+    log("Executing command: " + command);
+    let outputData = "";
+    const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
+    psProcess.stdout.on('data', (data) => {
+      const output = data.toString().trim();
+      outputData += output + "\n";
+      log(`Output: ${output}`);
+    });
+    psProcess.stderr.on('data', (data) => {
+      const errorOutput = data.toString().trim();
+      outputData += "ERROR: " + errorOutput + "\n";
+      log(`Error: ${errorOutput}`, 'error');
+    });
+    psProcess.on('error', (error) => {
+      log("Process error: " + error, 'error');
+      reject(error);
+    });
+    psProcess.on('close', (code) => {
+      log("Process closed with code: " + code);
+      if (code === 0) {
+        resolve({ success: true, command, message: outputData });
+      } else {
+        resolve({ success: false, command, message: outputData || `Process exited with code ${code}` });
+      }
+    });
   });
-  psProcess.on('close', (code) => {
-    log("Process closed with code: " + code);
-    event.reply(responseChannel, { success: code === 0, message: outputData || `Process exited with code ${code}` });
-  });
+}
+
+async function executeCommands(commands, event, responseChannel) {
+  const results = [];
+  for (const command of commands) {
+    try {
+      const result = await executeCommand(command);
+      results.push(result);
+    } catch (err) {
+      results.push({ success: false, command, message: err.toString() });
+    }
+  }
+  event.reply(responseChannel, results);
 }
 
 ipcMain.on('apply-privacy-optimizations', (event, selectedIds) => {
   log("Received apply-privacy-optimizations with data: " + JSON.stringify(selectedIds));
   const commands = privacyOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'privacy-optimizations-response');
+  executeCommands(commands, event, 'privacy-optimizations-response');
 });
 
 ipcMain.on('apply-gaming-optimizations', (event, selectedIds) => {
   log("Received apply-gaming-optimizations with data: " + JSON.stringify(selectedIds));
   const commands = gamingOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'gaming-optimizations-response');
+  executeCommands(commands, event, 'gaming-optimizations-response');
 });
 
 ipcMain.on('apply-updates-optimizations', (event, selectedIds) => {
   log("Received apply-updates-optimizations with data: " + JSON.stringify(selectedIds));
   const commands = updatesOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'updates-optimizations-response');
+  executeCommands(commands, event, 'updates-optimizations-response');
 });
 
 ipcMain.on('apply-services-optimizations', (event, selectedIds) => {
   log("Received apply-services-optimizations with data: " + JSON.stringify(selectedIds));
   const commands = servicesOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'services-optimizations-response');
+  executeCommands(commands, event, 'services-optimizations-response');
 });
 
 ipcMain.on('apply-maintenance-optimizations', (event, selectedIds) => {
   log("Received apply-maintenance-optimizations with data: " + JSON.stringify(selectedIds));
   const commands = maintenanceOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'maintenance-optimizations-response');
+  executeCommands(commands, event, 'maintenance-optimizations-response');
 });

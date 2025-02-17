@@ -387,6 +387,7 @@
           <li> <a href="#" data-tab="appsTab" class="active"><i class="fa fa-window-maximize"></i> Apps & Bloatware</a> </li>
           <li> <a href="#" data-tab="optimizationsTab"><i class="fa fa-sliders-h"></i> Optimizations</a> </li>
           <li> <a href="#" data-tab="commandsTab"><i class="fa fa-terminal"></i> System Tools</a> </li>
+          <li> <a href="#" data-tab="windowsFixesTab"><i class="fa fa-wrench"></i> Windows Fixes</a> </li>
           <li> <a href="#" data-tab="systemInfoTab"><i class="fa fa-desktop"></i> System Information</a> </li>
           <li> <a href="#" data-tab="aboutTab"><i class="fa fa-info-circle"></i> About</a> </li>
         </ul>
@@ -433,7 +434,7 @@
             </div>
           </div>
 
-          <div class="section" id="uselessBloatwareSection">
+          <div class="section" id="uselessBloatwareSection" style="margin-bottom: 0 !important">
             <div class="section-header">
               <h3>Useless Bloatware</h3>
               <div class="btn-group">
@@ -661,7 +662,7 @@
             </div>
           </div>
 
-          <div class="section" id="maintenanceSection">
+          <div class="section" id="maintenanceSection" style="margin-bottom: 0 !important">
             <div class="section-header">
               <h3>Maintenance Optimizations</h3>
               <div class="btn-group">
@@ -731,23 +732,22 @@
               <h4 class="sub-section-heading">Performance &amp; Services</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="adv_sys1" checked /> Enable Fast Boot</label>
-                <label><input type="checkbox" value="adv_sys2" checked /> Disable System Animations</label>
-                <label><input type="checkbox" value="adv_sys4" checked /> Disable Superfetch</label>
-                <label><input type="checkbox" value="adv_sys8" checked /> Optimize Registry Performance</label>
-                <label><input type="checkbox" value="adv_sys9" checked /> Enable Disk Write Caching</label>
+                <label><input type="checkbox" value="adv_sys3" checked /> Disable Superfetch</label>
+                <label><input type="checkbox" value="adv_sys7" checked /> Optimize Registry Performance</label>
+                <label><input type="checkbox" value="adv_sys8" checked /> Enable Disk Write Caching</label>
               </div>
 
               <h4 class="sub-section-heading">Search &amp; Security</h4>
               <div class="checkbox-group">
-                <label><input type="checkbox" value="adv_sys3" checked /> Disable Cortana Indexing</label>
-                <label><input type="checkbox" value="adv_sys5" checked /> Disable Windows Defender</label>
+                <label><input type="checkbox" value="adv_sys2" checked /> Disable Cortana Indexing</label>
+                <label><input type="checkbox" value="adv_sys4" checked /> Disable Windows Defender</label>
               </div>
 
               <h4 class="sub-section-heading">Notifications &amp; Error Reporting</h4>
               <div class="checkbox-group">
-                <label><input type="checkbox" value="adv_sys6" checked /> Disable Lock Screen Notifications</label>
-                <label><input type="checkbox" value="adv_sys7" checked /> Disable Windows Error Reporting</label>
-                <label><input type="checkbox" value="adv_sys10" checked /> Disable Background App Refresh</label>
+                <label><input type="checkbox" value="adv_sys5" checked /> Disable Lock Screen Notifications</label>
+                <label><input type="checkbox" value="adv_sys6" checked /> Disable Windows Error Reporting</label>
+                <label><input type="checkbox" value="adv_sys9" checked /> Disable Background App Refresh</label>
               </div>
 
               <button class="apply-btn" id="applySystemTweaksBtn"><i class="fa fa-check"></i> Apply Tweaks</button>
@@ -800,14 +800,13 @@
                 <label><input type="checkbox" value="adv_net2" checked /> Disable Network Throttling</label>
                 <label><input type="checkbox" value="adv_net3" checked /> Optimize TCP/IP Stack</label>
                 <label><input type="checkbox" value="adv_net6" checked /> Enable TCP Window Scaling</label>
-                <label><input type="checkbox" value="adv_net8" checked /> Optimize DNS Caching</label>
-                <label><input type="checkbox" value="adv_net9" checked /> Disable Auto-Tuning</label>
+                <label><input type="checkbox" value="adv_net8" checked /> Disable Auto-Tuning</label>
               </div>
 
               <h4 class="sub-section-heading">Protocols</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="adv_net7" checked /> Disable IPv6</label>
-                <label><input type="checkbox" value="adv_net10" checked /> Disable SMB1 Protocol</label>
+                <label><input type="checkbox" value="adv_net9" checked /> Disable SMB1 Protocol</label>
               </div>
 
               <button class="apply-btn" id="applyNetworkTweaksBtn"><i class="fa fa-check"></i> Apply Tweaks</button>
@@ -848,7 +847,7 @@
             </div>
           </div>
 
-          <div class="section" id="customCommandSection">
+          <div class="section" id="customCommandSection" style="margin-bottom: 0 !important">
             <div class="section-header">
               <h3>Custom Command</h3>
             </div>
@@ -859,12 +858,56 @@
           </div>
         </div>
 
+        <div class="tab" id="windowsFixesTab">
+          <div class="section" id="windowsFixesSection" style="margin-bottom: 0 !important">
+            <div class="section-header">
+              <h3>Windows Fixes</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <h4 class="sub-section-heading">Update &amp; Store</h4>
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="reset_windows_update" /> Windows Update Reset</label>
+                <label><input type="checkbox" value="reset_windows_store" /> Reset Windows Store</label>
+              </div>
+
+              <h4 class="sub-section-heading">Network &amp; Firewall</h4>
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="reset_network" /> Reset Network Settings</label>
+                <label><input type="checkbox" value="reset_firewall" /> Reset Windows Firewall</label>
+              </div>
+
+              <h4 class="sub-section-heading">System Repair &amp; Maintenance</h4>
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="rebuild_icon_cache" /> Rebuild Icon Cache</label>
+                <label><input type="checkbox" value="repair_boot_config" /> Repair Boot Configuration</label>
+                <label><input type="checkbox" value="cleanup_component_store" /> Cleanup Component Store</label>
+                <label><input type="checkbox" value="advanced_system_repair" /> Advanced System Repair</label>
+                <label><input type="checkbox" value="reset_windows_defender" /> Reset Windows Defender</label>
+                <label><input type="checkbox" value="reset_security_policy" /> Reset Security Policy</label>
+              </div>
+
+              <h4 class="sub-section-heading">Cleanup &amp; Optimization</h4>
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="clean_temp_files" /> Clean Temporary Files</label>
+                <label><input type="checkbox" value="clean_event_logs" /> Clean Event Logs</label>
+                <label><input type="checkbox" value="optimize_disk" /> Optimize Disk</label>
+              </div>
+
+              <button class="apply-btn" id="applyWindowsFixesBtn"> <i class="fa fa-check"></i> Apply Windows Fixes </button>
+            </div>
+          </div>
+        </div>
+
         <div class="tab" id="systemInfoTab"></div>
 
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <img src="logo.png" />
-            <p><strong>Version:</strong> 1.2-5</p>
+            <p><strong>Version:</strong> 1.3-6</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>
@@ -1052,15 +1095,14 @@
 
         // System Tweaks Options
         adv_sys1: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 1 /f',
-        adv_sys2: 'reg add "HKCU\\Control Panel\\Desktop" /v MinAnimate /t REG_SZ /d 0 /f',
-        adv_sys3: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f',
-        adv_sys4: 'sc.exe config "SysMain" start=disabled',
-        adv_sys5: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f',
-        adv_sys6: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreen /t REG_DWORD /d 1 /f',
-        adv_sys7: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f',
-        adv_sys8: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager" /v SessionManager /t REG_SZ /d "Optimized" /f',
-        adv_sys9: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0',
-        adv_sys10: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f',
+        adv_sys2: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f',
+        adv_sys3: 'sc.exe config "SysMain" start=disabled',
+        adv_sys4: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f',
+        adv_sys5: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreen /t REG_DWORD /d 1 /f',
+        adv_sys6: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f',
+        adv_sys7: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager" /v SessionManager /t REG_SZ /d "Optimized" /f',
+        adv_sys8: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0',
+        adv_sys9: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f',
 
         // Network Tweaks Options
         adv_net1: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\QoS\\Parameters" /v Enabled /t REG_DWORD /d 1 /f',
@@ -1070,9 +1112,23 @@
         adv_net5: 'netsh int tcp set global rss=disabled',
         adv_net6: 'netsh int tcp set global autotuninglevel=highlyrestricted',
         adv_net7: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\TCPIP6\\Parameters" /v DisabledComponents /t REG_DWORD /d 0xFF /f',
-        adv_net8: 'ipconfig /flushdns',
-        adv_net9: 'netsh int tcp set global autotuninglevel=disabled',
-        adv_net10: 'dism /online /norestart /disable-feature /featurename:SMB1Protocol'
+        adv_net8: 'netsh int tcp set global autotuninglevel=disabled',
+        adv_net9: 'dism /online /norestart /disable-feature /featurename:SMB1Protocol',
+
+        // Windows Fixes Mapping
+        reset_windows_update: 'net stop wuauserv && net stop cryptSvc && net stop bits && net stop msiserver && del /f /s /q %windir%\\SoftwareDistribution\\*.* > nul && rmdir /s /q %windir%\\SoftwareDistribution && md %windir%\\SoftwareDistribution && del /f /s /q %windir%\\System32\\catroot2\\*.* > nul && rmdir /s /q %windir%\\System32\\catroot2 && md %windir%\\System32\\catroot2 && regsvr32 /s wuaueng.dll && regsvr32 /s wuapi.dll && regsvr32 /s wups.dll && regsvr32 /s wups2.dll && regsvr32 /s wuwebv.dll && regsvr32 /s wuauserv.dll && regsvr32 /s wucltux.dll && regsvr32 /s wuaueng1.dll && netsh winsock reset && netsh winsock reset proxy && net start wuauserv && net start cryptSvc && net start bits && net start msiserver && sfc /scannow && DISM /Online /Cleanup-Image /RestoreHealth',
+        reset_windows_store: 'wsreset.exe && powershell -Command "Get-AppXPackage -AllUsers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register \'$($_.InstallLocation)\\AppXManifest.xml\'}"',
+        reset_network: 'netsh int ip reset && netsh winsock reset && ipconfig /flushdns',
+        reset_firewall: 'netsh advfirewall reset && netsh advfirewall set allprofiles state on',
+        rebuild_icon_cache: 'taskkill /IM explorer.exe /F && DEL /A /Q "%localappdata%\\IconCache.db" && start explorer.exe',
+        repair_boot_config: 'bootrec /fixmbr && bootrec /fixboot && bootrec /scanos && bootrec /rebuildbcd',
+        cleanup_component_store: 'Dism /Online /Cleanup-Image /StartComponentCleanup /ResetBase',
+        advanced_system_repair: 'sfc /scannow && Dism /Online /Cleanup-Image /RestoreHealth && Dism /Online /Cleanup-Image /StartComponentCleanup /ResetBase',
+        reset_windows_defender: 'sc stop WinDefend && sc start WinDefend',
+        clean_temp_files: 'del /q/f/s %TEMP%\\* && for /d %i in (%TEMP%\\*) do rd /s /q "%i"',
+        reset_security_policy: 'secedit /configure /db %windir%\\security\\database\\secedit.sdb /cfg %windir%\\inf\\defltbase.inf /areas SECURITYPOLICY',
+        clean_event_logs: 'for /f "tokens=*" %i in (\'wevtutil el\') do wevtutil cl "%i"',
+        optimize_disk: 'defrag C: /O /U /V'
       };
 
       document.querySelectorAll('.checkbox-group label').forEach(label => {

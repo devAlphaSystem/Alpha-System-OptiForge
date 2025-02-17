@@ -72,7 +72,8 @@ window.addEventListener('DOMContentLoaded', () => {
     'networkToolsSection',
     'maintenanceSection',
     'systemTweaksSection',
-    'networkTweaksSection'
+    'networkTweaksSection',
+    'windowsFixesSection'
   ];
   sectionsToSetup.forEach(setupSelectButtons);
 
@@ -633,6 +634,48 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  let windowsFixesNotificationId = null;
+  const applyWindowsFixesBtn = document.getElementById('applyWindowsFixesBtn');
+  applyWindowsFixesBtn.addEventListener('click', () => {
+    const checkboxes = document.querySelectorAll('#windowsFixesSection .section-content input[type="checkbox"]');
+    const selected = [];
+    checkboxes.forEach(chk => { if (chk.checked) selected.push(chk.value); });
+    console.info("Windows Fixes selected:", selected);
+
+    windowsFixesNotificationId = window.EasyNotificationInstance.createNotification({
+      title: 'Windows Fixes',
+      message: 'Executing Windows fixes...',
+      type: 'info',
+      displayTime: 0,
+      persistent: true,
+      hasProgressBar: false,
+      showTimerBar: false
+    });
+
+    ipcRenderer.send('apply-windows-fixes', selected);
+  });
+
+  ipcRenderer.on('windows-fixes-response', (event, arg) => {
+    console.info("Windows Fixes Response:", arg);
+    if (windowsFixesNotificationId) {
+      window.EasyNotificationInstance.dismissNotification(windowsFixesNotificationId);
+      windowsFixesNotificationId = null;
+    }
+    if (arg && arg.error) {
+      window.EasyNotificationInstance.createNotification({
+        title: 'Windows Fixes',
+        message: `Error: ${arg.error}`,
+        type: 'danger'
+      });
+    } else {
+      window.EasyNotificationInstance.createNotification({
+        title: 'Windows Fixes',
+        message: 'Windows fixes executed successfully.',
+        type: 'success'
+      });
+    }
+  });
+
   function formatBytes(bytes) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -745,6 +788,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const netSection = createCollapsibleSection('Network Interfaces', networkObj);
     const userSection = createCollapsibleSection('User Information', userInfo);
     const versSection = createCollapsibleSection('Process Versions', versionInfo);
+    versSection.style.marginBottom = '0';
 
     systemInfoTab.appendChild(generalSection);
     systemInfoTab.appendChild(cpuSection);
