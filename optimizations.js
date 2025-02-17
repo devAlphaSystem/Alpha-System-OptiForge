@@ -73,18 +73,6 @@ const updatesOptions = [
   { id: "updates7", command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Appx" /v AllowAutomaticAppArchiving /t REG_DWORD /d 0 /f', comment: "Disabling Auto archiving of unused apps", onerror: "Failed to disable auto archiving" }
 ];
 
-const powerOptions = [
-  { id: "power1", command: 'powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 99999999-9999-9999-9999-999999999999; powercfg /setactive 99999999-9999-9999-9999-999999999999', comment: "Applying Ultimate Power Plan (Max Performance)", onerror: "Failed to set Ultimate Power Plan" },
-  { id: "power2", command: 'powercfg /hibernate off; reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f', comment: "Disabling Hibernate, Sleep, and Fast Boot", onerror: "Failed to disable Hibernate/Sleep/Fast Boot" },
-  { id: "power3", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\54533251-82be-4824-96c1-47b60b740d00\\0cc5b647-c1df-4637-891a-dec35c318583" /v ValueMax /t REG_DWORD /d 100 /f', comment: "Unparking CPU Cores", onerror: "Failed to unpark CPU cores" },
-  { id: "power4", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling" /v PowerThrottlingOff /t REG_DWORD /d 1 /f', comment: "Disabling Power Throttling", onerror: "Failed to disable Power Throttling" },
-  { id: "power5", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ee12f906-d277-404b-b6da-e5fa1a576df5 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ee12f906-d277-404b-b6da-e5fa1a576df5 0', comment: "Disabling PCI Express Link State Power Management", onerror: "Failed to disable PCI Express power management" },
-  { id: "power6", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR 893dee8e-2bef-41e0-89c6-b55d0929964c 100; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR 893dee8e-2bef-41e0-89c6-b55d0929964c 100; powercfg /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR bc5038f7-23e0-4960-96da-33abaf5935ec 100; powercfg /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR bc5038f7-23e0-4960-96da-33abaf5935ec 100', comment: "Setting Processor State Always at 100%", onerror: "Failed to set processor state to 100%" },
-  { id: "power7", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\7516b95f-f776-4464-8c53-06167f40cc99\\aded5e82-b909-4619-9949-f5d71dac0bcb" /v ValueMax /t REG_DWORD /d 100 /f', comment: "Setting Display Brightness to 100%", onerror: "Failed to set display brightness to 100%" },
-  { id: "power8", command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\e73a048d-bf27-4f12-9731-8b2076e8891f\\637ea02f-bbcb-4015-8e2c-a1c7b9c0b546" /v ValueMax /t REG_DWORD /d 0 /f', comment: "Disabling Critical Battery Actions", onerror: "Failed to disable Critical Battery Actions" },
-  { id: "power9", command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_VIDEO 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0; powercfg /setdcvalueindex SCHEME_CURRENT SUB_VIDEO 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0', comment: "Disabling Adaptive Brightness", onerror: "Failed to disable Adaptive Brightness" }
-];
-
 const servicesOptions = [
   { id: "services1", command: 'sc.exe config "AJRouter" start=disabled', comment: "Disabling AllJoyn Router Service", onerror: "Failed to disable AllJoyn Router Service" },
   { id: "services2", command: 'sc.exe config "AppVClient" start=disabled', comment: "Disabling Application Virtualization Client", onerror: "Failed to disable Application Virtualization Client" },
@@ -102,6 +90,18 @@ const servicesOptions = [
   { id: "services14", command: 'sc.exe config "Spooler" start=disabled', comment: "Disabling Print Spooler Service", onerror: "Failed to disable Print Spooler Service" },
   { id: "services15", command: 'sc.exe config "bthserv" start=disabled', comment: "Disabling Bluetooth Support Service", onerror: "Failed to disable Bluetooth Support Service" },
   { id: "services16", command: 'sc.exe config "TermService" start=disabled', comment: "Disabling Remote Desktop Services", onerror: "Failed to disable Remote Desktop Services" }
+];
+
+const maintenanceOptions = [
+  { id: "maintenance1", command: 'Remove-Item -Path "$env:TEMP\\*" -Recurse -Force -ErrorAction SilentlyContinue', comment: "Cleaning temporary files", onerror: "Failed to clean temporary files" },
+  { id: "maintenance2", command: 'Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force -ErrorAction SilentlyContinue', comment: "Cleaning prefetch folder", onerror: "Failed to clean prefetch folder" },
+  { id: "maintenance3", command: 'Stop-Service wuauserv -ErrorAction SilentlyContinue; ' + 'Remove-Item -Path "C:\\Windows\\SoftwareDistribution\\Download\\*" -Recurse -Force -ErrorAction SilentlyContinue; ' + 'Start-Service wuauserv -ErrorAction SilentlyContinue', comment: "Clearing Windows Update cache", onerror: "Failed to clear Windows Update cache" },
+  { id: "maintenance4", command: 'reg add "HKCU\\Control Panel\\Desktop" /v MinAnimate /t REG_SZ /d 0 /f', comment: "Disabling window animations", onerror: "Failed to disable window animations" },
+  { id: "maintenance5", command: 'Clear-RecycleBin -DriveLetter C -Force', comment: "Clearing the Recycle Bin", onerror: "Failed to clear the Recycle Bin" },
+  { id: "maintenance6", command: 'wevtutil el | ForEach-Object { wevtutil cl "$_" }', comment: "Clearing all Windows Event Logs", onerror: "Failed to clear Windows Event Logs" },
+  { id: "maintenance7", command: 'Remove-Item -Path "C:\\Windows\\Logs\\CBS\\*" -Recurse -Force', comment: "Cleaning CBS Logs", onerror: "Failed to clean CBS logs" },
+  { id: "maintenance8", command: 'Remove-Item -Path "$env:LOCALAPPDATA\\Microsoft\\Windows\\Explorer\\thumbcache_*.db" -Force -ErrorAction SilentlyContinue', comment: "Clearing Thumbnail Cache", onerror: "Failed to clear Thumbnail Cache" },
+  { id: "maintenance9", command: 'Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase', comment: "Cleaning WinSxS folder", onerror: "Failed to clean WinSxS folder" }
 ];
 
 const wrapCommand = (opt) => opt.command;
@@ -143,16 +143,16 @@ ipcMain.on('apply-updates-optimizations', (event, selectedIds) => {
   executeCommands(psCommand, event, 'updates-optimizations-response');
 });
 
-ipcMain.on('apply-power-optimizations', (event, selectedIds) => {
-  log("Received apply-power-optimizations with data: " + JSON.stringify(selectedIds));
-  const commands = powerOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
-  const psCommand = commands.join(";");
-  executeCommands(psCommand, event, 'power-optimizations-response');
-});
-
 ipcMain.on('apply-services-optimizations', (event, selectedIds) => {
   log("Received apply-services-optimizations with data: " + JSON.stringify(selectedIds));
   const commands = servicesOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
   const psCommand = commands.join(";");
   executeCommands(psCommand, event, 'services-optimizations-response');
+});
+
+ipcMain.on('apply-maintenance-optimizations', (event, selectedIds) => {
+  log("Received apply-maintenance-optimizations with data: " + JSON.stringify(selectedIds));
+  const commands = maintenanceOptions.filter(opt => selectedIds.includes(opt.id)).map(wrapCommand);
+  const psCommand = commands.join(";");
+  executeCommands(psCommand, event, 'maintenance-optimizations-response');
 });

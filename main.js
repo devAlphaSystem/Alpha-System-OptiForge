@@ -43,10 +43,9 @@ app.whenReady().then(() => {
   log("App is ready");
   createWindow();
 
-  require('./optimizations');
   require('./apps');
+  require('./optimizations');
   require('./commands');
-  require('./advanced');
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

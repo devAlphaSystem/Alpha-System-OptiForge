@@ -71,8 +71,8 @@ window.addEventListener('DOMContentLoaded', () => {
     'systemToolsSection',
     'networkToolsSection',
     'maintenanceSection',
-    'advancedSystemTweaksSection',
-    'advancedNetworkTweaksSection'
+    'systemTweaksSection',
+    'networkTweaksSection'
   ];
   sectionsToSetup.forEach(setupSelectButtons);
 
@@ -545,18 +545,18 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  let advancedSystemStartNotificationId = null;
-  const applyAdvancedSystemTweaksBtn = document.getElementById('applyAdvancedSystemTweaksBtn');
-  if (applyAdvancedSystemTweaksBtn) {
-    applyAdvancedSystemTweaksBtn.addEventListener('click', () => {
-      const checkboxes = document.querySelectorAll('#advancedSystemTweaksSection .section-content input[type="checkbox"]');
+  let systemStartNotificationId = null;
+  const applySystemTweaksBtn = document.getElementById('applySystemTweaksBtn');
+  if (applySystemTweaksBtn) {
+    applySystemTweaksBtn.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('#systemTweaksSection .section-content input[type="checkbox"]');
       const selected = [];
       checkboxes.forEach(chk => { if (chk.checked) selected.push(chk.value); });
-      console.info("Advanced System Tweaks selected:", selected);
+      console.info("System Tweaks selected:", selected);
 
-      advancedSystemStartNotificationId = notifier.createNotification({
-        title: 'Advanced System Tweaks',
-        message: 'Executing advanced system tweaks...',
+      systemStartNotificationId = notifier.createNotification({
+        title: 'System Tweaks',
+        message: 'Executing system tweaks...',
         type: 'info',
         displayTime: 0,
         persistent: true,
@@ -564,43 +564,43 @@ window.addEventListener('DOMContentLoaded', () => {
         showTimerBar: false
       });
 
-      ipcRenderer.send('apply-advanced-system-tweaks', selected);
+      ipcRenderer.send('apply-system-tweaks', selected);
     });
   }
 
-  ipcRenderer.on('advanced-system-tweaks-response', (event, arg) => {
-    console.info("Advanced System Tweaks Response:", arg);
-    if (advancedSystemStartNotificationId) {
-      notifier.dismissNotification(advancedSystemStartNotificationId);
-      advancedSystemStartNotificationId = null;
+  ipcRenderer.on('system-tweaks-response', (event, arg) => {
+    console.info("System Tweaks Response:", arg);
+    if (systemStartNotificationId) {
+      notifier.dismissNotification(systemStartNotificationId);
+      systemStartNotificationId = null;
     }
     if (arg && arg.error) {
       notifier.createNotification({
-        title: 'Advanced System Tweaks',
+        title: 'System Tweaks',
         message: `Error: ${arg.error}`,
         type: 'danger'
       });
     } else {
       notifier.createNotification({
-        title: 'Advanced System Tweaks',
-        message: 'Advanced system tweaks completed successfully.',
+        title: 'System Tweaks',
+        message: 'System tweaks completed successfully.',
         type: 'success'
       });
     }
   });
 
-  let advancedNetworkStartNotificationId = null;
-  const applyAdvancedNetworkTweaksBtn = document.getElementById('applyAdvancedNetworkTweaksBtn');
-  if (applyAdvancedNetworkTweaksBtn) {
-    applyAdvancedNetworkTweaksBtn.addEventListener('click', () => {
-      const checkboxes = document.querySelectorAll('#advancedNetworkTweaksSection .section-content input[type="checkbox"]');
+  let networkStartNotificationId = null;
+  const applyNetworkTweaksBtn = document.getElementById('applyNetworkTweaksBtn');
+  if (applyNetworkTweaksBtn) {
+    applyNetworkTweaksBtn.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('#networkTweaksSection .section-content input[type="checkbox"]');
       const selected = [];
       checkboxes.forEach(chk => { if (chk.checked) selected.push(chk.value); });
-      console.info("Advanced Network Tweaks selected:", selected);
+      console.info("Network Tweaks selected:", selected);
 
-      advancedNetworkStartNotificationId = notifier.createNotification({
-        title: 'Advanced Network Tweaks',
-        message: 'Executing advanced network tweaks...',
+      networkStartNotificationId = notifier.createNotification({
+        title: 'Network Tweaks',
+        message: 'Executing network tweaks...',
         type: 'info',
         displayTime: 0,
         persistent: true,
@@ -608,26 +608,26 @@ window.addEventListener('DOMContentLoaded', () => {
         showTimerBar: false
       });
 
-      ipcRenderer.send('apply-advanced-network-tweaks', selected);
+      ipcRenderer.send('apply-network-tweaks', selected);
     });
   }
 
-  ipcRenderer.on('advanced-network-tweaks-response', (event, arg) => {
-    console.info("Advanced Network Tweaks Response:", arg);
-    if (advancedNetworkStartNotificationId) {
-      notifier.dismissNotification(advancedNetworkStartNotificationId);
-      advancedNetworkStartNotificationId = null;
+  ipcRenderer.on('network-tweaks-response', (event, arg) => {
+    console.info("Network Tweaks Response:", arg);
+    if (networkStartNotificationId) {
+      notifier.dismissNotification(networkStartNotificationId);
+      networkStartNotificationId = null;
     }
     if (arg && arg.error) {
       notifier.createNotification({
-        title: 'Advanced Network Tweaks',
+        title: 'Network Tweaks',
         message: `Error: ${arg.error}`,
         type: 'danger'
       });
     } else {
       notifier.createNotification({
-        title: 'Advanced Network Tweaks',
-        message: 'Advanced network tweaks completed successfully.',
+        title: 'Network Tweaks',
+        message: 'Network tweaks completed successfully.',
         type: 'success'
       });
     }
@@ -701,8 +701,7 @@ window.addEventListener('DOMContentLoaded', () => {
       'OS Release': os.release(),
       'Architecture': os.arch(),
       'Hostname': os.hostname(),
-      'Uptime': formatUptime(os.uptime()),
-      'Temporary Directory': os.tmpdir()
+      'Uptime': formatUptime(os.uptime())
     };
 
     const cpus = os.cpus();
@@ -711,11 +710,6 @@ window.addEventListener('DOMContentLoaded', () => {
       cpuInfo['Model'] = cpus[0].model;
       cpuInfo['Speed (MHz)'] = cpus[0].speed;
       cpuInfo['Number of Cores'] = cpus.length;
-      const times = cpus[0].times;
-      cpuInfo['User Time'] = `${times.user} ms`;
-      cpuInfo['System Time'] = `${times.sys} ms`;
-      cpuInfo['Idle Time'] = `${times.idle} ms`;
-      cpuInfo['IRQ Time'] = `${times.irq} ms`;
     } else {
       cpuInfo['Info'] = 'No CPU data available.';
     }
@@ -736,6 +730,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const userInfo = {
       'Username': user.username,
       'Home Directory': user.homedir,
+      'Temporary Directory': os.tmpdir(),
       'Shell': user.shell || 'N/A'
     };
 
