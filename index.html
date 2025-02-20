@@ -343,7 +343,7 @@
 
       .sub-section-heading {
         font-size: 15px;
-        margin: 8px 0 16px;
+        margin: 48px 0 16px;
         border-bottom: 1px solid var(--card-border);
         padding: 0 8px 8px;
       }
@@ -386,10 +386,56 @@
         margin: 0 16px 0 8px;
         vertical-align: middle;
       }
+
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        backdrop-filter: blur(5px);
+        background: rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 6px solid #f3f3f3;
+        border-top: 6px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-text {
+        margin-top: 20px;
+        font-size: 18px;
+        color: #fff;
+        text-align: center;
+      }
     </style>
   </head>
 
   <body>
+    <div id="loadingSpinner" class="loading-overlay">
+      <div class="spinner"></div>
+      <div class="loading-text">Loading all essential components to get your system performing at its peak. <br> Please hold on while we work our magic!</div>
+    </div>
+
     <div class="container">
       <div class="sidebar">
         <ul class="nav">
@@ -413,7 +459,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Core Windows Apps</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Core Windows Apps</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="apps_calc" checked /> Calculator</label>
                 <label><input type="checkbox" value="apps_mstore" checked /> Microsoft Store</label>
@@ -452,7 +498,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Productivity &amp; Communication</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Productivity &amp; Communication</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="apps_ub_mail" checked /> Mail &amp; Calendar</label>
                 <label><input type="checkbox" value="apps_ub_skype" checked /> Skype</label>
@@ -518,7 +564,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Activity &amp; Telemetry</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Activity &amp; Telemetry</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="privacy1" checked /> Disable Activity History</label>
                 <label><input type="checkbox" value="privacy3" checked /> Disable Telemetry</label>
@@ -580,7 +626,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Game Mode</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Game Mode</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="gaming1" checked /> Enable Game Mode</label>
               </div>
@@ -623,7 +669,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Windows Update Management</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Windows Update Management</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="updates1" checked /> Disable Auto Updates</label>
                 <label><input type="checkbox" value="updates2" checked /> Delays Feature Updates</label>
@@ -647,7 +693,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Disable Unused Services</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Disable Unused Services</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="services1" checked /> Disable AllJoyn</label>
                 <label><input type="checkbox" value="services2" checked /> Disable App Virtualization</label>
@@ -680,7 +726,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Cleanup &amp; Visuals</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Cleanup &amp; Visuals</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="maintenance1" checked /> Clear Temporary Files</label>
                 <label><input type="checkbox" value="maintenance2" checked /> Clear Prefetch Folder</label>
@@ -712,7 +758,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Maintenance &amp; Repair</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Maintenance &amp; Repair</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="sys_disk_cleanup" checked /> Run Disk Cleanup</label>
                 <label><input type="checkbox" value="sys_sfc" checked /> Run System File Checker (SFC /scannow)</label>
@@ -738,7 +784,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Performance &amp; Services</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Performance &amp; Services</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="adv_sys1" checked /> Enable Fast Boot</label>
                 <label><input type="checkbox" value="adv_sys3" checked /> Disable Superfetch</label>
@@ -772,7 +818,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Network Resets</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Network Resets</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="net_flush_dns" checked /> Flush DNS Cache</label>
                 <label><input type="checkbox" value="net_reset_adapters" checked /> Reset Network Adapters</label>
@@ -797,7 +843,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">QoS &amp; Offloads</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">QoS &amp; Offloads</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="adv_net1" checked /> Enable QoS Packet Scheduler</label>
                 <label><input type="checkbox" value="adv_net4" checked /> Disable Chimney Offload</label>
@@ -831,7 +877,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Power Plan &amp; Hibernate</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Power Plan &amp; Hibernate</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="power1" checked /> Applies Ultimate Power Plan</label>
                 <label><input type="checkbox" value="power2" checked /> Disable Hibernate/Sleep</label>
@@ -861,7 +907,7 @@
               <h3>Custom Command</h3>
             </div>
             <div class="section-content">
-              <input type="text" id="customCommandInput" placeholder="Enter your command here..." style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color)" />
+              <input type="text" id="customCommandInput" placeholder="Enter your command here..." style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color);" />
               <button class="apply-btn" id="executeCustomCommandBtn" style="margin-top: 10px"><i class="fa fa-terminal"></i> Run Command</button>
             </div>
           </div>
@@ -877,7 +923,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading">Update &amp; Store</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Update &amp; Store</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="reset_windows_update" /> Windows Update Reset</label>
                 <label><input type="checkbox" value="reset_windows_store" /> Reset Windows Store</label>
@@ -916,7 +962,7 @@
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <img src="logo.png" />
-            <p><strong>Version:</strong> 1.3-7</p>
+            <p><strong>Version:</strong> 1.4-8</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>
@@ -1126,7 +1172,7 @@
         optimize_disk: 'defrag C: /O /U /V'
       };
 
-      document.querySelectorAll('.checkbox-group label').forEach(label => {
+      document.querySelectorAll('.checkbox-group label').forEach((label) => {
         const checkbox = label.querySelector('input[type="checkbox"]');
         if (checkbox && commandMapping[checkbox.value]) {
           const infoIcon = document.createElement('i');
@@ -1139,8 +1185,8 @@
       const modal = document.getElementById('commandModal');
       const commandCodeElem = document.getElementById('commandCode');
 
-      document.querySelectorAll('.info-icon').forEach(icon => {
-        icon.addEventListener('click', event => {
+      document.querySelectorAll('.info-icon').forEach((icon) => {
+        icon.addEventListener('click', (event) => {
           event.preventDefault();
           event.stopPropagation();
 
@@ -1155,7 +1201,7 @@
         modal.style.display = 'none';
       });
 
-      window.addEventListener('click', event => {
+      window.addEventListener('click', (event) => {
         if (event.target === modal) {
           modal.style.display = 'none';
         }
