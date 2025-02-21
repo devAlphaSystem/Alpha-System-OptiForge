@@ -123,6 +123,8 @@ async function initializeStatusChecks() {
 window.addEventListener('DOMContentLoaded', () => {
   const notifier = window.EasyNotificationInstance;
 
+  notifier.clearAllNotifications();
+
   initializeStatusChecks();
 
   const navItems = document.querySelectorAll('.nav a');

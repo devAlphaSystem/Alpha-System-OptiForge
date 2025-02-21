@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, dialog, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 
 Menu.setApplicationMenu(null);
@@ -17,6 +17,22 @@ function log(message, level = 'info') {
       break;
     default:
       console.log(`[${timestamp}] ${message}`);
+  }
+}
+
+async function checkAdminPrivileges() {
+  try {
+    const { default: isElevated } = await import('is-elevated');
+    const elevated = await isElevated();
+    if (!elevated) {
+      log('Application is not running with administrator privileges', 'warn');
+      dialog.showErrorBox('Admin Rights Required', 'This application requires administrator privileges to run. Please restart the application as an administrator.');
+      app.quit();
+    } else {
+      log('Application is running with administrator privileges', 'info');
+    }
+  } catch (error) {
+    log(`Error checking admin privileges: ${error.message}`, 'error');
   }
 }
 
@@ -39,8 +55,11 @@ function createWindow() {
   win.loadFile('index.html');
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   log("App is ready");
+
+  await checkAdminPrivileges();
+
   createWindow();
 
   require('./apps');

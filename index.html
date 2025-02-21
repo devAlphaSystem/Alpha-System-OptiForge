@@ -790,6 +790,7 @@
                 <label><input type="checkbox" value="adv_sys3" checked /> Disable Superfetch</label>
                 <label><input type="checkbox" value="adv_sys7" checked /> Optimize Registry Performance</label>
                 <label><input type="checkbox" value="adv_sys8" checked /> Enable Disk Write Caching</label>
+                <label><input type="checkbox" value="adv_sys10" checked /> Enable System Verbose</label>
               </div>
 
               <h4 class="sub-section-heading">Search &amp; Security</h4>
@@ -962,7 +963,7 @@
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <img src="logo.png" />
-            <p><strong>Version:</strong> 1.4-8</p>
+            <p><strong>Version:</strong> 1.4-9</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>
@@ -1146,6 +1147,7 @@
         adv_sys7: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager" /v SessionManager /t REG_SZ /d "Optimized" /f',
         adv_sys8: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0',
         adv_sys9: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f',
+        adv_sys10: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v DisableStatusMessages /t REG_DWORD /d 0 /f; reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v VerboseStatus /t REG_DWORD /d 1 /f',
 
         adv_net1: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\QoS\\Parameters" /v Enabled /t REG_DWORD /d 1 /f',
         adv_net2: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 0 /f',

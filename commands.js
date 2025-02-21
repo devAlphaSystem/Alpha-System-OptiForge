@@ -48,40 +48,40 @@ const systemTweaksOptions = [
   },
   {
     id: 'adv_sys2',
-    command: 'reg add "HKCU\\Control Panel\\Desktop" /v MinAnimate /t REG_SZ /d 0 /f'
-  },
-  {
-    id: 'adv_sys3',
     command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f'
   },
   {
-    id: 'adv_sys4',
+    id: 'adv_sys3',
     command: 'sc.exe config "SysMain" start=disabled'
   },
   {
-    id: 'adv_sys5',
+    id: 'adv_sys4',
     command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f'
   },
   {
-    id: 'adv_sys6',
+    id: 'adv_sys5',
     command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreen /t REG_DWORD /d 1 /f'
   },
   {
-    id: 'adv_sys7',
+    id: 'adv_sys6',
     command: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f'
   },
   {
-    id: 'adv_sys8',
+    id: 'adv_sys7',
     command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager" /v SessionManager /t REG_SZ /d "Optimized" /f'
   },
   {
-    id: 'adv_sys9',
+    id: 'adv_sys8',
     command: 'powercfg /setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0'
   },
   {
-    id: 'adv_sys10',
+    id: 'adv_sys9',
     command: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f'
-  }
+  },
+  {
+    id: 'adv_sys10',
+    command: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v DisableStatusMessages /t REG_DWORD /d 0 /f; reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v VerboseStatus /t REG_DWORD /d 1 /f'
+  },
 ];
 
 const networkToolsOptions = [
@@ -134,14 +134,10 @@ const networkTweaksOptions = [
   },
   {
     id: 'adv_net8',
-    command: 'ipconfig /flushdns'
-  },
-  {
-    id: 'adv_net9',
     command: 'netsh int tcp set global autotuninglevel=disabled'
   },
   {
-    id: 'adv_net10',
+    id: 'adv_net9',
     command: 'dism /online /norestart /disable-feature /featurename:SMB1Protocol'
   }
 ];

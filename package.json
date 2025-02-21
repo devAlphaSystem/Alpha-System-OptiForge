@@ -1,6 +1,6 @@
 {
   "name": "Alpha_System_OptiForge",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "description": "Alpha System OptiForge",
   "main": "main.js",
   "scripts": {
@@ -24,6 +24,7 @@
     }
   },
   "dependencies": {
+    "is-elevated": "^4.0.0",
     "systeminformation": "^5.25.11"
   }
 }
