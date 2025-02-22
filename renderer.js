@@ -1,5 +1,6 @@
 const { log } = require('console');
 const { ipcRenderer } = require('electron');
+const { execSync } = require('child_process');
 const os = require('os');
 
 async function updateRemoveAppsStatus(labelEl, appId) {
@@ -47,25 +48,87 @@ async function updateBloatwareStatus(labelEl, appId) {
 }
 
 async function updateOptimizationStatus(labelEl, category, optionId) {
-  let circle = labelEl.querySelector('.status-circle');
-  if (!circle) {
-    circle = document.createElement('span');
-    circle.className = 'status-circle';
-    const checkbox = labelEl.querySelector('input[type="checkbox"]');
-    if (checkbox) {
-      checkbox.insertAdjacentElement('afterend', circle);
-    } else {
-      labelEl.insertBefore(circle, labelEl.firstChild);
-    }
-  }
-
   try {
     const state = await ipcRenderer.invoke('check-optimization-state', category, optionId);
     log(labelEl.innerText + ": " + state);
+    if (state === null) {
+      const existingCircle = labelEl.querySelector('.status-circle');
+      if (existingCircle) {
+        existingCircle.remove();
+      }
+      return;
+    }
+
+    let circle = labelEl.querySelector('.status-circle');
+    if (!circle) {
+      circle = document.createElement('span');
+      circle.className = 'status-circle';
+      const checkbox = labelEl.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.insertAdjacentElement('afterend', circle);
+      } else {
+        labelEl.insertBefore(circle, labelEl.firstChild);
+      }
+    }
+
     circle.style.backgroundColor = state ? 'green' : 'red';
   } catch (error) {
-    circle.style.backgroundColor = 'gray';
+    const circle = labelEl.querySelector('.status-circle');
+    if (circle) {
+      circle.style.backgroundColor = 'gray';
+    }
   }
+}
+
+async function updateFixesStatus(labelEl, category, optionId) {
+  try {
+    const state = await ipcRenderer.invoke('check-fixes-state', category, optionId);
+    log(labelEl.innerText + ": " + state);
+    if (state === null) {
+      const existingCircle = labelEl.querySelector('.status-circle');
+      if (existingCircle) {
+        existingCircle.remove();
+      }
+      return;
+    }
+
+    let circle = labelEl.querySelector('.status-circle');
+    if (!circle) {
+      circle = document.createElement('span');
+      circle.className = 'status-circle';
+      const checkbox = labelEl.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.insertAdjacentElement('afterend', circle);
+      } else {
+        labelEl.insertBefore(circle, labelEl.firstChild);
+      }
+    }
+
+    circle.style.backgroundColor = state ? 'green' : 'red';
+  } catch (error) {
+    const circle = labelEl.querySelector('.status-circle');
+    if (circle) {
+      circle.style.backgroundColor = 'gray';
+    }
+  }
+}
+
+function updateHealthDisplay(healthData) {
+  const scoreElem = document.getElementById('healthScore');
+  const statusElem = document.getElementById('healthStatus');
+  const detailsElem = document.getElementById('healthDetails');
+
+  scoreElem.textContent = healthData.score;
+  statusElem.textContent = healthData.status;
+  statusElem.style.color = healthData.statusColor;
+
+  detailsElem.innerHTML = healthData.checks.map(check => `
+    <div style="margin: 10px 0; padding: 10px;">
+      <span style="color: ${check.passed ? 'green' : 'red'}; margin-right: 10px;">${check.passed ? '<i class="fas fa-check"></i>' : '<i class="far fa-times-circle"></i>'}</span>
+      ${check.name.split(' ').map(word => word.toUpperCase()).join(' ')}
+      ${check.message ? `<div style="color: #888; font-size: 0.9em; margin-top: 5px;">${check.message}</div>` : ''}
+    </div>
+  `).join('');
 }
 
 function checkRemoveAppsStatus() {
@@ -93,9 +156,9 @@ function checkBloatwareStatus() {
 }
 
 function checkOptimizationStatus(sectionId, category) {
-  const labels = document.querySelectorAll(`#${sectionId} .checkbox-group label`);
+  const optimizationLabels = document.querySelectorAll(`#${sectionId} .checkbox-group label`);
   const promises = [];
-  labels.forEach(label => {
+  optimizationLabels.forEach(label => {
     const checkbox = label.querySelector('input[type="checkbox"]');
     if (checkbox && checkbox.value) {
       promises.push(updateOptimizationStatus(label, category, checkbox.value));
@@ -104,21 +167,106 @@ function checkOptimizationStatus(sectionId, category) {
   return Promise.all(promises);
 }
 
-async function initializeStatusChecks() {
-  await Promise.all([
-    checkRemoveAppsStatus(),
-    checkBloatwareStatus(),
-    checkOptimizationStatus('privacySection', 'privacy'),
-    checkOptimizationStatus('gamingSection', 'gaming'),
-    checkOptimizationStatus('updatesSection', 'updates'),
-    checkOptimizationStatus('servicesSection', 'services'),
-  ]);
+function checkFixesStatus(sectionId, category) {
+  const fixesLabels = document.querySelectorAll(`#${sectionId} .checkbox-group label`);
+  const promises = [];
+  fixesLabels.forEach((label) => {
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    if (checkbox && checkbox.value) {
+      promises.push(updateFixesStatus(label, category, checkbox.value));
+    }
+  });
+  return Promise.all(promises);
+}
 
+async function checkSystemHealth() {
+  try {
+    const healthData = await ipcRenderer.invoke('check-system-health');
+    updateHealthDisplay(healthData);
+  } catch (error) {
+    console.error('Health check failed:', error);
+  }
+}
+
+function updateLoadingText(message) {
+  const loadingText = document.querySelector('.verbose-text');
+  if (loadingText) {
+    loadingText.textContent = message;
+  }
+}
+
+async function initializeStatusChecks() {
+  updateLoadingText('Checking NuGet package provider...');
+  try {
+    const nugetCheck = execSync(`powershell -ExecutionPolicy Bypass -Command "Get-PackageProvider -Name NuGet -ListAvailable | Where-Object { $_.Version -ge [version]'2.8.5.201' } | Select-Object -First 1"`).toString();
+    if (!nugetCheck.trim()) {
+      updateLoadingText('Installing NuGet package provider...');
+      log('Installing NuGet package provider...')
+      execSync('powershell -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope CurrentUser"');
+    } else {
+      log('NuGet package provider already installed.');
+      updateLoadingText('NuGet package provider already installed.');
+    }
+  } catch (error) {
+    console.error('Error checking/installing NuGet:', error);
+  }
+
+  updateLoadingText('Checking PSWindowsUpdate module...');
+  try {
+    const pswuCheck = execSync('powershell -ExecutionPolicy Bypass -Command "Get-Module -ListAvailable PSWindowsUpdate | Select-Object -First 1"').toString();
+    if (!pswuCheck.trim()) {
+      updateLoadingText('Installing PSWindowsUpdate module...');
+      log('Installing PSWindowsUpdate module...')
+      execSync('powershell -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-Module PSWindowsUpdate -Force -Scope CurrentUser -SkipPublisherCheck -AllowClobber"');
+    } else {
+      log('PSWindowsUpdate module already installed.');
+      updateLoadingText('PSWindowsUpdate module already installed.');
+    }
+  } catch (error) {
+    console.error('Error checking/installing PSWindowsUpdate:', error);
+  }
+
+  updateLoadingText('Checking remove apps status...');
+  await checkRemoveAppsStatus();
+
+  updateLoadingText('Checking bloatware status...');
+  await checkBloatwareStatus();
+
+  updateLoadingText('Checking privacy optimizations...');
+  await checkOptimizationStatus('privacySection', 'privacy');
+
+  updateLoadingText('Checking gaming optimizations...');
+  await checkOptimizationStatus('gamingSection', 'gaming');
+
+  updateLoadingText('Checking update optimizations...');
+  await checkOptimizationStatus('updatesSection', 'updates');
+
+  updateLoadingText('Checking services optimizations...');
+  await checkOptimizationStatus('servicesSection', 'services');
+
+  updateLoadingText('Checking system tweaks...');
+  await checkFixesStatus('systemTweaksSection', 'systemTweaks');
+
+  updateLoadingText('Checking network tweaks...');
+  await checkFixesStatus('networkTweaksSection', 'networkTweaks');
+
+  updateLoadingText('Checking system health...');
+  await checkSystemHealth();
+
+  updateLoadingText('All checks completed!');
   const spinner = document.getElementById('loadingSpinner');
   if (spinner) {
     spinner.style.display = 'none';
   }
 }
+
+ipcRenderer.on('health-check-update', (event, healthData) => {
+  updateHealthDisplay(healthData);
+});
+
+ipcRenderer.on('health-check-progress', (event, message) => {
+  updateLoadingText(message);
+});
 
 window.addEventListener('DOMContentLoaded', () => {
   const notifier = window.EasyNotificationInstance;
@@ -199,7 +347,8 @@ window.addEventListener('DOMContentLoaded', () => {
     'maintenanceSection',
     'systemTweaksSection',
     'networkTweaksSection',
-    'windowsFixesSection'
+    'windowsFixesSection',
+    'healthTab'
   ];
   sectionsToSetup.forEach(setupSelectButtons);
 
@@ -835,6 +984,11 @@ window.addEventListener('DOMContentLoaded', () => {
     content.classList.add('section-content');
     content.style.display = 'none';
 
+    if (title == 'General Information') {
+      content.style.display = 'block';
+      content.classList.add('active');
+    }
+
     const list = document.createElement('ul');
     list.style.listStyleType = 'none';
     list.style.padding = '0';
@@ -903,24 +1057,17 @@ window.addEventListener('DOMContentLoaded', () => {
       Shell: user.shell || 'N/A'
     };
 
-    const versionInfo = {};
-    for (const key in process.versions) {
-      versionInfo[key] = process.versions[key];
-    }
-
     const generalSection = createCollapsibleSection('General Information', generalInfo);
     const cpuSection = createCollapsibleSection('CPU Information', cpuInfo);
     const memSection = createCollapsibleSection('Memory Information', memoryInfo);
     const netSection = createCollapsibleSection('Network Interfaces', networkObj);
     const userSection = createCollapsibleSection('User Information', userInfo);
-    const versSection = createCollapsibleSection('Process Versions', versionInfo);
-    versSection.style.marginBottom = '0';
+    userSection.style.marginBottom = '0';
 
     systemInfoTab.appendChild(generalSection);
     systemInfoTab.appendChild(cpuSection);
     systemInfoTab.appendChild(memSection);
     systemInfoTab.appendChild(netSection);
     systemInfoTab.appendChild(userSection);
-    systemInfoTab.appendChild(versSection);
   }
 });

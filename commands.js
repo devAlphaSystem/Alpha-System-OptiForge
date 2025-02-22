@@ -44,31 +44,38 @@ const systemToolsOptions = [
 const systemTweaksOptions = [
   {
     id: 'adv_sys1',
-    command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f'
   },
   {
     id: 'adv_sys2',
-    command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Search" /v AllowCortana /t REG_DWORD /d 1 /f'
   },
   {
     id: 'adv_sys3',
-    command: 'sc.exe config "SysMain" start=disabled'
+    commandOn: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\SysMain" /v Start /t REG_DWORD /d 4 /f',
+    commandOff: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\SysMain" /v Start /t REG_DWORD /d 2 /f'
   },
   {
     id: 'adv_sys4',
-    command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 0 /f'
   },
   {
     id: 'adv_sys5',
-    command: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreen /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreen /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreen /t REG_DWORD /d 0 /f'
   },
   {
     id: 'adv_sys6',
-    command: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting" /v Disabled /t REG_DWORD /d 0 /f'
   },
   {
     id: 'adv_sys7',
-    command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager" /v SessionManager /t REG_SZ /d "Optimized" /f'
+    commandOn: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager" /v SessionManager /t REG_SZ /d "Optimized" /f',
+    commandOff: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager" /v SessionManager /t REG_SZ /d "Standard" /f'
   },
   {
     id: 'adv_sys8',
@@ -76,11 +83,13 @@ const systemTweaksOptions = [
   },
   {
     id: 'adv_sys9',
-    command: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 0 /f'
   },
   {
     id: 'adv_sys10',
-    command: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v DisableStatusMessages /t REG_DWORD /d 0 /f; reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v VerboseStatus /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v DisableStatusMessages /t REG_DWORD /d 0 /f; reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v VerboseStatus /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v DisableStatusMessages /t REG_DWORD /d 1 /f; reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /v VerboseStatus /t REG_DWORD /d 0 /f'
   },
 ];
 
@@ -106,11 +115,13 @@ const networkToolsOptions = [
 const networkTweaksOptions = [
   {
     id: 'adv_net1',
-    command: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\QoS\\Parameters" /v Enabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\QoS\\Parameters" /v Enabled /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\QoS\\Parameters" /v Enabled /t REG_DWORD /d 0 /f'
   },
   {
     id: 'adv_net2',
-    command: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 1 /f'
   },
   {
     id: 'adv_net3',
@@ -187,34 +198,30 @@ function wrapCommand(cmd) {
 
 function executeCommand(command) {
   return new Promise((resolve) => {
-    log('Executing command: ' + command);
+    log(`Executing command: ${command}`);
     let outputData = '';
     const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
 
     psProcess.stdout.on('data', (data) => {
       const output = data.toString().trim();
-      outputData += output + '\n';
+      outputData += `${output}\n`;
       log(`Output: ${output}`);
     });
 
     psProcess.stderr.on('data', (data) => {
       const errorOutput = data.toString().trim();
-      outputData += 'ERROR: ' + errorOutput + '\n';
+      outputData += `ERROR: ${errorOutput}\n`;
       log(`Error: ${errorOutput}`, 'error');
     });
 
     psProcess.on('error', (error) => {
-      log('Process error: ' + error, 'error');
+      log(`Process error: ${error}`, 'error');
       resolve({ success: false, command, message: error.toString() });
     });
 
     psProcess.on('close', (code) => {
-      log('Process closed with code: ' + code);
-      if (code === 0) {
-        resolve({ success: true, command, message: outputData });
-      } else {
-        resolve({ success: false, command, message: outputData || `Process exited with code ${code}` });
-      }
+      log(`Process closed with code: ${code}`);
+      resolve({ success: code === 0, command, message: outputData || `Process exited with code ${code}` });
     });
   });
 }
@@ -233,37 +240,120 @@ async function executeCommands(commands, event, responseChannel) {
 }
 
 ipcMain.on('apply-system-tools', (event, selectedIds) => {
-  log('Received apply-system-tools with data: ' + JSON.stringify(selectedIds));
-  const commands = systemToolsOptions.filter((opt) => selectedIds.includes(opt.id)).map((opt) => wrapCommand(opt.command));
+  log(`Received apply-system-tools with data: ${JSON.stringify(selectedIds)}`);
+  const commands = systemToolsOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'system-tools-response');
 });
 
 ipcMain.on('apply-system-tweaks', (event, selectedIds) => {
-  log('Received apply-system-tweaks with data: ' + JSON.stringify(selectedIds));
-  const commands = systemTweaksOptions.filter((opt) => selectedIds.includes(opt.id)).map((opt) => wrapCommand(opt.command));
+  log(`Received apply-system-tweaks with data: ${JSON.stringify(selectedIds)}`);
+  const commands = systemTweaksOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'system-tweaks-response');
 });
 
 ipcMain.on('apply-network-tools', (event, selectedIds) => {
-  log('Received apply-network-tools with data: ' + JSON.stringify(selectedIds));
-  const commands = networkToolsOptions.filter((opt) => selectedIds.includes(opt.id)).map((opt) => wrapCommand(opt.command));
+  log(`Received apply-network-tools with data: ${JSON.stringify(selectedIds)}`);
+  const commands = networkToolsOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'network-tools-response');
 });
 
 ipcMain.on('apply-network-tweaks', (event, selectedIds) => {
-  log('Received apply-network-tweaks with data: ' + JSON.stringify(selectedIds));
-  const commands = networkTweaksOptions.filter((opt) => selectedIds.includes(opt.id)).map((opt) => wrapCommand(opt.command));
+  log(`Received apply-network-tweaks with data: ${JSON.stringify(selectedIds)}`);
+  const commands = networkTweaksOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'network-tweaks-response');
 });
 
 ipcMain.on('apply-power-optimizations', (event, selectedIds) => {
-  log('Received apply-power-optimizations with data: ' + JSON.stringify(selectedIds));
-  const commands = powerOptions.filter((opt) => selectedIds.includes(opt.id)).map((opt) => wrapCommand(opt.command));
+  log(`Received apply-power-optimizations with data: ${JSON.stringify(selectedIds)}`);
+  const commands = powerOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'power-optimizations-response');
 });
 
 ipcMain.on('execute-custom-command', (event, customCmd) => {
-  log('Received custom command: ' + customCmd);
-  const commands = [wrapCommand(customCmd)];
-  executeCommands(commands, event, 'custom-command-response');
+  log(`Received custom command: ${customCmd}`);
+  executeCommands([wrapCommand(customCmd)], event, 'custom-command-response');
+});
+
+ipcMain.handle('check-fixes-state', async (event, category, optionId) => {
+  let option;
+  if (category === 'systemTweaks') {
+    option = systemTweaksOptions.find(opt => opt.id === optionId);
+  } else if (category === 'networkTweaks') {
+    option = networkTweaksOptions.find(opt => opt.id === optionId);
+  }
+  if (!option || option.command) return null;
+
+  if (option.commandOn.startsWith('reg add')) {
+    const regex = /reg add "([^"]+)"\s+\/v\s+(\S+)\s+\/t\s+REG_DWORD\s+\/d\s+(\d+)/i;
+    const match = option.commandOn.match(regex);
+    if (!match) return false;
+
+    const [_, keyPath, valueName, expectedValue] = match;
+    const queryCmd = `reg query "${keyPath}" /v ${valueName}`;
+
+    return new Promise(resolve => {
+      let outputData = '';
+      const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', queryCmd]);
+
+      psProcess.stdout.on('data', data => outputData += data.toString());
+      psProcess.stderr.on('data', data => outputData += data.toString());
+      psProcess.on('close', () => {
+        const valueMatch = outputData.match(new RegExp(`${valueName}\\s+REG_DWORD\\s+0x${parseInt(expectedValue).toString(16)}`, 'i'));
+        resolve(!!valueMatch);
+      });
+      psProcess.on('error', () => resolve(false));
+    });
+  } else if (option.commandOn.startsWith('sc.exe')) {
+    const scMatch = option.commandOn.match(/sc\.exe config "([^"]+)" start=(\w+)/i);
+    if (!scMatch) return false;
+
+    const serviceName = scMatch[1];
+    const expectedStartType = scMatch[2].toLowerCase();
+
+    const expectedCodeMap = { 'auto': '2', 'disabled': '4', 'demand': '3', 'delayed-auto': '2' };
+    const expectedCode = expectedCodeMap[expectedStartType];
+    if (!expectedCode) return false;
+
+    const checkCmd = `sc qc "${serviceName}"`;
+
+    return new Promise(resolve => {
+      let outputData = '';
+      const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', checkCmd]);
+
+      psProcess.stdout.on('data', data => outputData += data.toString());
+      psProcess.stderr.on('data', data => outputData += data.toString());
+      psProcess.on('close', () => {
+        const startTypeLine = outputData.split('\n').find(line => line.includes('START_TYPE'));
+        if (!startTypeLine) {
+          resolve(false);
+          return;
+        }
+        const currentCode = startTypeLine.split(':')[1].trim().split(/\s+/)[0];
+        resolve(currentCode === expectedCode);
+      });
+      psProcess.on('error', () => resolve(false));
+    });
+  } else {
+    return false;
+  }
 });

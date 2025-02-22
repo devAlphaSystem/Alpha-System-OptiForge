@@ -389,34 +389,30 @@ function wrapCommand(cmd) {
 
 function executeCommand(command) {
   return new Promise((resolve) => {
-    log('Executing command: ' + command);
+    log(`Executing command: ${command}`);
     let outputData = '';
     const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
 
     psProcess.stdout.on('data', (data) => {
       const output = data.toString().trim();
-      outputData += output + '\n';
+      outputData += `${output}\n`;
       log(`Output: ${output}`);
     });
 
     psProcess.stderr.on('data', (data) => {
       const errorOutput = data.toString().trim();
-      outputData += 'ERROR: ' + errorOutput + '\n';
+      outputData += `ERROR: ${errorOutput}\n`;
       log(`Error: ${errorOutput}`, 'error');
     });
 
     psProcess.on('error', (error) => {
-      log('Process error: ' + error, 'error');
+      log(`Process error: ${error}`, 'error');
       resolve({ success: false, command, message: error.toString() });
     });
 
     psProcess.on('close', (code) => {
-      log('Process closed with code: ' + code);
-      if (code === 0) {
-        resolve({ success: true, command, message: outputData });
-      } else {
-        resolve({ success: false, command, message: outputData || `Process exited with code ${code}` });
-      }
+      log(`Process closed with code: ${code}`);
+      resolve({ success: code === 0, command, message: outputData || `Process exited with code ${code}` });
     });
   });
 }
@@ -436,116 +432,94 @@ async function executeCommands(commands, event, responseChannel) {
 
 ipcMain.on('apply-privacy-optimizations', (event, selectedIds) => {
   log('Received apply-privacy-optimizations with data: ' + JSON.stringify(selectedIds));
-  const commands = privacyOptions.map((opt) => { if (selectedIds.includes(opt.id)) return wrapCommand(opt.commandOn); return wrapCommand(opt.commandOff); });
+  const commands = privacyOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'privacy-optimizations-response');
 });
 
 ipcMain.on('apply-gaming-optimizations', (event, selectedIds) => {
   log('Received apply-gaming-optimizations with data: ' + JSON.stringify(selectedIds));
-  const commands = gamingOptions.map((opt) => { if (selectedIds.includes(opt.id)) return wrapCommand(opt.commandOn); return wrapCommand(opt.commandOff); });
+  const commands = gamingOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'gaming-optimizations-response');
 });
 
 ipcMain.on('apply-updates-optimizations', (event, selectedIds) => {
   log('Received apply-updates-optimizations with data: ' + JSON.stringify(selectedIds));
-  const commands = updatesOptions.map((opt) => { if (selectedIds.includes(opt.id)) return wrapCommand(opt.commandOn); return wrapCommand(opt.commandOff); });
+  const commands = updatesOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'updates-optimizations-response');
 });
 
 ipcMain.on('apply-services-optimizations', (event, selectedIds) => {
   log('Received apply-services-optimizations with data: ' + JSON.stringify(selectedIds));
-  const commands = servicesOptions.map((opt) => { if (selectedIds.includes(opt.id)) return wrapCommand(opt.commandOn); return wrapCommand(opt.commandOff); });
+  const commands = servicesOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'services-optimizations-response');
 });
 
 ipcMain.on('apply-maintenance-optimizations', (event, selectedIds) => {
   log('Received apply-maintenance-optimizations with data: ' + JSON.stringify(selectedIds));
-  const commands = maintenanceOptions.map((opt) => { if (selectedIds.includes(opt.id)) return wrapCommand(opt.commandOn); return wrapCommand(opt.commandOff); });
+  const commands = maintenanceOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'maintenance-optimizations-response');
 });
 
 ipcMain.handle('check-optimization-state', async (event, category, optionId) => {
   if (category === 'services') {
-    const option = servicesOptions.find((opt) => opt.id === optionId);
-    if (!option) return false;
+    const option = servicesOptions.find(opt => opt.id === optionId);
+    if (!option?.commandOn) return false;
 
-    const regex = /sc\.exe\s+config\s+"([^"]+)"\s+start=(\S+)/i;
-    const match = option.commandOn.match(regex);
+    const match = option.commandOn.match(/sc\.exe\s+config\s+"([^"]+)"\s+start=(\S+)/i);
     if (!match) return false;
 
-    const serviceName = match[1];
-    const expectedState = match[2].toLowerCase();
-
-    return new Promise((resolve) => {
-      let outputData = '';
+    const [_, serviceName, expectedState] = match;
+    return new Promise(resolve => {
+      let output = '';
       const scProcess = spawn('sc.exe', ['qc', serviceName], { shell: true });
 
-      scProcess.stdout.on('data', (data) => {
-        outputData += data.toString();
-      });
-
-      scProcess.stderr.on('data', (data) => {
-        outputData += data.toString();
-      });
-
+      scProcess.stdout.on('data', d => output += d.toString());
+      scProcess.stderr.on('data', d => output += d.toString());
       scProcess.on('close', () => {
-        const startTypeRegex = /START_TYPE\s*:\s*\d+\s+(\w+)/i;
-        const typeMatch = outputData.match(startTypeRegex);
-        if (typeMatch) {
-          const actualState = typeMatch[1].toLowerCase();
-          if (actualState === expectedState) {
-            return resolve(true);
-          }
-        }
-        if (outputData.toLowerCase().includes(expectedState)) {
-          return resolve(true);
-        }
-        resolve(false);
+        const typeMatch = output.match(/START_TYPE\s*:\s*\d+\s+(\w+)/i);
+        resolve(typeMatch?.[1].toLowerCase() === expectedState.toLowerCase() || output.toLowerCase().includes(expectedState.toLowerCase()));
       });
-
-      scProcess.on('error', (err) => {
-        resolve(false);
-      });
+      scProcess.on('error', () => resolve(false));
     });
-  } else if (category === 'privacy' || category === 'gaming' || category === 'updates') {
-    let option;
-    if (category === 'privacy') {
-      option = privacyOptions.find((opt) => opt.id === optionId);
-    } else if (category === 'gaming') {
-      option = gamingOptions.find((opt) => opt.id === optionId);
-    } else if (category === 'updates') {
-      option = updatesOptions.find((opt) => opt.id === optionId);
-    }
-    if (!option) return false;
+  }
 
-    const regex = /reg add "([^"]+)"\s+\/v\s+(\S+)\s+\/t\s+REG_DWORD\s+\/d\s+(\d+)/i;
-    const match = option.commandOn.match(regex);
+  if (['privacy', 'gaming', 'updates'].includes(category)) {
+    const option = { privacy: privacyOptions, gaming: gamingOptions, updates: updatesOptions }[category]?.find(opt => opt.id === optionId);
+
+    if (!option?.commandOn) return false;
+
+    const match = option.commandOn.match(/reg add "([^"]+)"\s+\/v\s+(\S+)\s+\/t\s+REG_DWORD\s+\/d\s+(\d+)/i);
     if (!match) return false;
 
-    const keyPath = match[1];
-    const valueName = match[2];
-    const expectedValue = match[3];
-    const queryCmd = `reg query "${keyPath}" /v ${valueName}`;
+    const [_, keyPath, valueName, expectedValue] = match;
+    return new Promise(resolve => {
+      let output = '';
+      const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', `reg query "${keyPath}" /v ${valueName}`]);
 
-    return new Promise((resolve) => {
-      let outputData = '';
-      const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', queryCmd]);
-
-      psProcess.stdout.on('data', (data) => {
-        outputData += data.toString();
-      });
-
-      psProcess.stderr.on('data', (data) => {
-        outputData += data.toString();
-      });
-
-      psProcess.on('close', () => {
-        resolve(outputData.includes(expectedValue));
-      });
-
-      psProcess.on('error', () => {
-        resolve(false);
-      });
+      psProcess.stdout.on('data', d => output += d.toString());
+      psProcess.stderr.on('data', d => output += d.toString());
+      psProcess.on('close', () => resolve(output.includes(expectedValue)));
+      psProcess.on('error', () => resolve(false));
     });
   }
 

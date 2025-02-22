@@ -220,40 +220,36 @@ const uselessBloatwareOptions = [
   }
 ];
 
-function wrapCommand(opt) {
-  return opt.command.replace(/&&/g, ';');
+function wrapCommand(cmd) {
+  return cmd.replace(/&&/g, ';');
 }
 
 function executeCommand(command) {
   return new Promise((resolve) => {
-    log('Executing command: ' + command);
+    log(`Executing command: ${command}`);
     let outputData = '';
     const psProcess = spawn('powershell.exe', ['-NoProfile', '-Command', command]);
 
     psProcess.stdout.on('data', (data) => {
       const output = data.toString().trim();
-      outputData += output + '\n';
+      outputData += `${output}\n`;
       log(`Output: ${output}`);
     });
 
     psProcess.stderr.on('data', (data) => {
       const errorOutput = data.toString().trim();
-      outputData += 'ERROR: ' + errorOutput + '\n';
+      outputData += `ERROR: ${errorOutput}\n`;
       log(`Error: ${errorOutput}`, 'error');
     });
 
     psProcess.on('error', (error) => {
-      log('Process error: ' + error, 'error');
+      log(`Process error: ${error}`, 'error');
       resolve({ success: false, command, message: error.toString() });
     });
 
     psProcess.on('close', (code) => {
-      log('Process closed with code: ' + code);
-      if (code === 0) {
-        resolve({ success: true, command, message: outputData });
-      } else {
-        resolve({ success: false, command, message: outputData || `Process exited with code ${code}` });
-      }
+      log(`Process closed with code: ${code}`);
+      resolve({ success: code === 0, command, message: outputData || `Process exited with code ${code}` });
     });
   });
 }
@@ -273,13 +269,21 @@ async function executeCommands(commands, event, responseChannel) {
 
 ipcMain.on('apply-remove-apps', (event, selectedIds) => {
   log('Received apply-remove-apps with data: ' + JSON.stringify(selectedIds));
-  const commands = removeAppsOptions.filter((opt) => selectedIds.includes(opt.id)).map(wrapCommand);
+  const commands = removeAppsOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'remove-apps-response');
 });
 
 ipcMain.on('apply-useless-bloatware', (event, selectedIds) => {
   log('Received apply-useless-bloatware with data: ' + JSON.stringify(selectedIds));
-  const commands = uselessBloatwareOptions.filter((opt) => selectedIds.includes(opt.id)).map(wrapCommand);
+  const commands = uselessBloatwareOptions.map(opt => {
+    if (opt.command) { return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null; }
+    const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
+    return cmd ? wrapCommand(cmd) : null;
+  }).filter(cmd => cmd !== null);
   executeCommands(commands, event, 'useless-bloatware-response');
 });
 

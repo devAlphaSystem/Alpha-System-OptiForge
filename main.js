@@ -62,6 +62,7 @@ app.whenReady().then(async () => {
 
   createWindow();
 
+  require('./health');
   require('./apps');
   require('./optimizations');
   require('./commands');

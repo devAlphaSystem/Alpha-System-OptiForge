@@ -5,7 +5,7 @@ OptiForge is a comprehensive system optimization tool designed to streamline Win
 ## Table of Contents
 
 - [Features](#features)
-- [Installation, Build & Packaging](#installation-build--packaging)
+- [Installation & Build](#installation--build)
 - [Usage](#usage)
 - [Disclaimer](#disclaimer)
 - [Contact](#contact)
@@ -32,27 +32,27 @@ OptiForge offers a variety of optimizations and tools, including:
 - **Custom Command Execution:**  
   Enter and execute custom commands directly from the interface.
 
-## Installation, Build & Packaging
+## Installation & Build
 
 1. **Clone the Repository:**
 
-  ```bash
-  git clone https://github.com/devAlphaSystem/Alpha-System-OptiForge.git
+```bash
+git clone https://github.com/devAlphaSystem/Alpha-System-OptiForge.git
 
-  cd Alpha-System-OptiForge
-  ```
+cd Alpha-System-OptiForge
+```
 
 2. **Install Dependencies:**
 
-  ```bash
-  npm install
-  ```
+```bash
+npm install
+```
 
 3. **Build the Project:**
 
-  ```bash
-  npm run build
-  ```
+```bash
+npm run build
+```
 
 ## Usage
 
