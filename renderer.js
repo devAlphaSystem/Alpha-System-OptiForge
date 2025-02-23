@@ -113,6 +113,39 @@ async function updateFixesStatus(labelEl, category, optionId) {
   }
 }
 
+async function updateFeaturesStatus(labelEl, category, optionId) {
+  try {
+    const state = await ipcRenderer.invoke('check-features-state', category, optionId);
+    log(labelEl.innerText + ": " + state);
+    if (state === null) {
+      const existingCircle = labelEl.querySelector('.status-circle');
+      if (existingCircle) {
+        existingCircle.remove();
+      }
+      return;
+    }
+
+    let circle = labelEl.querySelector('.status-circle');
+    if (!circle) {
+      circle = document.createElement('span');
+      circle.className = 'status-circle';
+      const checkbox = labelEl.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.insertAdjacentElement('afterend', circle);
+      } else {
+        labelEl.insertBefore(circle, labelEl.firstChild);
+      }
+    }
+
+    circle.style.backgroundColor = state ? 'green' : 'red';
+  } catch (error) {
+    const circle = labelEl.querySelector('.status-circle');
+    if (circle) {
+      circle.style.backgroundColor = 'gray';
+    }
+  }
+}
+
 function updateHealthDisplay(healthData) {
   const scoreElem = document.getElementById('healthScore');
   const statusElem = document.getElementById('healthStatus');
@@ -174,6 +207,18 @@ function checkFixesStatus(sectionId, category) {
     const checkbox = label.querySelector('input[type="checkbox"]');
     if (checkbox && checkbox.value) {
       promises.push(updateFixesStatus(label, category, checkbox.value));
+    }
+  });
+  return Promise.all(promises);
+}
+
+function checkFeaturesStatus(sectionId, category) {
+  const featuresLabels = document.querySelectorAll(`#${sectionId} .checkbox-group label`);
+  const promises = [];
+  featuresLabels.forEach((label) => {
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    if (checkbox && checkbox.value) {
+      promises.push(updateFeaturesStatus(label, category, checkbox.value));
     }
   });
   return Promise.all(promises);
@@ -249,6 +294,10 @@ async function initializeStatusChecks() {
 
   updateLoadingText('Checking network tweaks...');
   await checkFixesStatus('networkTweaksSection', 'networkTweaks');
+
+  updateLoadingText('Checking Windows Features status...');
+  await checkFeaturesStatus('userFeaturesSection', 'userFeatures');
+  await checkFeaturesStatus('machineFeaturesSection', 'machineFeatures');
 
   updateLoadingText('Checking system health...');
   await checkSystemHealth();
@@ -348,6 +397,8 @@ window.addEventListener('DOMContentLoaded', () => {
     'systemTweaksSection',
     'networkTweaksSection',
     'windowsFixesSection',
+    'userFeaturesSection',
+    'machineFeaturesSection',
     'healthTab'
   ];
   sectionsToSetup.forEach(setupSelectButtons);
@@ -946,6 +997,90 @@ window.addEventListener('DOMContentLoaded', () => {
       window.EasyNotificationInstance.createNotification({
         title: 'Windows Fixes',
         message: 'Windows fixes executed successfully.',
+        type: 'success'
+      });
+    }
+  });
+
+  let userWindowsFeaturesNotificationId = null;
+  const applyUserWindowsFeaturesBtn = document.getElementById('applyUserFeaturesBtn');
+  applyUserWindowsFeaturesBtn.addEventListener('click', () => {
+    const checkboxes = document.querySelectorAll('#userFeaturesSection .section-content input[type="checkbox"]');
+    const selected = [];
+    checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
+    console.info('User Windows Features selected:', selected);
+
+    userWindowsFeaturesNotificationId = window.EasyNotificationInstance.createNotification({
+      title: 'User Windows Features',
+      message: 'Executing User Windows features...',
+      type: 'info',
+      displayTime: 0,
+      persistent: true,
+      hasProgressBar: false,
+      showTimerBar: false
+    });
+
+    ipcRenderer.send('apply-user-windows-features', selected);
+  });
+
+  ipcRenderer.on('user-windows-features-response', (event, arg) => {
+    console.info('User Windows Features Response:', arg);
+    if (userWindowsFeaturesNotificationId) {
+      window.EasyNotificationInstance.dismissNotification(userWindowsFeaturesNotificationId);
+      userWindowsFeaturesNotificationId = null;
+    }
+    if (arg && arg.error) {
+      window.EasyNotificationInstance.createNotification({
+        title: 'User Windows Features',
+        message: `Error: ${arg.error}`,
+        type: 'danger'
+      });
+    } else {
+      window.EasyNotificationInstance.createNotification({
+        title: 'User Windows Features',
+        message: 'Windows features executed successfully.',
+        type: 'success'
+      });
+    }
+  });
+
+  let machineWindowsFeaturesNotificationId = null;
+  const applyMachineWindowsFeaturesBtn = document.getElementById('applyMachineFeaturesBtn');
+  applyMachineWindowsFeaturesBtn.addEventListener('click', () => {
+    const checkboxes = document.querySelectorAll('#machineFeaturesSection .section-content input[type="checkbox"]');
+    const selected = [];
+    checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
+    console.info('Machine Windows Features selected:', selected);
+
+    machineWindowsFeaturesNotificationId = window.EasyNotificationInstance.createNotification({
+      title: 'Machine Windows Features',
+      message: 'Executing Machine Windows features...',
+      type: 'info',
+      displayTime: 0,
+      persistent: true,
+      hasProgressBar: false,
+      showTimerBar: false
+    });
+
+    ipcRenderer.send('apply-machine-windows-features', selected);
+  });
+
+  ipcRenderer.on('machine-windows-features-response', (event, arg) => {
+    console.info('Machine Windows Features Response:', arg);
+    if (machineWindowsFeaturesNotificationId) {
+      window.EasyNotificationInstance.dismissNotification(machineWindowsFeaturesNotificationId);
+      machineWindowsFeaturesNotificationId = null;
+    }
+    if (arg && arg.error) {
+      window.EasyNotificationInstance.createNotification({
+        title: 'Machine Windows Features',
+        message: `Error: ${arg.error}`,
+        type: 'danger'
+      });
+    } else {
+      window.EasyNotificationInstance.createNotification({
+        title: 'Machine Windows Features',
+        message: 'Windows features executed successfully.',
         type: 'success'
       });
     }

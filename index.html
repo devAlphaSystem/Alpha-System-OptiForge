@@ -452,6 +452,7 @@
           <li> <a href="#" data-tab="optimizationsTab"><i class="fa fa-sliders-h"></i> Optimizations</a> </li>
           <li> <a href="#" data-tab="commandsTab"><i class="fa fa-terminal"></i> System Tools</a> </li>
           <li> <a href="#" data-tab="windowsFixesTab"><i class="fa fa-wrench"></i> Windows Fixes</a> </li>
+          <li> <a href="#" data-tab="windowsFeaturesTab"><i class="fa fa-cogs"></i> Windows Features</a> </li>
           <li> <a href="#" data-tab="systemInfoTab"><i class="fa fa-desktop"></i> System Information</a> </li>
           <li> <a href="#" data-tab="aboutTab"><i class="fa fa-info-circle"></i> About</a> </li>
         </ul>
@@ -989,12 +990,189 @@
           </div>
         </div>
 
+        <div class="tab" id="windowsFeaturesTab">
+          <div class="section" id="userFeaturesSection">
+            <div class="section-header">
+              <h3>User Windows Features</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content active">
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Privacy & Personalization</h4>
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="disable_advertising_id" checked /> Disable Advertising ID</label>
+                <label><input type="checkbox" value="disable_input_tipc" checked /> Disable Input TIPC</label>
+                <label><input type="checkbox" value="disable_content_subscription_353698" checked /> Disable Content Subscription 353698</label>
+                <label><input type="checkbox" value="disable_content_subscription_338388" checked /> Disable Content Subscription 338388</label>
+                <label><input type="checkbox" value="disable_content_subscription_338389" checked /> Disable Content Subscription 338389</label>
+                <label><input type="checkbox" value="disable_content_subscription_338393_353694_353696" checked /> Disable Content Subscriptions 338393, 353694, 353696</label>
+                <label><input type="checkbox" value="disable_user_profile_engagement_scoobe" checked /> Disable User Profile Engagement Scoobe</label>
+                <label><input type="checkbox" value="disable_clipboard_history" checked /> Disable Clipboard History</label>
+                <label><input type="checkbox" value="deny_user_account_information_access" checked /> Deny User Account Information Access</label>
+                <label><input type="checkbox" value="disable_start_track_progs" checked /> Disable Start Track Programs</label>
+                <label><input type="checkbox" value="deny_app_diagnostics_access" checked /> Deny App Diagnostics Access</label>
+                <label><input type="checkbox" value="enable_do_not_track_edge" checked /> Enable Do Not Track in Edge</label>
+                <label><input type="checkbox" value="disable_payment_method_query_edge" checked /> Disable Payment Method Query in Edge</label>
+                <label><input type="checkbox" value="disable_personalization_reporting_edge" checked /> Disable Personalization Reporting in Edge</label>
+                <label><input type="checkbox" value="disable_address_bar_bing_search_edge" checked /> Disable Bing Search in Edge Address Bar</label>
+                <label><input type="checkbox" value="disable_user_feedback_edge" checked /> Disable User Feedback in Edge</label>
+                <label><input type="checkbox" value="disable_autofill_credit_card_edge" checked /> Disable Autofill Credit Card in Edge</label>
+                <label><input type="checkbox" value="disable_autofill_address_edge" checked /> Disable Autofill Address in Edge</label>
+                <label><input type="checkbox" value="disable_local_providers_edge" checked /> Disable Local Providers in Edge</label>
+                <label><input type="checkbox" value="disable_search_suggestions_edge" checked /> Disable Search Suggestions in Edge</label>
+                <label><input type="checkbox" value="disable_edge_shopping_assistant" checked /> Disable Edge Shopping Assistant</label>
+                <label><input type="checkbox" value="disable_web_widget_edge" checked /> Disable Web Widget in Edge</label>
+                <label><input type="checkbox" value="disable_hubs_sidebar_edge" checked /> Disable Hubs Sidebar in Edge</label>
+                <label><input type="checkbox" value="disable_browser_signin_edge" checked /> Disable Browser Sign-in in Edge</label>
+                <label><input type="checkbox" value="disable_microsoft_editor_proofing_edge" checked /> Disable Microsoft Editor Proofing in Edge</label>
+                <label><input type="checkbox" value="enable_do_not_track_microsoftedge" checked /> Enable Do Not Track in Microsoft Edge</label>
+                <label><input type="checkbox" value="disable_flip_ahead_microsoftedge" checked /> Disable Flip Ahead in Microsoft Edge</label>
+                <label><input type="checkbox" value="disable_search_suggestions_microsoftedge" checked /> Disable Search Suggestions in Microsoft Edge</label>
+                <label><input type="checkbox" value="disable_cortana_microsoftedge" checked /> Disable Cortana in Microsoft Edge</label>
+                <label><input type="checkbox" value="disable_search_history_microsoftedge" checked /> Disable Search History in Microsoft Edge</label>
+                <label><input type="checkbox" value="disable_office_telemetry" checked /> Disable Office Telemetry</label>
+                <label><input type="checkbox" value="disable_office_send_telemetry" checked /> Disable Office Send Telemetry</label>
+                <label><input type="checkbox" value="disable_office_quality_metrics" checked /> Disable Office Quality Metrics</label>
+                <label><input type="checkbox" value="disable_office_linkedin_integration" checked /> Disable Office LinkedIn Integration</label>
+                <label><input type="checkbox" value="disable_office_inline_text_prediction" checked /> Disable Office Inline Text Prediction</label>
+                <label><input type="checkbox" value="disable_office_osm_logging" checked /> Disable Office OSM Logging</label>
+                <label><input type="checkbox" value="disable_office_osm_upload" checked /> Disable Office OSM Upload</label>
+                <label><input type="checkbox" value="enable_office_osm_file_obfuscation" checked /> Enable Office OSM File Obfuscation</label>
+                <label><input type="checkbox" value="disable_office_feedback_surveys" checked /> Disable Office Feedback Surveys</label>
+                <label><input type="checkbox" value="disable_office_feedback" checked /> Disable Office Feedback</label>
+                <label><input type="checkbox" value="disable_office_feedback_include_email" checked /> Disable Office Feedback Include Email</label>
+                <label><input type="checkbox" value="disable_setting_sync" checked /> Disable Setting Sync</label>
+                <label><input type="checkbox" value="disable_personalization_sync" checked /> Disable Personalization Sync</label>
+                <label><input type="checkbox" value="disable_credentials_sync" checked /> Disable Credentials Sync</label>
+                <label><input type="checkbox" value="disable_browser_settings_sync" checked /> Disable Browser Settings Sync</label>
+                <label><input type="checkbox" value="disable_language_sync" checked /> Disable Language Sync</label>
+                <label><input type="checkbox" value="disable_accessibility_sync" checked /> Disable Accessibility Sync</label>
+                <label><input type="checkbox" value="disable_windows_sync" checked /> Disable Windows Sync</label>
+                <label><input type="checkbox" value="disable_cortana_consent" checked /> Disable Cortana Consent</label>
+                <label><input type="checkbox" value="disable_privacy_policy_acceptance" checked /> Disable Privacy Policy Acceptance</label>
+                <label><input type="checkbox" value="restrict_implicit_ink_collection" checked /> Restrict Implicit Ink Collection</label>
+                <label><input type="checkbox" value="restrict_implicit_text_collection" checked /> Restrict Implicit Text Collection</label>
+                <label><input type="checkbox" value="disable_contact_harvesting" checked /> Disable Contact Harvesting</label>
+                <label><input type="checkbox" value="disable_windows_copilot" checked /> Disable Windows Copilot</label>
+                <label><input type="checkbox" value="hide_copilot_button" checked /> Hide Copilot Button</label>
+                <label><input type="checkbox" value="disable_ai_data_analysis" checked /> Disable AI Data Analysis</label>
+                <label><input type="checkbox" value="disable_tailored_experiences" checked /> Disable Tailored Experiences</label>
+                <label><input type="checkbox" value="disable_system_pane_suggestions" checked /> Disable System Pane Suggestions</label>
+                <label><input type="checkbox" value="disable_rotating_lock_screen" checked /> Disable Rotating Lock Screen</label>
+                <label><input type="checkbox" value="disable_rotating_lock_screen_overlay" checked /> Disable Rotating Lock Screen Overlay</label>
+                <label><input type="checkbox" value="disable_subscribed_content_338387" checked /> Disable Subscribed Content 338387</label>
+                <label><input type="checkbox" value="disable_toasts_above_lock_screen" checked /> Disable Toasts Above Lock Screen</label>
+                <label><input type="checkbox" value="disable_cross_device_experience" checked /> Disable Cross-Device Experience</label>
+                <label><input type="checkbox" value="disable_phone_link" checked /> Disable Phone Link</label>
+                <label><input type="checkbox" value="disable_mobility_opted_in" checked /> Disable Mobility Opted-In</label>
+                <label><input type="checkbox" value="disable_dynamic_search_box" checked /> Disable Dynamic Search Box</label>
+                <label><input type="checkbox" value="disable_search_box_suggestions" checked /> Disable Search Box Suggestions</label>
+                <label><input type="checkbox" value="disable_people_band" checked /> Disable People Band</label>
+                <label><input type="checkbox" value="disable_searchbox_taskbar_mode" checked /> Disable Searchbox Taskbar Mode</label>
+                <label><input type="checkbox" value="hide_meet_now_button" checked /> Hide Meet Now Button</label>
+                <label><input type="checkbox" value="disable_siuf_rules" checked /> Disable SIUF Rules</label>
+                <label><input type="checkbox" value="disable_siuf_period" checked /> Disable SIUF Period</label>
+                <label><input type="checkbox" value="disable_silent_installed_apps" checked /> Disable Silent Installed Apps</label>
+                <label><input type="checkbox" value="disable_soft_landing" checked /> Disable Soft Landing</label>
+                <label><input type="checkbox" value="disable_media_player_usage_tracking" checked /> Disable Media Player Usage Tracking</label>
+                <label><input type="checkbox" value="hide_desktop_icon_newstartpanel" checked /> Hide Desktop Icon New Start Panel</label>
+              </div>
+              <button class="apply-btn" id="applyUserFeaturesBtn"><i class="fa fa-check"></i> Apply User Features</button>
+            </div>
+          </div>
+
+          <div class="section" id="machineFeaturesSection" style="margin-bottom: 0 !important">
+            <div class="section-header">
+              <h3>Machine Windows Features</h3>
+              <div class="btn-group">
+                <button class="select-all">Select All</button>
+                <button class="deselect-all">Deselect All</button>
+              </div>
+            </div>
+            <div class="section-content">
+              <h4 class="sub-section-heading" style="margin-top: 8px !important;">System & Security</h4>
+              <div class="checkbox-group">
+                <label><input type="checkbox" value="prevent_handwriting_data_sharing" checked /> Prevent Handwriting Data Sharing</label>
+                <label><input type="checkbox" value="prevent_handwriting_error_reports" checked /> Prevent Handwriting Error Reports</label>
+                <label><input type="checkbox" value="disable_appcompat_inventory" checked /> Disable AppCompat Inventory</label>
+                <label><input type="checkbox" value="disable_lock_screen_camera" checked /> Disable Lock Screen Camera</label>
+                <label><input type="checkbox" value="disable_advertising_info" checked /> Disable Advertising Info</label>
+                <label><input type="checkbox" value="disable_bluetooth_advertising" checked /> Disable Bluetooth Advertising</label>
+                <label><input type="checkbox" value="disable_ceip" checked /> Disable CEIP</label>
+                <label><input type="checkbox" value="disable_message_sync" checked /> Disable Message Sync</label>
+                <label><input type="checkbox" value="disable_windows_error_reporting" checked /> Disable Windows Error Reporting</label>
+                <label><input type="checkbox" value="disable_activity_feed" checked /> Disable Activity Feed</label>
+                <label><input type="checkbox" value="disable_publish_user_activities" checked /> Disable Publish User Activities</label>
+                <label><input type="checkbox" value="disable_upload_user_activities" checked /> Disable Upload User Activities</label>
+                <label><input type="checkbox" value="disable_clipboard_history" checked /> Disable Clipboard History</label>
+                <label><input type="checkbox" value="disable_cross_device_clipboard" checked /> Disable Cross-Device Clipboard</label>
+                <label><input type="checkbox" value="deny_user_account_information_access" checked /> Deny User Account Information Access</label>
+                <label><input type="checkbox" value="deny_app_diagnostics_access" checked /> Deny App Diagnostics Access</label>
+                <label><input type="checkbox" value="disable_password_reveal" checked /> Disable Password Reveal</label>
+                <label><input type="checkbox" value="disable_user_activity_reporting" checked /> Disable User Activity Reporting</label>
+                <label><input type="checkbox" value="disable_diagtrack_service" checked /> Disable DiagTrack Service</label>
+                <label><input type="checkbox" value="disable_dmwappushservice" checked /> Disable dmwappushservice</label>
+                <label><input type="checkbox" value="disable_autologger_diagtrack_listener" checked /> Disable Autologger DiagTrack Listener</label>
+                <label><input type="checkbox" value="enable_do_not_track_edge" checked /> Enable Do Not Track in Edge</label>
+                <label><input type="checkbox" value="disable_payment_method_query_edge" checked /> Disable Payment Method Query in Edge</label>
+                <label><input type="checkbox" value="disable_personalization_reporting_edge" checked /> Disable Personalization Reporting in Edge</label>
+                <label><input type="checkbox" value="disable_address_bar_bing_search_edge" checked /> Disable Bing Search in Edge Address Bar</label>
+                <label><input type="checkbox" value="disable_user_feedback_edge" checked /> Disable User Feedback in Edge</label>
+                <label><input type="checkbox" value="disable_autofill_credit_card_edge" checked /> Disable Autofill Credit Card in Edge</label>
+                <label><input type="checkbox" value="disable_autofill_address_edge" checked /> Disable Autofill Address in Edge</label>
+                <label><input type="checkbox" value="disable_local_providers_edge" checked /> Disable Local Providers in Edge</label>
+                <label><input type="checkbox" value="disable_search_suggestions_edge" checked /> Disable Search Suggestions in Edge</label>
+                <label><input type="checkbox" value="disable_edge_shopping_assistant" checked /> Disable Edge Shopping Assistant</label>
+                <label><input type="checkbox" value="disable_web_widget_edge" checked /> Disable Web Widget in Edge</label>
+                <label><input type="checkbox" value="disable_hubs_sidebar_edge" checked /> Disable Hubs Sidebar in Edge</label>
+                <label><input type="checkbox" value="disable_browser_signin_edge" checked /> Disable Browser Sign-in in Edge</label>
+                <label><input type="checkbox" value="disable_microsoft_editor_proofing_edge" checked /> Disable Microsoft Editor Proofing in Edge</label>
+                <label><input type="checkbox" value="disable_address_bar_dropdown_edge" checked /> Disable Address Bar Dropdown in Edge</label>
+                <label><input type="checkbox" value="disable_input_personalization" checked /> Disable Input Personalization</label>
+                <label><input type="checkbox" value="disable_search_location_access" checked /> Disable Search Location Access</label>
+                <label><input type="checkbox" value="disable_web_search" checked /> Disable Web Search</label>
+                <label><input type="checkbox" value="disable_connected_search_web" checked /> Disable Connected Search Web</label>
+                <label><input type="checkbox" value="disable_speech_model_download" checked /> Disable Speech Model Download</label>
+                <label><input type="checkbox" value="disable_cloud_search" checked /> Disable Cloud Search</label>
+                <label><input type="checkbox" value="disable_cortana_above_lock" checked /> Disable Cortana Above Lock</label>
+                <label><input type="checkbox" value="disable_dynamic_content_in_wsb" checked /> Disable Dynamic Content in WSB</label>
+                <label><input type="checkbox" value="disable_windows_copilot" checked /> Disable Windows Copilot</label>
+                <label><input type="checkbox" value="disable_recall_enablement" checked /> Disable Recall Enablement</label>
+                <label><input type="checkbox" value="disable_image_creator" checked /> Disable Image Creator</label>
+                <label><input type="checkbox" value="disable_ai_data_analysis" checked /> Disable AI Data Analysis</label>
+                <label><input type="checkbox" value="disable_location" checked /> Disable Location</label>
+                <label><input type="checkbox" value="disable_windows_location_provider" checked /> Disable Windows Location Provider</label>
+                <label><input type="checkbox" value="disable_location_scripting" checked /> Disable Location Scripting</label>
+                <label><input type="checkbox" value="disable_telemetry" checked /> Disable Telemetry</label>
+                <label><input type="checkbox" value="disable_telemetry_data_collection" checked /> Disable Telemetry Data Collection</label>
+                <label><input type="checkbox" value="disable_ait_enable" checked /> Disable AIT Enable</label>
+                <label><input type="checkbox" value="disable_tailored_experiences" checked /> Disable Tailored Experiences</label>
+                <label><input type="checkbox" value="limit_diagnostic_log_collection" checked /> Limit Diagnostic Log Collection</label>
+                <label><input type="checkbox" value="disable_one_settings_downloads" checked /> Disable One Settings Downloads</label>
+                <label><input type="checkbox" value="disable_delivery_optimization" checked /> Disable Delivery Optimization</label>
+                <label><input type="checkbox" value="disable_delivery_optimization_policy" checked /> Disable Delivery Optimization Policy</label>
+                <label><input type="checkbox" value="disable_system_settings_download_mode" checked /> Disable System Settings Download Mode</label>
+                <label><input type="checkbox" value="disable_speech_model_update" checked /> Disable Speech Model Update</label>
+                <label><input type="checkbox" value="disable_mmx" checked /> Disable MMX</label>
+                <label><input type="checkbox" value="disable_feedback_notifications" checked /> Disable Feedback Notifications</label>
+                <label><input type="checkbox" value="disable_remote_assistance" checked /> Disable Remote Assistance</label>
+                <label><input type="checkbox" value="disable_remote_desktop_connections" checked /> Disable Remote Desktop Connections</label>
+                <label><input type="checkbox" value="hide_meet_now_button" checked /> Hide Meet Now Button</label>
+                <label><input type="checkbox" value="disable_news_and_interests" checked /> Disable News and Interests</label>
+              </div>
+              <button class="apply-btn" id="applyMachineFeaturesBtn"><i class="fa fa-check"></i> Apply Machine Features</button>
+            </div>
+          </div>
+        </div>
+
         <div class="tab" id="systemInfoTab"></div>
 
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <img src="logo.png" />
-            <p><strong>Version:</strong> 1.5-10</p>
+            <p><strong>Version:</strong> 1.6-11</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>
@@ -1205,7 +1383,152 @@
         optimize_disk: '$diskType = (Get-PhysicalDisk).MediaType; if ($diskType -eq "SSD") { Optimize-Volume C -ReTrim -Verbose } else { defrag C: /O /U /V }',
         repair_wsl: 'wsl --update; wsl --shutdown; wsl --install --no-distribution --quiet; wsl --set-default-version 2',
         reset_printer_spooler: 'Stop-Service -Name Spooler -Force; Remove-Item -Path "$env:WINDIR\\System32\\spool\\PRINTERS\\*" -Recurse -Force; Start-Service -Name Spooler',
-        reset_audio_services: 'Stop-Service -Name Audiosrv -Force; Start-Sleep -Seconds 2; regsvr32 /s %SystemRoot%\\System32\\AudioEng.dll; regsvr32 /s %SystemRoot%\\System32\\AudioSes.dll; Start-Service -Name Audiosrv; msdt.exe /id AudioPlaybackDiagnostic'
+        reset_audio_services: 'Stop-Service -Name Audiosrv -Force; Start-Sleep -Seconds 2; regsvr32 /s %SystemRoot%\\System32\\AudioEng.dll; regsvr32 /s %SystemRoot%\\System32\\AudioSes.dll; Start-Service -Name Audiosrv; msdt.exe /id AudioPlaybackDiagnostic',
+
+        disable_advertising_id: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_input_tipc: 'reg add "HKCU\\Software\\Microsoft\\input\\TIPC" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_content_subscription_353698: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-353698Enabled /t REG_DWORD /d 0 /f',
+        disable_content_subscription_338388: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-338388Enabled /t REG_DWORD /d 0 /f',
+        disable_content_subscription_338389: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-338389Enabled /t REG_DWORD /d 0 /f',
+        disable_content_subscription_338393_353694_353696: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-338393Enabled /t REG_DWORD /d 0 /f; reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-353694Enabled /t REG_DWORD /d 0 /f; reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-353696Enabled /t REG_DWORD /d 0 /f',
+        disable_user_profile_engagement_scoobe: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\UserProfileEngagement" /v ScoobeSystemSettingEnabled /t REG_DWORD /d 0 /f',
+        disable_clipboard_history: 'reg add "HKCU\\Software\\Microsoft\\Clipboard" /v EnableClipboardHistory /t REG_DWORD /d 0 /f',
+        deny_user_account_information_access: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\userAccountInformation" /v Value /t REG_SZ /d Deny /f',
+        disable_start_track_progs: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v Start_TrackProgs /t REG_DWORD /d 0 /f',
+        deny_app_diagnostics_access: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\appDiagnostics" /v Value /t REG_SZ /d Deny /f',
+        enable_do_not_track_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v ConfigureDoNotTrack /t REG_DWORD /d 1 /f',
+        disable_payment_method_query_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v PaymentMethodQueryEnabled /t REG_DWORD /d 0 /f',
+        disable_personalization_reporting_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v PersonalizationReportingEnabled /t REG_DWORD /d 0 /f',
+        disable_address_bar_bing_search_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v AddressBarMicrosoftSearchInBingProviderEnabled /t REG_DWORD /d 0 /f',
+        disable_user_feedback_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v UserFeedbackAllowed /t REG_DWORD /d 0 /f',
+        disable_autofill_credit_card_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v AutofillCreditCardEnabled /t REG_DWORD /d 0 /f',
+        disable_autofill_address_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v AutofillAddressEnabled /t REG_DWORD /d 0 /f',
+        disable_local_providers_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v LocalProvidersEnabled /t REG_DWORD /d 0 /f',
+        disable_search_suggestions_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v SearchSuggestEnabled /t REG_DWORD /d 0 /f',
+        disable_edge_shopping_assistant: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v EdgeShoppingAssistantEnabled /t REG_DWORD /d 0 /f',
+        disable_web_widget_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v WebWidgetAllowed /t REG_DWORD /d 0 /f',
+        disable_hubs_sidebar_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v HubsSidebarEnabled /t REG_DWORD /d 0 /f',
+        disable_browser_signin_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v BrowserSignin /t REG_DWORD /d 0 /f',
+        disable_microsoft_editor_proofing_edge: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Edge" /v MicrosoftEditorProofingEnabled /t REG_DWORD /d 0 /f',
+        enable_do_not_track_microsoftedge: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main" /v DoNotTrack /t REG_DWORD /d 1 /f',
+        disable_flip_ahead_microsoftedge: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\FlipAhead" /v FPEnabled /t REG_DWORD /d 0 /f',
+        disable_search_suggestions_microsoftedge: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\Main" /v ShowSearchSuggestionsGlobal /t REG_DWORD /d 0 /f',
+        disable_cortana_microsoftedge: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI" /v EnableCortana /t REG_DWORD /d 0 /f',
+        disable_search_history_microsoftedge: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\\ShowSearchHistory" /v (Default) /t REG_DWORD /d 0 /f',
+        disable_office_telemetry: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\common\\clienttelemetry" /v DisableTelemetry /t REG_DWORD /d 1 /f',
+        disable_office_send_telemetry: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\common\\clienttelemetry" /v SendTelemetry /t REG_DWORD /d 3 /f',
+        disable_office_quality_metrics: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\16.0\\common" /v QMEnable /t REG_DWORD /d 0 /f',
+        disable_office_linkedin_integration: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\16.0\\common" /v LinkedIn /t REG_DWORD /d 0 /f',
+        disable_office_inline_text_prediction: 'reg add "HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\MailSettings" /v InlineTextPrediction /t REG_DWORD /d 0 /f',
+        disable_office_osm_logging: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\16.0\\osm" /v Enablelogging /t REG_DWORD /d 0 /f',
+        disable_office_osm_upload: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\16.0\\osm" /v EnableUpload /t REG_DWORD /d 0 /f',
+        enable_office_osm_file_obfuscation: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\16.0\\osm" /v EnableFileObfuscation /t REG_DWORD /d 1 /f',
+        disable_office_feedback_surveys: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\16.0\\common\\Feedback" /v SurveyEnabled /t REG_DWORD /d 0 /f',
+        disable_office_feedback: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\16.0\\common\\Feedback" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_office_feedback_include_email: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\16.0\\common\\Feedback" /v IncludeEmail /t REG_DWORD /d 0 /f',
+        disable_setting_sync: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SettingSync" /v SyncPolicy /t REG_DWORD /d 5 /f',
+        disable_personalization_sync: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SettingSync\\Groups\\Personalization" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_credentials_sync: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SettingSync\\Groups\\Credentials" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_browser_settings_sync: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SettingSync\\Groups\\BrowserSettings" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_language_sync: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SettingSync\\Groups\\Language" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_accessibility_sync: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SettingSync\\Groups\\Accessibility" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_windows_sync: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SettingSync\\Groups\\Windows" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_cortana_consent: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Windows Search" /v CortanaConsent /t REG_DWORD /d 0 /f',
+        disable_privacy_policy_acceptance: 'reg add "HKCU\\Software\\Microsoft\\Personalization\\Settings" /v AcceptedPrivacyPolicy /t REG_DWORD /d 0 /f',
+        restrict_implicit_ink_collection: 'reg add "HKCU\\Software\\Microsoft\\InputPersonalization" /v RestrictImplicitInkCollection /t REG_DWORD /d 1 /f',
+        restrict_implicit_text_collection: 'reg add "HKCU\\Software\\Microsoft\\InputPersonalization" /v RestrictImplicitTextCollection /t REG_DWORD /d 1 /f',
+        disable_contact_harvesting: 'reg add "HKCU\\Software\\Microsoft\\InputPersonalization\\TrainedDataStore" /v HarvestContacts /t REG_DWORD /d 0 /f',
+        disable_windows_copilot: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Windows\\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f',
+        hide_copilot_button: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v ShowCopilotButton /t REG_DWORD /d 0 /f',
+        disable_ai_data_analysis: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Windows\\WindowsAI" /v DisableAIDataAnalysis /t REG_DWORD /d 1 /f',
+        disable_tailored_experiences: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Privacy" /v TailoredExperiencesWithDiagnosticDataEnabled /t REG_DWORD /d 0 /f',
+        disable_system_pane_suggestions: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SystemPaneSuggestionsEnabled /t REG_DWORD /d 0 /f',
+        disable_rotating_lock_screen: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v RotatingLockScreenEnabled /t REG_DWORD /d 0 /f',
+        disable_rotating_lock_screen_overlay: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v RotatingLockScreenOverlayEnabled /t REG_DWORD /d 0 /f',
+        disable_subscribed_content_338387: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-338387Enabled /t REG_DWORD /d 0 /f',
+        disable_toasts_above_lock_screen: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Notifications\\Settings" /v NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK /t REG_DWORD /d 0 /f',
+        disable_cross_device_experience: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Mobility" /v CrossDeviceEnabled /t REG_DWORD /d 0 /f',
+        disable_phone_link: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Mobility" /v PhoneLinkEnabled /t REG_DWORD /d 0 /f',
+        disable_mobility_opted_in: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Mobility" /v OptedIn /t REG_DWORD /d 0 /f',
+        disable_dynamic_search_box: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SearchSettings" /v IsDynamicSearchBoxEnabled /t REG_DWORD /d 0 /f',
+        disable_search_box_suggestions: 'reg add "HKCU\\Software\\Policies\\Microsoft\\Windows\\Explorer" /v DisableSearchBoxSuggestions /t REG_DWORD /d 1 /f',
+        disable_people_band: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\People" /v PeopleBand /t REG_DWORD /d 0 /f',
+        disable_searchbox_taskbar_mode: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Search" /v SearchboxTaskbarMode /t REG_DWORD /d 0 /f',
+        hide_meet_now_button: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer" /v HideSCAMeetNow /t REG_DWORD /d 1 /f',
+        disable_siuf_rules: 'reg add "HKCU\\Software\\Microsoft\\Siuf\\Rules" /v NumberOfSIUFInPeriod /t REG_DWORD /d 0 /f',
+        disable_siuf_period: 'reg add "HKCU\\Software\\Microsoft\\Siuf\\Rules" /v PeriodInNanoSeconds /t REG_DWORD /d 0 /f',
+        disable_silent_installed_apps: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SilentInstalledAppsEnabled /t REG_DWORD /d 0 /f',
+        disable_soft_landing: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SoftLandingEnabled /t REG_DWORD /d 0 /f',
+        disable_media_player_usage_tracking: 'reg add "HKCU\\Software\\Microsoft\\MediaPlayer\\Preferences" /v UsageTracking /t REG_DWORD /d 0 /f',
+        hide_desktop_icon_newstartpanel: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel" /v {2cc5ca98-6485-489a-920e-b3e88a6ccce3} /t REG_DWORD /d 1 /f',
+
+        prevent_handwriting_data_sharing: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\TabletPC" /v PreventHandwritingDataSharing /t REG_DWORD /d 1 /f',
+        prevent_handwriting_error_reports: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\HandwritingErrorReports" /v PreventHandwritingErrorReports /t REG_DWORD /d 1 /f',
+        disable_appcompat_inventory: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat" /v DisableInventory /t REG_DWORD /d 1 /f',
+        disable_lock_screen_camera: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreenCamera /t REG_DWORD /d 1 /f',
+        disable_advertising_info: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f',
+        disable_bluetooth_advertising: 'reg add "HKLM\\SOFTWARE\\Microsoft\\PolicyManager\\current\\device\\Bluetooth" /v AllowAdvertising /t REG_DWORD /d 0 /f',
+        disable_ceip: 'reg add "HKLM\\SOFTWARE\\Microsoft\\SQMClient\\Windows" /v CEIPEnable /t REG_DWORD /d 0 /f',
+        disable_message_sync: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Messaging" /v AllowMessageSync /t REG_DWORD /d 0 /f',
+        disable_windows_error_reporting: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f',
+        disable_activity_feed: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f',
+        disable_publish_user_activities: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v PublishUserActivities /t REG_DWORD /d 0 /f',
+        disable_upload_user_activities: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v UploadUserActivities /t REG_DWORD /d 0 /f',
+        disable_clipboard_history: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v AllowClipboardHistory /t REG_DWORD /d 0 /f',
+        disable_cross_device_clipboard: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v AllowCrossDeviceClipboard /t REG_DWORD /d 0 /f',
+        deny_user_account_information_access: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\userAccountInformation" /v Value /t REG_SZ /d Deny /f',
+        deny_app_diagnostics_access: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\appDiagnostics" /v Value /t REG_SZ /d Deny /f',
+        disable_password_reveal: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CredUI" /v DisablePasswordReveal /t REG_DWORD /d 1 /f',
+        disable_user_activity_reporting: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat" /v DisableUAR /t REG_DWORD /d 1 /f',
+        disable_diagtrack_service: 'reg add "HKLM\\System\\CurrentControlSet\\Services\\DiagTrack" /v Start /t REG_DWORD /d 4 /f',
+        disable_dmwappushservice: 'reg add "HKLM\\System\\CurrentControlSet\\Services\\dmwappushservice" /v Start /t REG_DWORD /d 4 /f',
+        disable_autologger_diagtrack_listener: 'reg add "HKLM\\System\\CurrentControlSet\\Control\\WMI\\Autologger\\AutoLogger-Diagtrack-Listener" /v Start /t REG_DWORD /d 0 /f',
+        enable_do_not_track_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\ConfigureDoNotTrack" /v ConfigureDoNotTrack /t REG_DWORD /d 1 /f',
+        disable_payment_method_query_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\PaymentMethodQueryEnabled" /v PaymentMethodQueryEnabled /t REG_DWORD /d 0 /f',
+        disable_personalization_reporting_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\PersonalizationReportingEnabled" /v PersonalizationReportingEnabled /t REG_DWORD /d 0 /f',
+        disable_address_bar_bing_search_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AddressBarMicrosoftSearchInBingProviderEnabled" /v AddressBarMicrosoftSearchInBingProviderEnabled /t REG_DWORD /d 0 /f',
+        disable_user_feedback_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\UserFeedbackAllowed" /v UserFeedbackAllowed /t REG_DWORD /d 0 /f',
+        disable_autofill_credit_card_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AutofillCreditCardEnabled" /v AutofillCreditCardEnabled /t REG_DWORD /d 0 /f',
+        disable_autofill_address_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AutofillAddressEnabled" /v AutofillAddressEnabled /t REG_DWORD /d 0 /f',
+        disable_local_providers_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\LocalProvidersEnabled" /v LocalProvidersEnabled /t REG_DWORD /d 0 /f',
+        disable_search_suggestions_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\SearchSuggestEnabled" /v SearchSuggestEnabled /t REG_DWORD /d 0 /f',
+        disable_edge_shopping_assistant: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\EdgeShoppingAssistantEnabled" /v EdgeShoppingAssistantEnabled /t REG_DWORD /d 0 /f',
+        disable_web_widget_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\WebWidgetAllowed" /v WebWidgetAllowed /t REG_DWORD /d 0 /f',
+        disable_hubs_sidebar_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\HubsSidebarEnabled" /v HubsSidebarEnabled /t REG_DWORD /d 0 /f',
+        disable_browser_signin_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\BrowserSignin" /v BrowserSignin /t REG_DWORD /d 0 /f',
+        disable_microsoft_editor_proofing_edge: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\MicrosoftEditorProofingEnabled" /v MicrosoftEditorProofingEnabled /t REG_DWORD /d 0 /f',
+        disable_address_bar_dropdown_edge: 'reg add "HKLM\\SOFTWARE\\Microsoft\\PolicyManager\\current\\device\\Browser\\AllowAddressBarDropdown" /v AllowAddressBarDropdown /t REG_DWORD /d 0 /f',
+        disable_input_personalization: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\InputPersonalization\\AllowInputPersonalization" /v AllowInputPersonalization /t REG_DWORD /d 0 /f',
+        disable_search_location_access: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search\\AllowSearchToUseLocation" /v AllowSearchToUseLocation /t REG_DWORD /d 0 /f',
+        disable_web_search: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search\\DisableWebSearch" /v DisableWebSearch /t REG_DWORD /d 1 /f',
+        disable_connected_search_web: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search\\ConnectedSearchUseWeb" /v ConnectedSearchUseWeb /t REG_DWORD /d 0 /f',
+        disable_speech_model_download: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Speech_OneCore\\Preferences\\ModelDownloadAllowed" /v ModelDownloadAllowed /t REG_DWORD /d 0 /f',
+        disable_cloud_search: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search\\AllowCloudSearch" /v AllowCloudSearch /t REG_DWORD /d 0 /f',
+        disable_cortana_above_lock: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search\\AllowCortanaAboveLock" /v AllowCortanaAboveLock /t REG_DWORD /d 0 /f',
+        disable_dynamic_content_in_wsb: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search\\EnableDynamicContentInWSB" /v EnableDynamicContentInWSB /t REG_DWORD /d 0 /f',
+        disable_windows_copilot: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot\\TurnOffWindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f',
+        disable_recall_enablement: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI\\AllowRecallEnablement" /v AllowRecallEnablement /t REG_DWORD /d 0 /f',
+        disable_image_creator: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Paint\\DisableImageCreator" /v DisableImageCreator /t REG_DWORD /d 1 /f',
+        disable_ai_data_analysis: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI\\DisableAIDataAnalysis" /v DisableAIDataAnalysis /t REG_DWORD /d 1 /f',
+        disable_location: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\LocationAndSensors\\DisableLocation" /v DisableLocation /t REG_DWORD /d 1 /f',
+        disable_windows_location_provider: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\LocationAndSensors\\DisableWindowsLocationProvider" /v DisableWindowsLocationProvider /t REG_DWORD /d 1 /f',
+        disable_location_scripting: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\LocationAndSensors\\DisableLocationScripting" /v DisableLocationScripting /t REG_DWORD /d 1 /f',
+        disable_telemetry: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\\AllowTelemetry" /v AllowTelemetry /t REG_DWORD /d 0 /f',
+        disable_telemetry_data_collection: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection\\AllowTelemetry" /v AllowTelemetry /t REG_DWORD /d 0 /f',
+        disable_ait_enable: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat\\AITEnable" /v AITEnable /t REG_DWORD /d 0 /f',
+        disable_tailored_experiences: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Privacy\\TailoredExperiencesWithDiagnosticDataEnabled" /v TailoredExperiencesWithDiagnosticDataEnabled /t REG_DWORD /d 0 /f',
+        limit_diagnostic_log_collection: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\\LimitDiagnosticLogCollection" /v LimitDiagnosticLogCollection /t REG_DWORD /d 1 /f',
+        disable_one_settings_downloads: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\\DisableOneSettingsDownloads" /v DisableOneSettingsDownloads /t REG_DWORD /d 1 /f',
+        disable_delivery_optimization: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\Config\\DODownloadMode" /v DODownloadMode /t REG_DWORD /d 0 /f',
+        disable_delivery_optimization_policy: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization\\DODownloadMode" /v DODownloadMode /t REG_DWORD /d 0 /f',
+        disable_system_settings_download_mode: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\SystemSettingsDownloadMode" /v SystemSettingsDownloadMode /t REG_DWORD /d 0 /f',
+        disable_speech_model_update: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Speech\\AllowSpeechModelUpdate" /v AllowSpeechModelUpdate /t REG_DWORD /d 0 /f',
+        disable_mmx: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System\\EnableMmx" /v EnableMmx /t REG_DWORD /d 0 /f',
+        disable_feedback_notifications: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\\DoNotShowFeedbackNotifications" /v DoNotShowFeedbackNotifications /t REG_DWORD /d 1 /f',
+        disable_remote_assistance: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\Terminal Services\\fAllowToGetHelp" /v fAllowToGetHelp /t REG_DWORD /d 0 /f',
+        disable_remote_desktop_connections: 'reg add "HKLM\\System\\CurrentControlSet\\Control\\Terminal Server\\fDenyTSConnections" /v fDenyTSConnections /t REG_DWORD /d 1 /f',
+        hide_meet_now_button: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\HideSCAMeetNow" /v HideSCAMeetNow /t REG_DWORD /d 1 /f',
+        disable_news_and_interests: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Dsh\\AllowNewsAndInterests" /v AllowNewsAndInterests /t REG_DWORD /d 0 /f',
       };
 
       document.querySelectorAll('.checkbox-group label').forEach((label) => {
