@@ -179,23 +179,23 @@ const gamingOptions = [
   },
   {
     id: 'gaming7',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile" /v SystemResponsiveness /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile" /v SystemResponsiveness /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile" /v SystemResponsiveness /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile" /v SystemResponsiveness /t REG_DWORD /d 1 /f'
   },
   {
     id: 'gaming8',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 10 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 10 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile" /v NetworkThrottlingIndex /t REG_DWORD /d 0 /f'
   },
   {
     id: 'gaming9',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile\\Tasks\\Games" /v "GPU Priority" /t REG_DWORD /d 8 /f; reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile\\Tasks\\Games" /v "Priority" /t REG_DWORD /d 6 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile\\Tasks\\Games" /v "GPU Priority" /t REG_DWORD /d 0 /f; reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile\\Tasks\\Games" /v "Priority" /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile\\Tasks\\Games" /v "GPU Priority" /t REG_DWORD /d 8 /f; reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile\\Tasks\\Games" /v "Priority" /t REG_DWORD /d 6 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile\\Tasks\\Games" /v "GPU Priority" /t REG_DWORD /d 0 /f; reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile\\Tasks\\Games" /v "Priority" /t REG_DWORD /d 0 /f'
   },
   {
     id: 'gaming10',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile\\Tasks\\Games" /v "Scheduling Category" /t REG_SZ /d High /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\MultimediaSystemProfile\\Tasks\\Games" /v "Scheduling Category" /t REG_SZ /d Normal /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile\\Tasks\\Games" /v "Scheduling Category" /t REG_SZ /d High /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Multimedia\\SystemProfile\\Tasks\\Games" /v "Scheduling Category" /t REG_SZ /d Normal /f'
   },
   {
     id: 'gaming11',
@@ -237,7 +237,7 @@ const updatesOptions = [
   },
   {
     id: 'updates4',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsUpdate" /v TargetReleaseVersion /t REG_DWORD /d 1 /f; reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsUpdate" /v TargetReleaseVersionInfo /t REG_SZ /d "10" /f',
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsUpdate" /v TargetReleaseVersion /t REG_DWORD /d 1 /f; reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsUpdate" /v TargetReleaseVersionInfo /t REG_SZ /d "21H2" /f',
     commandOff: 'reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsUpdate" /v TargetReleaseVersion /f; reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsUpdate" /v TargetReleaseVersionInfo /f'
   },
   {

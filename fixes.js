@@ -21,7 +21,7 @@ function log(message, level = 'info') {
 const windowsFixesOptions = [
   {
     id: 'reset_windows_update',
-    command: 'Stop-Service -Name wuauserv,cryptSvc,bits,msiserver -Force; Rename-Item "$env:windir\\SoftwareDistribution" "SoftwareDistribution.old" -Force -ErrorAction SilentlyContinue; Rename-Item "$env:windir\\System32\\catroot2" "catroot2.old" -Force -ErrorAction SilentlyContinue; regsvr32 /s wuaueng.dll; regsvr32 /s wuapi.dll; regsvr32 /s wups.dll; regsvr32 /s wups2.dll; regsvr32 /s wuwebv.dll; regsvr32 /s wuauserv.dll; regsvr32 /s wucltux.dll; netsh int ip reset reset.log; netsh winsock reset catalog; sfc /scannow; DISM /Online /Cleanup-Image /RestoreHealth /Source:WIM:X:\\Sources\\Install.wim:1 /LimitAccess; Cleanmgr /sagerun:1'
+    command: 'Stop-Service -Name wuauserv,cryptSvc,bits,msiserver -Force; Rename-Item "$env:windir\\SoftwareDistribution" "SoftwareDistribution.old" -Force -ErrorAction SilentlyContinue; Rename-Item "$env:windir\\System32\\catroot2" "catroot2.old" -Force -ErrorAction SilentlyContinue; regsvr32 /s wuaueng.dll; regsvr32 /s wuapi.dll; regsvr32 /s wups.dll; regsvr32 /s wups2.dll; regsvr32 /s wuwebv.dll; regsvr32 /s wuauserv.dll; regsvr32 /s wucltux.dll; netsh int ip reset reset.log; netsh winsock reset catalog; sfc /scannow; DISM /Online /Cleanup-Image /RestoreHealth; Cleanmgr /sagerun:1'
   },
   {
     id: 'reset_windows_store',
@@ -41,7 +41,7 @@ const windowsFixesOptions = [
   },
   {
     id: 'repair_boot_config',
-    command: '$firmware = Get-FirmwareType; if ($firmware -eq "UEFI") { bcdboot C:\\Windows /s S: /f UEFI } else { bootrec /fixmbr; bootrec /fixboot }; bootrec /scanos; bootrec /rebuildbcd'
+    command: '$firmware = (Get-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control" -Name PEFirmwareType).PEFirmwareType; if ($firmware -eq 2) { bcdboot C:\\Windows /s S: /f UEFI } else { bootrec /fixmbr; bootrec /fixboot }; bootrec /scanos; bootrec /rebuildbcd'
   },
   {
     id: 'cleanup_component_store',
@@ -49,11 +49,11 @@ const windowsFixesOptions = [
   },
   {
     id: 'advanced_system_repair',
-    command: 'sfc /scannow; DISM /Online /Cleanup-Image /RestoreHealth /Source:WIM:X:\\Sources\\Install.wim:1 /LimitAccess; DISM /Online /Cleanup-Image /StartComponentCleanup /ResetBase /Defer'
+    command: 'sfc /scannow; DISM /Online /Cleanup-Image /RestoreHealth; DISM /Online /Cleanup-Image /StartComponentCleanup /ResetBase /Defer'
   },
   {
     id: 'reset_windows_defender',
-    command: 'Stop-Service -Name WinDefend -Force; Start-Service -Name WinDefend; Start-Process "C:\\Program Files\\Windows Defender\\MpCmdRun.exe" -ArgumentList "-RemoveDefinitions -All"; Update-MpSignature'
+    command: 'Stop-Service -Name WinDefend -Force; Start-Service -Name WinDefend; Start-Process "C:\\Program Files\\Windows Defender\\MpCmdRun.exe" -ArgumentList "-RemoveDefinitions -All" -Wait; Update-MpSignature'
   },
   {
     id: 'clean_temp_files',
@@ -69,7 +69,7 @@ const windowsFixesOptions = [
   },
   {
     id: 'optimize_disk',
-    command: '$diskType = (Get-PhysicalDisk).MediaType; if ($diskType -eq "SSD") { Optimize-Volume C -ReTrim -Verbose } else { defrag C: /O /U /V }'
+    command: '$partition = Get-Partition -DriveLetter C; $disk = Get-Disk -Number $partition.DiskNumber; if ($disk.MediaType -eq "SSD") { Optimize-Volume C -ReTrim -Verbose } else { defrag C: /O /U /V }'
   },
   {
     id: 'repair_wsl',
@@ -81,7 +81,7 @@ const windowsFixesOptions = [
   },
   {
     id: 'reset_audio_services',
-    command: 'Stop-Service -Name Audiosrv -Force; Start-Sleep -Seconds 2; regsvr32 /s %SystemRoot%\\System32\\AudioEng.dll; regsvr32 /s %SystemRoot%\\System32\\AudioSes.dll; Start-Service -Name Audiosrv; msdt.exe /id AudioPlaybackDiagnostic'
+    command: 'Stop-Service -Name Audiosrv -Force; Start-Sleep -Seconds 2; regsvr32 /s $env:SystemRoot\\System32\\AudioEng.dll; regsvr32 /s $env:SystemRoot\\System32\\AudioSes.dll; Start-Service -Name Audiosrv; msdt.exe /id AudioPlaybackDiagnostic'
   }
 ];
 

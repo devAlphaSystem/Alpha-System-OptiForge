@@ -18,7 +18,7 @@ async function updateRemoveAppsStatus(labelEl, appId) {
 
   try {
     const result = await ipcRenderer.invoke('check-remove-app-status', appId);
-    log(labelEl.innerText + ": " + result.installed)
+    console.log(labelEl.innerText + ": " + result.installed);
     circle.style.backgroundColor = result.installed ? 'green' : 'red';
   } catch (error) {
     circle.style.backgroundColor = 'gray';
@@ -40,7 +40,7 @@ async function updateBloatwareStatus(labelEl, appId) {
 
   try {
     const result = await ipcRenderer.invoke('check-app-status', appId);
-    log(labelEl.innerText + ": " + result.installed)
+    console.log(labelEl.innerText + ": " + result.installed);
     circle.style.backgroundColor = result.installed ? 'green' : 'red';
   } catch (error) {
     circle.style.backgroundColor = 'gray';
@@ -155,7 +155,7 @@ function updateHealthDisplay(healthData) {
   statusElem.textContent = healthData.status;
   statusElem.style.color = healthData.statusColor;
 
-  detailsElem.innerHTML = healthData.checks.map(check => `
+  detailsElem.innerHTML = (healthData.checks || []).map(check => `
     <div style="margin: 10px 0; padding: 10px;">
       <span style="color: ${check.passed ? 'green' : 'red'}; margin-right: 10px;">${check.passed ? '<i class="fas fa-check"></i>' : '<i class="far fa-times-circle"></i>'}</span>
       ${check.name.split(' ').map(word => word.toUpperCase()).join(' ')}
@@ -246,10 +246,10 @@ async function initializeStatusChecks() {
     const nugetCheck = execSync(`powershell -ExecutionPolicy Bypass -Command "Get-PackageProvider -Name NuGet -ListAvailable | Where-Object { $_.Version -ge [version]'2.8.5.201' } | Select-Object -First 1"`).toString();
     if (!nugetCheck.trim()) {
       updateLoadingText('Installing NuGet package provider...');
-      log('Installing NuGet package provider...')
+      console.log('Installing NuGet package provider...');
       execSync('powershell -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope CurrentUser"');
     } else {
-      log('NuGet package provider already installed.');
+      console.log('NuGet package provider already installed.');
       updateLoadingText('NuGet package provider already installed.');
     }
   } catch (error) {
@@ -261,10 +261,10 @@ async function initializeStatusChecks() {
     const pswuCheck = execSync('powershell -ExecutionPolicy Bypass -Command "Get-Module -ListAvailable PSWindowsUpdate | Select-Object -First 1"').toString();
     if (!pswuCheck.trim()) {
       updateLoadingText('Installing PSWindowsUpdate module...');
-      log('Installing PSWindowsUpdate module...')
+      console.log('Installing PSWindowsUpdate module...');
       execSync('powershell -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-Module PSWindowsUpdate -Force -Scope CurrentUser -SkipPublisherCheck -AllowClobber"');
     } else {
-      log('PSWindowsUpdate module already installed.');
+      console.log('PSWindowsUpdate module already installed.');
       updateLoadingText('PSWindowsUpdate module already installed.');
     }
   } catch (error) {
@@ -443,6 +443,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkOptimizationStatus('privacySection', 'privacy');
   });
 
   let gamingStartNotificationId = null;
@@ -485,6 +486,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkOptimizationStatus('gamingSection', 'gaming');
   });
 
   let updatesStartNotificationId = null;
@@ -527,6 +529,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkOptimizationStatus('updatesSection', 'updates');
   });
 
   let powerStartNotificationId = null;
@@ -611,6 +614,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkOptimizationStatus('servicesSection', 'services');
   });
 
   let maintenanceStartNotificationId = null;
@@ -695,6 +699,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkRemoveAppsStatus();
   });
 
   let bloatwareStartNotificationId = null;
@@ -737,6 +742,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkBloatwareStatus();
   });
 
   let systemToolsNotificationId = null;
@@ -914,6 +920,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkFixesStatus('systemTweaksSection', 'systemTweaks');
   });
 
   let networkStartNotificationId = null;
@@ -958,6 +965,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkFixesStatus('networkTweaksSection', 'networkTweaks');
   });
 
   let windowsFixesNotificationId = null;
@@ -1042,6 +1050,7 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkFeaturesStatus('userFeaturesSection', 'userFeatures');
   });
 
   let machineWindowsFeaturesNotificationId = null;
@@ -1084,125 +1093,6 @@ window.addEventListener('DOMContentLoaded', () => {
         type: 'success'
       });
     }
+    checkFeaturesStatus('machineFeaturesSection', 'machineFeatures');
   });
-
-  function formatBytes(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
-
-  function formatUptime(seconds) {
-    const days = Math.floor(seconds / (3600 * 24));
-    seconds %= 3600 * 24;
-    const hours = Math.floor(seconds / 3600);
-    seconds %= 3600;
-    const minutes = Math.floor(seconds / 60);
-    seconds = Math.floor(seconds % 60);
-    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-  }
-
-  function createCollapsibleSection(title, infoObject) {
-    const section = document.createElement('div');
-    section.classList.add('section');
-
-    const header = document.createElement('div');
-    header.classList.add('section-header');
-    const h3 = document.createElement('h3');
-    h3.textContent = title;
-    header.appendChild(h3);
-    section.appendChild(header);
-
-    const content = document.createElement('div');
-    content.classList.add('section-content');
-    content.style.display = 'none';
-
-    if (title == 'General Information') {
-      content.style.display = 'block';
-      content.classList.add('active');
-    }
-
-    const list = document.createElement('ul');
-    list.style.listStyleType = 'none';
-    list.style.padding = '0';
-
-    for (const key in infoObject) {
-      const li = document.createElement('li');
-      li.style.margin = '5px 0';
-      li.textContent = `${key}: ${infoObject[key]}`;
-      list.appendChild(li);
-    }
-
-    content.appendChild(list);
-    section.appendChild(content);
-
-    header.addEventListener('click', () => {
-      if (content.style.display === 'block') {
-        content.style.display = 'none';
-        content.classList.remove('active');
-      } else {
-        content.style.display = 'block';
-        content.classList.add('active');
-      }
-    });
-
-    return section;
-  }
-
-  const systemInfoTab = document.getElementById('systemInfoTab');
-  if (systemInfoTab) {
-    const generalInfo = {
-      'OS Type': os.type(),
-      'Platform': os.platform(),
-      'OS Release': os.release(),
-      Architecture: os.arch(),
-      Hostname: os.hostname(),
-      Uptime: formatUptime(os.uptime())
-    };
-
-    const cpus = os.cpus();
-    const cpuInfo = {};
-    if (cpus && cpus.length > 0) {
-      cpuInfo['Model'] = cpus[0].model;
-      cpuInfo['Speed (MHz)'] = cpus[0].speed;
-      cpuInfo['Number of Cores'] = cpus.length;
-    } else {
-      cpuInfo['Info'] = 'No CPU data available.';
-    }
-
-    const memoryInfo = {
-      'Total Memory': formatBytes(os.totalmem()),
-      'Free Memory': formatBytes(os.freemem())
-    };
-
-    const networkObj = {};
-    const networkInterfaces = os.networkInterfaces();
-    for (const iface in networkInterfaces) {
-      const addresses = networkInterfaces[iface].map((addr) => `${addr.address} (${addr.family})${addr.internal ? ' [Internal]' : ''}`);
-      networkObj[iface] = addresses.join(', ');
-    }
-
-    const user = os.userInfo();
-    const userInfo = {
-      Username: user.username,
-      'Home Directory': user.homedir,
-      'Temporary Directory': os.tmpdir(),
-      Shell: user.shell || 'N/A'
-    };
-
-    const generalSection = createCollapsibleSection('General Information', generalInfo);
-    const cpuSection = createCollapsibleSection('CPU Information', cpuInfo);
-    const memSection = createCollapsibleSection('Memory Information', memoryInfo);
-    const netSection = createCollapsibleSection('Network Interfaces', networkObj);
-    const userSection = createCollapsibleSection('User Information', userInfo);
-    userSection.style.marginBottom = '0';
-
-    systemInfoTab.appendChild(generalSection);
-    systemInfoTab.appendChild(cpuSection);
-    systemInfoTab.appendChild(memSection);
-    systemInfoTab.appendChild(netSection);
-    systemInfoTab.appendChild(userSection);
-  }
 });

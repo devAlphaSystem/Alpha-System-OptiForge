@@ -155,10 +155,7 @@ const HEALTH_CHECKS = {
           const checkCmd = `powershell -ExecutionPolicy Bypass -Command "Get-AppxPackage -Name ${packageName} -ErrorAction SilentlyContinue | Select-Object -Property Name"`;
           return execSync(checkCmd, { stdio: 'pipe' }).toString().trim().length > 0;
         }).length;
-        return {
-          passed: installed <= 5,
-          message: `${installed} bloatware apps found`
-        };
+        return { passed: installed <= 5, message: `${installed} bloatware apps found` };
       } catch (error) {
         return { passed: false, message: 'Check failed' };
       }
@@ -172,10 +169,7 @@ const HEALTH_CHECKS = {
         const [capacity, freeSpace] = output.match(/\d+/g);
         const freeGB = (freeSpace / 1e9).toFixed(1);
         const totalGB = (capacity / 1e9).toFixed(1);
-        return {
-          passed: freeGB > 5,
-          message: `Free space: ${freeGB}GB / ${totalGB}GB`
-        };
+        return { passed: freeGB > 5, message: `Free space: ${freeGB}GB / ${totalGB}GB` };
       } catch (error) {
         return { passed: false, message: 'Check failed' };
       }
@@ -187,10 +181,7 @@ const HEALTH_CHECKS = {
       try {
         const tempSize = execSync('powershell -ExecutionPolicy Bypass -Command "(Get-ChildItem $env:TEMP -Recurse | Measure-Object -Property Length -Sum).Sum"').toString();
         const sizeGB = (parseInt(tempSize) / 1e9).toFixed(1);
-        return {
-          passed: sizeGB < 1,
-          message: `Temp files: ${sizeGB}GB`
-        };
+        return { passed: sizeGB < 1, message: `Temp files: ${sizeGB}GB` };
       } catch (error) {
         return { passed: false, message: 'Check failed' };
       }
@@ -201,15 +192,9 @@ const HEALTH_CHECKS = {
     check: () => {
       try {
         const updates = execSync('powershell -ExecutionPolicy Bypass -Command "Import-Module PSWindowsUpdate; Get-WindowsUpdate -IsInstalled:$false"').toString();
-        return {
-          passed: !updates.includes('Update'),
-          message: updates.includes('Update') ? 'Updates pending' : 'Up to date'
-        };
+        return { passed: !updates.includes('Update'), message: updates.includes('Update') ? 'Updates pending' : 'Up to date' };
       } catch (error) {
-        return {
-          passed: false,
-          message: 'Check failed - ' + error.message.split('\n')[0]
-        };
+        return { passed: false, message: 'Check failed - ' + error.message.split('\n')[0] };
       }
     }
   },
@@ -219,10 +204,7 @@ const HEALTH_CHECKS = {
       try {
         const startupCount = execSync('powershell -Command "Get-CimInstance Win32_StartupCommand | Measure-Object | Select-Object -ExpandProperty Count"').toString().trim();
         const count = parseInt(startupCount) || 0;
-        return {
-          passed: count <= 5,
-          message: `${count} startup programs`
-        };
+        return { passed: count <= 5, message: `${count} startup programs` };
       } catch (error) {
         return { passed: false, message: 'Check failed' };
       }
@@ -233,10 +215,7 @@ const HEALTH_CHECKS = {
     check: () => {
       try {
         const status = execSync('powershell -Command "(Get-MpComputerStatus).AntivirusEnabled"').toString().trim();
-        return {
-          passed: status === 'True',
-          message: status === 'True' ? 'Enabled' : 'Disabled'
-        };
+        return { passed: status === 'True', message: status === 'True' ? 'Enabled' : 'Disabled' };
       } catch (error) {
         return { passed: false, message: 'Check failed' };
       }
@@ -247,10 +226,7 @@ const HEALTH_CHECKS = {
     check: () => {
       try {
         const output = execSync('netsh advfirewall show allprofiles state').toString();
-        return {
-          passed: !output.includes('OFF'),
-          message: output.includes('OFF') ? 'Disabled' : 'Enabled'
-        };
+        return { passed: !output.includes('OFF'), message: output.includes('OFF') ? 'Disabled' : 'Enabled' };
       } catch (error) {
         return { passed: false, message: 'Check failed' };
       }
@@ -262,10 +238,7 @@ const HEALTH_CHECKS = {
       try {
         const bootTime = execSync('powershell -Command "(Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime"').toString().trim();
         const uptimeDays = (Date.now() - new Date(bootTime)) / 86400000;
-        return {
-          passed: uptimeDays < 7,
-          message: `Uptime: ${uptimeDays.toFixed(1)} days`
-        };
+        return { passed: uptimeDays < 7, message: `Uptime: ${uptimeDays.toFixed(1)} days` };
       } catch (error) {
         return { passed: false, message: 'Check failed' };
       }
@@ -277,10 +250,7 @@ const HEALTH_CHECKS = {
       try {
         const dns = execSync('powershell -Command "Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandProperty ServerAddresses"').toString();
         const goodDNS = ['8.8.8.8', '1.1.1.1', '9.9.9.9'];
-        return {
-          passed: goodDNS.some(server => dns.includes(server)),
-          message: goodDNS.some(server => dns.includes(server)) ? 'Secure DNS' : 'Default DNS'
-        };
+        return { passed: goodDNS.some(server => dns.includes(server)), message: goodDNS.some(server => dns.includes(server)) ? 'Secure DNS' : 'Default DNS' };
       } catch (error) {
         return { passed: false, message: 'Check failed' };
       }

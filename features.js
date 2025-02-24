@@ -166,8 +166,8 @@ const userRegistryChanges = [
   },
   {
     id: 'disable_search_history_microsoftedge',
-    commandOn: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\\ShowSearchHistory" /v (Default) /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\\ShowSearchHistory" /v (Default) /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\\ShowSearchHistory" /ve /t REG_SZ /d 0 /f',
+    commandOff: 'reg add "HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Storage\\microsoft.microsoftedge_8wekyb3d8bbwe\\MicrosoftEdge\\ServiceUI\\ShowSearchHistory" /ve /t REG_SZ /d 1 /f'
   },
   {
     id: 'disable_office_telemetry',
@@ -176,8 +176,8 @@ const userRegistryChanges = [
   },
   {
     id: 'disable_office_send_telemetry',
-    commandOn: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\common\\clienttelemetry" /v SendTelemetry /t REG_DWORD /d 3 /f',
-    commandOff: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\common\\clienttelemetry" /v SendTelemetry /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\common\\clienttelemetry" /v SendTelemetry /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKCU\\Software\\Policies\\Microsoft\\office\\common\\clienttelemetry" /v SendTelemetry /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_office_quality_metrics',
@@ -509,73 +509,73 @@ const machineRegistryChanges = [
   },
   {
     id: 'enable_do_not_track_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\ConfigureDoNotTrack" /v ConfigureDoNotTrack /t REG_DWORD /d 1 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\ConfigureDoNotTrack" /v ConfigureDoNotTrack /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v ConfigureDoNotTrack /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v ConfigureDoNotTrack /t REG_DWORD /d 0 /f'
   },
   {
     id: 'disable_payment_method_query_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\PaymentMethodQueryEnabled" /v PaymentMethodQueryEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\PaymentMethodQueryEnabled" /v PaymentMethodQueryEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v PaymentMethodQueryEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v PaymentMethodQueryEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_personalization_reporting_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\PersonalizationReportingEnabled" /v PersonalizationReportingEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\PersonalizationReportingEnabled" /v PersonalizationReportingEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v PersonalizationReportingEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v PersonalizationReportingEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_address_bar_bing_search_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AddressBarMicrosoftSearchInBingProviderEnabled" /v AddressBarMicrosoftSearchInBingProviderEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AddressBarMicrosoftSearchInBingProviderEnabled" /v AddressBarMicrosoftSearchInBingProviderEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v AddressBarMicrosoftSearchInBingProviderEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v AddressBarMicrosoftSearchInBingProviderEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_user_feedback_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\UserFeedbackAllowed" /v UserFeedbackAllowed /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\UserFeedbackAllowed" /v UserFeedbackAllowed /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v UserFeedbackAllowed /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v UserFeedbackAllowed /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_autofill_credit_card_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AutofillCreditCardEnabled" /v AutofillCreditCardEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AutofillCreditCardEnabled" /v AutofillCreditCardEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v AutofillCreditCardEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v AutofillCreditCardEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_autofill_address_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AutofillAddressEnabled" /v AutofillAddressEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\AutofillAddressEnabled" /v AutofillAddressEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v AutofillAddressEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v AutofillAddressEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_local_providers_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\LocalProvidersEnabled" /v LocalProvidersEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\LocalProvidersEnabled" /v LocalProvidersEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v LocalProvidersEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v LocalProvidersEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_search_suggestions_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\SearchSuggestEnabled" /v SearchSuggestEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\SearchSuggestEnabled" /v SearchSuggestEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v SearchSuggestEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v SearchSuggestEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_edge_shopping_assistant',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\EdgeShoppingAssistantEnabled" /v EdgeShoppingAssistantEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\EdgeShoppingAssistantEnabled" /v EdgeShoppingAssistantEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v EdgeShoppingAssistantEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v EdgeShoppingAssistantEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_web_widget_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\WebWidgetAllowed" /v WebWidgetAllowed /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\WebWidgetAllowed" /v WebWidgetAllowed /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v WebWidgetAllowed /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v WebWidgetAllowed /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_hubs_sidebar_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\HubsSidebarEnabled" /v HubsSidebarEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\HubsSidebarEnabled" /v HubsSidebarEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v HubsSidebarEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v HubsSidebarEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_browser_signin_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\BrowserSignin" /v BrowserSignin /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\BrowserSignin" /v BrowserSignin /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v BrowserSignin /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v BrowserSignin /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_microsoft_editor_proofing_edge',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\MicrosoftEditorProofingEnabled" /v MicrosoftEditorProofingEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge\\MicrosoftEditorProofingEnabled" /v MicrosoftEditorProofingEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v MicrosoftEditorProofingEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge" /v MicrosoftEditorProofingEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_address_bar_dropdown_edge',
@@ -584,8 +584,8 @@ const machineRegistryChanges = [
   },
   {
     id: 'disable_input_personalization',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\InputPersonalization\\AllowInputPersonalization" /v AllowInputPersonalization /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\InputPersonalization\\AllowInputPersonalization" /v AllowInputPersonalization /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\InputPersonalization" /v AllowInputPersonalization /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\InputPersonalization" /v AllowInputPersonalization /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_search_location_access',
@@ -624,23 +624,23 @@ const machineRegistryChanges = [
   },
   {
     id: 'disable_windows_copilot',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot\\TurnOffWindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot\\TurnOffWindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 0 /f'
   },
   {
     id: 'disable_recall_enablement',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI\\AllowRecallEnablement" /v AllowRecallEnablement /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI\\AllowRecallEnablement" /v AllowRecallEnablement /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI" /v AllowRecallEnablement /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI" /v AllowRecallEnablement /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_image_creator',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Paint\\DisableImageCreator" /v DisableImageCreator /t REG_DWORD /d 1 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Paint\\DisableImageCreator" /v DisableImageCreator /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Paint" /v DisableImageCreator /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Paint" /v DisableImageCreator /t REG_DWORD /d 0 /f'
   },
   {
     id: 'disable_ai_data_analysis',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI\\DisableAIDataAnalysis" /v DisableAIDataAnalysis /t REG_DWORD /d 1 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI\\DisableAIDataAnalysis" /v DisableAIDataAnalysis /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI" /v DisableAIDataAnalysis /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsAI" /v DisableAIDataAnalysis /t REG_DWORD /d 0 /f'
   },
   {
     id: 'disable_location',
@@ -669,13 +669,13 @@ const machineRegistryChanges = [
   },
   {
     id: 'disable_ait_enable',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat\\AITEnable" /v AITEnable /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat\\AITEnable" /v AITEnable /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat" /v AITEnable /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\AppCompat" /v AITEnable /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_tailored_experiences',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Privacy\\TailoredExperiencesWithDiagnosticDataEnabled" /v TailoredExperiencesWithDiagnosticDataEnabled /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Privacy\\TailoredExperiencesWithDiagnosticDataEnabled" /v TailoredExperiencesWithDiagnosticDataEnabled /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Privacy" /v TailoredExperiencesWithDiagnosticDataEnabled /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Privacy" /v TailoredExperiencesWithDiagnosticDataEnabled /t REG_DWORD /d 1 /f'
   },
   {
     id: 'limit_diagnostic_log_collection',
@@ -694,48 +694,48 @@ const machineRegistryChanges = [
   },
   {
     id: 'disable_delivery_optimization_policy',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization\\DODownloadMode" /v DODownloadMode /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization\\DODownloadMode" /v DODownloadMode /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization" /v DODownloadMode /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization" /v DODownloadMode /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_system_settings_download_mode',
-    commandOn: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\SystemSettingsDownloadMode" /v SystemSettingsDownloadMode /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\SystemSettingsDownloadMode" /v SystemSettingsDownloadMode /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization" /v SystemSettingsDownloadMode /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization" /v SystemSettingsDownloadMode /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_speech_model_update',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Speech\\AllowSpeechModelUpdate" /v AllowSpeechModelUpdate /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Speech\\AllowSpeechModelUpdate" /v AllowSpeechModelUpdate /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Speech" /v AllowSpeechModelUpdate /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Speech" /v AllowSpeechModelUpdate /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_mmx',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System\\EnableMmx" /v EnableMmx /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System\\EnableMmx" /v EnableMmx /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v EnableMmx /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v EnableMmx /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_feedback_notifications',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\\DoNotShowFeedbackNotifications" /v DoNotShowFeedbackNotifications /t REG_DWORD /d 1 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\\DoNotShowFeedbackNotifications" /v DoNotShowFeedbackNotifications /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v DoNotShowFeedbackNotifications /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v DoNotShowFeedbackNotifications /t REG_DWORD /d 0 /f'
   },
   {
     id: 'disable_remote_assistance',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\Terminal Services\\fAllowToGetHelp" /v fAllowToGetHelp /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\Terminal Services\\fAllowToGetHelp" /v fAllowToGetHelp /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\Terminal Services" /v fAllowToGetHelp /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\Terminal Services" /v fAllowToGetHelp /t REG_DWORD /d 1 /f'
   },
   {
     id: 'disable_remote_desktop_connections',
-    commandOn: 'reg add "HKLM\\System\\CurrentControlSet\\Control\\Terminal Server\\fDenyTSConnections" /v fDenyTSConnections /t REG_DWORD /d 1 /f',
-    commandOff: 'reg add "HKLM\\System\\CurrentControlSet\\Control\\Terminal Server\\fDenyTSConnections" /v fDenyTSConnections /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\System\\CurrentControlSet\\Control\\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\System\\CurrentControlSet\\Control\\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f'
   },
   {
     id: 'hide_meet_now_button',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\HideSCAMeetNow" /v HideSCAMeetNow /t REG_DWORD /d 1 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\HideSCAMeetNow" /v HideSCAMeetNow /t REG_DWORD /d 0 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer" /v HideSCAMeetNow /t REG_DWORD /d 1 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer" /v HideSCAMeetNow /t REG_DWORD /d 0 /f'
   },
   {
     id: 'disable_news_and_interests',
-    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Dsh\\AllowNewsAndInterests" /v AllowNewsAndInterests /t REG_DWORD /d 0 /f',
-    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Dsh\\AllowNewsAndInterests" /v AllowNewsAndInterests /t REG_DWORD /d 1 /f'
+    commandOn: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f',
+    commandOff: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 1 /f'
   }
 ];
 
