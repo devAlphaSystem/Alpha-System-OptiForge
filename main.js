@@ -1,4 +1,4 @@
-const { app, dialog, BrowserWindow, Menu } = require('electron');
+const { app, Menu, dialog, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 Menu.setApplicationMenu(null);
@@ -38,22 +38,38 @@ async function checkAdminPrivileges() {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1152,
-    height: 648,
+    width: 1280,
+    height: 720,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       devTools: false
     },
+    frame: false,
     resizable: false,
     maximizable: false,
     fullscreenable: false,
-    autoHideMenuBar: true
+    autoHideMenuBar: true,
+    backgroundColor: '#282a36'
   });
 
   log("Creating BrowserWindow");
   win.loadFile('index.html');
 }
+
+ipcMain.on('renderer-log', (event, message, level = 'info') => {
+  log(`[Renderer] ${message}`, level);
+});
+
+ipcMain.on('window-minimize', () => {
+  const window = BrowserWindow.getFocusedWindow();
+  if (window) window.minimize();
+});
+
+ipcMain.on('window-close', () => {
+  const window = BrowserWindow.getFocusedWindow();
+  if (window) window.close();
+});
 
 app.whenReady().then(async () => {
   log("App is ready");
@@ -62,7 +78,6 @@ app.whenReady().then(async () => {
 
   createWindow();
 
-  require('./health');
   require('./apps');
   require('./optimizations');
   require('./commands');

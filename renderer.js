@@ -1,7 +1,24 @@
-const { log } = require('console');
 const { ipcRenderer } = require('electron');
 const { execSync } = require('child_process');
-const os = require('os');
+
+function log(message, level = 'info') {
+  const timestamp = new Date().toISOString();
+  ipcRenderer.send('renderer-log', message, level);
+
+  switch (level) {
+    case 'info':
+      console.info(`[${timestamp}] INFO: ${message}`);
+      break;
+    case 'warn':
+      console.warn(`[${timestamp}] WARN: ${message}`);
+      break;
+    case 'error':
+      console.error(`[${timestamp}] ERROR: ${message}`);
+      break;
+    default:
+      console.log(`[${timestamp}] ${message}`);
+  }
+}
 
 async function updateRemoveAppsStatus(labelEl, appId) {
   let circle = labelEl.querySelector('.status-circle');
@@ -18,7 +35,7 @@ async function updateRemoveAppsStatus(labelEl, appId) {
 
   try {
     const result = await ipcRenderer.invoke('check-remove-app-status', appId);
-    console.log(labelEl.innerText + ": " + result.installed);
+    log(labelEl.innerText + ": " + result.installed);
     circle.style.backgroundColor = result.installed ? 'green' : 'red';
   } catch (error) {
     circle.style.backgroundColor = 'gray';
@@ -40,7 +57,7 @@ async function updateBloatwareStatus(labelEl, appId) {
 
   try {
     const result = await ipcRenderer.invoke('check-app-status', appId);
-    console.log(labelEl.innerText + ": " + result.installed);
+    log(labelEl.innerText + ": " + result.installed);
     circle.style.backgroundColor = result.installed ? 'green' : 'red';
   } catch (error) {
     circle.style.backgroundColor = 'gray';
@@ -146,24 +163,6 @@ async function updateFeaturesStatus(labelEl, category, optionId) {
   }
 }
 
-function updateHealthDisplay(healthData) {
-  const scoreElem = document.getElementById('healthScore');
-  const statusElem = document.getElementById('healthStatus');
-  const detailsElem = document.getElementById('healthDetails');
-
-  scoreElem.textContent = healthData.score;
-  statusElem.textContent = healthData.status;
-  statusElem.style.color = healthData.statusColor;
-
-  detailsElem.innerHTML = (healthData.checks || []).map(check => `
-    <div style="margin: 10px 0; padding: 10px;">
-      <span style="color: ${check.passed ? 'green' : 'red'}; margin-right: 10px;">${check.passed ? '<i class="fas fa-check"></i>' : '<i class="far fa-times-circle"></i>'}</span>
-      ${check.name.split(' ').map(word => word.toUpperCase()).join(' ')}
-      ${check.message ? `<div style="color: #888; font-size: 0.9em; margin-top: 5px;">${check.message}</div>` : ''}
-    </div>
-  `).join('');
-}
-
 function checkRemoveAppsStatus() {
   const removeAppsLabels = document.querySelectorAll('#removeAppsSection .checkbox-group label');
   const promises = [];
@@ -224,15 +223,6 @@ function checkFeaturesStatus(sectionId, category) {
   return Promise.all(promises);
 }
 
-async function checkSystemHealth() {
-  try {
-    const healthData = await ipcRenderer.invoke('check-system-health');
-    updateHealthDisplay(healthData);
-  } catch (error) {
-    console.error('Health check failed:', error);
-  }
-}
-
 function updateLoadingText(message) {
   const loadingText = document.querySelector('.verbose-text');
   if (loadingText) {
@@ -246,14 +236,14 @@ async function initializeStatusChecks() {
     const nugetCheck = execSync(`powershell -ExecutionPolicy Bypass -Command "Get-PackageProvider -Name NuGet -ListAvailable | Where-Object { $_.Version -ge [version]'2.8.5.201' } | Select-Object -First 1"`).toString();
     if (!nugetCheck.trim()) {
       updateLoadingText('Installing NuGet package provider...');
-      console.log('Installing NuGet package provider...');
+      log('Installing NuGet package provider...');
       execSync('powershell -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope CurrentUser"');
     } else {
-      console.log('NuGet package provider already installed.');
+      log('NuGet package provider already installed.');
       updateLoadingText('NuGet package provider already installed.');
     }
   } catch (error) {
-    console.error('Error checking/installing NuGet:', error);
+    log('Error checking/installing NuGet: ' + error, 'error');
   }
 
   updateLoadingText('Checking PSWindowsUpdate module...');
@@ -261,14 +251,14 @@ async function initializeStatusChecks() {
     const pswuCheck = execSync('powershell -ExecutionPolicy Bypass -Command "Get-Module -ListAvailable PSWindowsUpdate | Select-Object -First 1"').toString();
     if (!pswuCheck.trim()) {
       updateLoadingText('Installing PSWindowsUpdate module...');
-      console.log('Installing PSWindowsUpdate module...');
+      log('Installing PSWindowsUpdate module...');
       execSync('powershell -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-Module PSWindowsUpdate -Force -Scope CurrentUser -SkipPublisherCheck -AllowClobber"');
     } else {
-      console.log('PSWindowsUpdate module already installed.');
+      log('PSWindowsUpdate module already installed.');
       updateLoadingText('PSWindowsUpdate module already installed.');
     }
   } catch (error) {
-    console.error('Error checking/installing PSWindowsUpdate:', error);
+    log('Error checking/installing PSWindowsUpdate: ' + error, 'error');
   }
 
   updateLoadingText('Checking remove apps status...');
@@ -299,23 +289,12 @@ async function initializeStatusChecks() {
   await checkFeaturesStatus('userFeaturesSection', 'userFeatures');
   await checkFeaturesStatus('machineFeaturesSection', 'machineFeatures');
 
-  updateLoadingText('Checking system health...');
-  await checkSystemHealth();
-
   updateLoadingText('All checks completed!');
   const spinner = document.getElementById('loadingSpinner');
   if (spinner) {
     spinner.style.display = 'none';
   }
 }
-
-ipcRenderer.on('health-check-update', (event, healthData) => {
-  updateHealthDisplay(healthData);
-});
-
-ipcRenderer.on('health-check-progress', (event, message) => {
-  updateLoadingText(message);
-});
 
 window.addEventListener('DOMContentLoaded', () => {
   const notifier = window.EasyNotificationInstance;
@@ -330,7 +309,7 @@ window.addEventListener('DOMContentLoaded', () => {
   navItems.forEach((item) => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
-      console.info('Navigating to tab:', item.getAttribute('data-tab'));
+      log('Navigating to tab: ' + item.getAttribute('data-tab'));
 
       navItems.forEach((nav) => nav.classList.remove('active'));
       tabContents.forEach((tab) => tab.classList.remove('active'));
@@ -388,7 +367,6 @@ window.addEventListener('DOMContentLoaded', () => {
     'updatesSection',
     'powerSection',
     'servicesSection',
-    'recommendedAppsSection',
     'removeAppsSection',
     'uselessBloatwareSection',
     'systemToolsSection',
@@ -398,8 +376,7 @@ window.addEventListener('DOMContentLoaded', () => {
     'networkTweaksSection',
     'windowsFixesSection',
     'userFeaturesSection',
-    'machineFeaturesSection',
-    'healthTab'
+    'machineFeaturesSection'
   ];
   sectionsToSetup.forEach(setupSelectButtons);
 
@@ -409,7 +386,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#privacySection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Privacy Optimizations selected:', selected);
+    log('Privacy Optimizations selected: ' + selected);
 
     privacyStartNotificationId = notifier.createNotification({
       title: 'Privacy Optimizations',
@@ -425,7 +402,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('privacy-optimizations-response', (event, arg) => {
-    console.info('Privacy Optimizations Response:', arg);
+    log('Privacy Optimizations Response: ' + arg);
     if (privacyStartNotificationId) {
       notifier.dismissNotification(privacyStartNotificationId);
       privacyStartNotificationId = null;
@@ -452,7 +429,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#gamingSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Gaming Optimizations selected:', selected);
+    log('Gaming Optimizations selected: ' + selected);
 
     gamingStartNotificationId = notifier.createNotification({
       title: 'Gaming Optimizations',
@@ -468,7 +445,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('gaming-optimizations-response', (event, arg) => {
-    console.info('Gaming Optimizations Response:', arg);
+    log('Gaming Optimizations Response: ' + arg);
     if (gamingStartNotificationId) {
       notifier.dismissNotification(gamingStartNotificationId);
       gamingStartNotificationId = null;
@@ -495,7 +472,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#updatesSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Updates Optimizations selected:', selected);
+    log('Updates Optimizations selected: ' + selected);
 
     updatesStartNotificationId = notifier.createNotification({
       title: 'Updates Optimizations',
@@ -511,7 +488,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('updates-optimizations-response', (event, arg) => {
-    console.info('Updates Optimizations Response:', arg);
+    log('Updates Optimizations Response: ' + arg);
     if (updatesStartNotificationId) {
       notifier.dismissNotification(updatesStartNotificationId);
       updatesStartNotificationId = null;
@@ -538,7 +515,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#powerSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Power Optimizations selected:', selected);
+    log('Power Optimizations selected: ' + selected);
 
     powerStartNotificationId = notifier.createNotification({
       title: 'Power Optimizations',
@@ -554,7 +531,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('power-optimizations-response', (event, arg) => {
-    console.info('Power Optimizations Response:', arg);
+    log('Power Optimizations Response: ' + arg);
     if (powerStartNotificationId) {
       notifier.dismissNotification(powerStartNotificationId);
       powerStartNotificationId = null;
@@ -580,7 +557,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#servicesSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Services Optimizations selected:', selected);
+    log('Services Optimizations selected: ' + selected);
 
     servicesStartNotificationId = notifier.createNotification({
       title: 'Services Optimizations',
@@ -596,7 +573,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('services-optimizations-response', (event, arg) => {
-    console.info('Services Optimizations Response:', arg);
+    log('Services Optimizations Response: ' + arg);
     if (servicesStartNotificationId) {
       notifier.dismissNotification(servicesStartNotificationId);
       servicesStartNotificationId = null;
@@ -623,7 +600,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#maintenanceSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Maintenance Optimizations selected:', selected);
+    log('Maintenance Optimizations selected: ' + selected);
 
     maintenanceStartNotificationId = notifier.createNotification({
       title: 'Maintenance Optimizations',
@@ -639,7 +616,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('maintenance-optimizations-response', (event, arg) => {
-    console.info('Maintenance Optimizations Response:', arg);
+    log('Maintenance Optimizations Response: ' + arg);
     if (maintenanceStartNotificationId) {
       notifier.dismissNotification(maintenanceStartNotificationId);
       maintenanceStartNotificationId = null;
@@ -665,7 +642,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#removeAppsSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Remove Apps selected:', selected);
+    log('Remove Apps selected: ' + selected);
 
     removeAppsStartNotificationId = notifier.createNotification({
       title: 'Remove Apps',
@@ -681,7 +658,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('remove-apps-response', (event, arg) => {
-    console.info('Remove Apps Response:', arg);
+    log('Remove Apps Response: ' + arg);
     if (removeAppsStartNotificationId) {
       notifier.dismissNotification(removeAppsStartNotificationId);
       removeAppsStartNotificationId = null;
@@ -708,7 +685,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#uselessBloatwareSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Useless Bloatware selected:', selected);
+    log('Useless Bloatware selected: ' + selected);
 
     bloatwareStartNotificationId = notifier.createNotification({
       title: 'Useless Bloatware',
@@ -724,7 +701,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('useless-bloatware-response', (event, arg) => {
-    console.info('Useless Bloatware Response:', arg);
+    log('Useless Bloatware Response: ' + arg);
     if (bloatwareStartNotificationId) {
       notifier.dismissNotification(bloatwareStartNotificationId);
       bloatwareStartNotificationId = null;
@@ -751,7 +728,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#systemToolsSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('System Tools selected:', selected);
+    log('System Tools selected: ' + selected);
 
     systemToolsNotificationId = notifier.createNotification({
       title: 'System Tools',
@@ -767,7 +744,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('system-tools-response', (event, arg) => {
-    console.info('System Tools Response:', arg);
+    log('System Tools Response: ' + arg);
     if (systemToolsNotificationId) {
       notifier.dismissNotification(systemToolsNotificationId);
       systemToolsNotificationId = null;
@@ -793,7 +770,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#networkToolsSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Network Tools selected:', selected);
+    log('Network Tools selected: ' + selected);
 
     networkToolsNotificationId = notifier.createNotification({
       title: 'Network Tools',
@@ -809,7 +786,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('network-tools-response', (event, arg) => {
-    console.info('Network Tools Response:', arg);
+    log('Network Tools Response: ' + arg);
     if (networkToolsNotificationId) {
       notifier.dismissNotification(networkToolsNotificationId);
       networkToolsNotificationId = null;
@@ -842,7 +819,7 @@ window.addEventListener('DOMContentLoaded', () => {
       });
       return;
     }
-    console.info('Executing custom command:', customCmd);
+    log('Executing custom command: ' + customCmd);
 
     customCommandNotificationId = notifier.createNotification({
       title: 'Custom Command',
@@ -858,7 +835,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('custom-command-response', (event, arg) => {
-    console.info('Custom Command Response:', arg);
+    log('Custom Command Response: ' + arg);
     if (customCommandNotificationId) {
       notifier.dismissNotification(customCommandNotificationId);
       customCommandNotificationId = null;
@@ -885,7 +862,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const checkboxes = document.querySelectorAll('#systemTweaksSection .section-content input[type="checkbox"]');
       const selected = [];
       checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-      console.info('System Tweaks selected:', selected);
+      log('System Tweaks selected: ' + selected);
 
       systemStartNotificationId = notifier.createNotification({
         title: 'System Tweaks',
@@ -902,7 +879,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   ipcRenderer.on('system-tweaks-response', (event, arg) => {
-    console.info('System Tweaks Response:', arg);
+    log('System Tweaks Response: ' + arg);
     if (systemStartNotificationId) {
       notifier.dismissNotification(systemStartNotificationId);
       systemStartNotificationId = null;
@@ -930,7 +907,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const checkboxes = document.querySelectorAll('#networkTweaksSection .section-content input[type="checkbox"]');
       const selected = [];
       checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-      console.info('Network Tweaks selected:', selected);
+      log('Network Tweaks selected: ' + selected);
 
       networkStartNotificationId = notifier.createNotification({
         title: 'Network Tweaks',
@@ -947,7 +924,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   ipcRenderer.on('network-tweaks-response', (event, arg) => {
-    console.info('Network Tweaks Response:', arg);
+    log('Network Tweaks Response: ' + arg);
     if (networkStartNotificationId) {
       notifier.dismissNotification(networkStartNotificationId);
       networkStartNotificationId = null;
@@ -974,7 +951,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#windowsFixesSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Windows Fixes selected:', selected);
+    log('Windows Fixes selected: ' + selected);
 
     windowsFixesNotificationId = window.EasyNotificationInstance.createNotification({
       title: 'Windows Fixes',
@@ -990,7 +967,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('windows-fixes-response', (event, arg) => {
-    console.info('Windows Fixes Response:', arg);
+    log('Windows Fixes Response: ' + arg);
     if (windowsFixesNotificationId) {
       window.EasyNotificationInstance.dismissNotification(windowsFixesNotificationId);
       windowsFixesNotificationId = null;
@@ -1016,7 +993,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#userFeaturesSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('User Windows Features selected:', selected);
+    log('User Windows Features selected: ' + selected);
 
     userWindowsFeaturesNotificationId = window.EasyNotificationInstance.createNotification({
       title: 'User Windows Features',
@@ -1032,7 +1009,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('user-windows-features-response', (event, arg) => {
-    console.info('User Windows Features Response:', arg);
+    log('User Windows Features Response: ' + arg);
     if (userWindowsFeaturesNotificationId) {
       window.EasyNotificationInstance.dismissNotification(userWindowsFeaturesNotificationId);
       userWindowsFeaturesNotificationId = null;
@@ -1059,7 +1036,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const checkboxes = document.querySelectorAll('#machineFeaturesSection .section-content input[type="checkbox"]');
     const selected = [];
     checkboxes.forEach((chk) => { if (chk.checked) selected.push(chk.value); });
-    console.info('Machine Windows Features selected:', selected);
+    log('Machine Windows Features selected: ' + selected);
 
     machineWindowsFeaturesNotificationId = window.EasyNotificationInstance.createNotification({
       title: 'Machine Windows Features',
@@ -1075,7 +1052,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('machine-windows-features-response', (event, arg) => {
-    console.info('Machine Windows Features Response:', arg);
+    log('Machine Windows Features Response: ' + arg);
     if (machineWindowsFeaturesNotificationId) {
       window.EasyNotificationInstance.dismissNotification(machineWindowsFeaturesNotificationId);
       machineWindowsFeaturesNotificationId = null;
@@ -1094,5 +1071,15 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     }
     checkFeaturesStatus('machineFeaturesSection', 'machineFeatures');
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('minimize-button')?.addEventListener('click', () => {
+    ipcRenderer.send('window-minimize');
+  });
+
+  document.getElementById('close-button')?.addEventListener('click', () => {
+    ipcRenderer.send('window-close');
   });
 });

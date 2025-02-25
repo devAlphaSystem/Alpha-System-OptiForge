@@ -343,42 +343,42 @@ const servicesOptions = [
 const maintenanceOptions = [
   {
     id: 'maintenance1',
-    commandOn: 'Remove-Item -Path "$env:TEMP\\*" -Recurse -Force -ErrorAction SilentlyContinue',
+    commandOn: 'Remove-Item -Path "$env:TEMP\\*" -Recurse -Force -ErrorAction SilentlyContinue; exit 0',
     commandOff: 'echo "No maintenance action performed"'
   },
   {
     id: 'maintenance2',
-    commandOn: 'Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force -ErrorAction SilentlyContinue',
+    commandOn: 'Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force -ErrorAction SilentlyContinue; exit 0',
     commandOff: 'echo "No maintenance action performed"'
   },
   {
     id: 'maintenance3',
-    commandOn: 'Stop-Service wuauserv -ErrorAction SilentlyContinue; Remove-Item -Path "C:\\Windows\\SoftwareDistribution\\Download\\*" -Recurse -Force -ErrorAction SilentlyContinue; Start-Service wuauserv -ErrorAction SilentlyContinue',
+    commandOn: 'Stop-Service wuauserv -ErrorAction SilentlyContinue; Remove-Item -Path "C:\\Windows\\SoftwareDistribution\\Download\\*" -Recurse -Force -ErrorAction SilentlyContinue; Start-Service wuauserv -ErrorAction SilentlyContinue; exit 0',
     commandOff: 'echo "No maintenance action performed"'
   },
   {
     id: 'maintenance4',
-    commandOn: 'Clear-RecycleBin -DriveLetter C -Force',
+    commandOn: 'Clear-RecycleBin -DriveLetter C -Force -ErrorAction SilentlyContinue; exit 0',
     commandOff: 'echo "No maintenance action performed"'
   },
   {
     id: 'maintenance5',
-    commandOn: 'wevtutil el | ForEach-Object { wevtutil cl "$_" }',
+    commandOn: 'wevtutil el | ForEach-Object { wevtutil cl "$_" 2>&1 | Out-Null }; exit 0',
     commandOff: 'echo "No maintenance action performed"'
   },
   {
     id: 'maintenance6',
-    commandOn: 'Remove-Item -Path "C:\\Windows\\Logs\\CBS\\*" -Recurse -Force',
+    commandOn: 'Remove-Item -Path "C:\\Windows\\Logs\\CBS\\*" -Recurse -Force -ErrorAction SilentlyContinue; exit 0',
     commandOff: 'echo "No maintenance action performed"'
   },
   {
     id: 'maintenance7',
-    commandOn: 'Remove-Item -Path "$env:LOCALAPPDATA\\Microsoft\\Windows\\Explorer\\thumbcache_*.db" -Force -ErrorAction SilentlyContinue',
+    commandOn: 'Remove-Item -Path "$env:LOCALAPPDATA\\Microsoft\\Windows\\Explorer\\thumbcache_*.db" -Force -ErrorAction SilentlyContinue; exit 0',
     commandOff: 'echo "No maintenance action performed"'
   },
   {
     id: 'maintenance8',
-    commandOn: 'Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase',
+    commandOn: 'Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase; exit 0',
     commandOff: 'echo "No maintenance action performed"'
   }
 ];

@@ -27,6 +27,113 @@ body {
   height: 100vh;
 }
 
+.title-bar {
+  height: 32px;
+  background: linear-gradient(180deg, #2f3240, #282a36);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 12px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  -webkit-app-region: drag;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.window-controls {
+  display: flex;
+  gap: 12px;
+  -webkit-app-region: no-drag;
+}
+
+.window-button {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  position: relative;
+}
+
+.window-button:hover {
+  transform: scale(1.15);
+}
+
+.window-button:active {
+  transform: scale(0.95);
+}
+
+.close-button {
+  background: #ff5f56;
+}
+
+.close-button:hover {
+  background: #ff5f56;
+  box-shadow: 0 0 8px rgba(255, 95, 86, 0.4);
+}
+
+.minimize-button {
+  background: #ffbd2e;
+}
+
+.minimize-button:hover {
+  background: #ffbd2e;
+  box-shadow: 0 0 8px rgba(255, 189, 46, 0.4);
+}
+
+.minimize-button::before {
+  content: "";
+  width: 8px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1px;
+  transition: all 0.2s ease;
+}
+
+.close-button::before,
+.close-button::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 1px;
+}
+
+.close-button::before {
+  transform: rotate(45deg);
+}
+
+.close-button::after {
+  transform: rotate(-45deg);
+}
+
+@keyframes titlebar-entry {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title-bar {
+  animation: titlebar-entry 0.3s ease-out;
+}
+
 .container {
   display: flex;
   height: 100vh;
@@ -377,12 +484,12 @@ body {
 
 .loading-overlay {
   position: fixed;
-  top: 0;
+  top: 32px;
   left: 0;
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(5px);
-  background: rgba(0, 0, 0, 0.3);
+  background: rgb(30, 30, 47);
   display: flex;
   flex-direction: column;
   align-items: center;
