@@ -289,11 +289,6 @@ ipcMain.on('apply-power-optimizations', (event, selectedIds) => {
   executeCommands(commands, event, 'power-optimizations-response');
 });
 
-ipcMain.on('execute-custom-command', (event, customCmd) => {
-  log(`Received custom command: ${customCmd}`);
-  executeCommands([wrapCommand(customCmd)], event, 'custom-command-response');
-});
-
 ipcMain.handle('check-fixes-state', async (event, category, optionId) => {
   let option;
   if (category === 'systemTweaks') {

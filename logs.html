@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Application Logs</title>
+
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: text;
+      }
+
+      body {
+        background: #1e1e2f;
+        color: #f8f8f2;
+        font-family: 'Roboto', sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+      }
+
+      #logContainer {
+        background: rgba(40, 42, 54, 0.9);
+        border-radius: 8px;
+        padding: 20px;
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        word-break: break-all;
+        white-space: pre-wrap;
+        font-family: 'Fira Code', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(68, 71, 90, 0.5);
+        margin-top: 32px;
+      }
+
+      #logContainer::-webkit-scrollbar {
+        width: 8px;
+        background: transparent;
+      }
+
+      #logContainer::-webkit-scrollbar-thumb {
+        background: #44475a;
+        border-radius: 4px;
+      }
+
+      #logContainer::-webkit-scrollbar-thumb:hover {
+        background: #6272a4;
+      }
+
+      #logContainer div {
+        padding: 2px 0;
+        border-bottom: 1px solid rgba(68, 71, 90, 0.2);
+        white-space: pre-wrap; 
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
+      #logContainer div:last-child {
+        border-bottom: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="title-bar">
+      <div class="window-controls">
+        <button class="window-button close-button" id="close-button"></button>
+      </div>
+    </div>
+
+    <div id="logContainer"></div>
+
+    <script src="https://cdn.alphasystem.dev/plugins/disable-dev-tools/latest/script-min.js"></script>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+      const logContainer = document.getElementById('logContainer');
+
+      ipcRenderer.on('log-entry', (event, entry) => {
+        const logEntry = document.createElement('div');
+        logEntry.style.color = getColorForLevel(entry.level);
+        logEntry.textContent = `[${entry.timestamp}] ${entry.message}`;
+        logContainer.appendChild(logEntry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+      });
+
+      document.getElementById('close-button')?.addEventListener('click', () => {
+        ipcRenderer.send('window-close');
+      });
+
+      function getColorForLevel(level) {
+        switch (level) {
+          case 'error': return '#ff5555';
+          case 'warn': return '#ffb86c';
+          default: return '#f8f8f2';
+        }
+      }
+    </script>
+  </body>
+</html>

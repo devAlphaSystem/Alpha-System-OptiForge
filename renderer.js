@@ -292,7 +292,11 @@ async function initializeStatusChecks() {
   updateLoadingText('All checks completed!');
   const spinner = document.getElementById('loadingSpinner');
   if (spinner) {
-    spinner.style.display = 'none';
+    spinner.classList.add('hidden');
+    setTimeout(() => {
+      spinner.style.display = 'none';
+      spinner.classList.remove('hidden');
+    }, 300);
   }
 }
 
@@ -402,7 +406,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('privacy-optimizations-response', (event, arg) => {
-    log('Privacy Optimizations Response: ' + arg);
+    log('Privacy Optimizations Response: ' + JSON.stringify(arg, null, 2));
     if (privacyStartNotificationId) {
       notifier.dismissNotification(privacyStartNotificationId);
       privacyStartNotificationId = null;
@@ -445,7 +449,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('gaming-optimizations-response', (event, arg) => {
-    log('Gaming Optimizations Response: ' + arg);
+    log('Gaming Optimizations Response: ' + JSON.stringify(arg, null, 2));
     if (gamingStartNotificationId) {
       notifier.dismissNotification(gamingStartNotificationId);
       gamingStartNotificationId = null;
@@ -488,7 +492,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('updates-optimizations-response', (event, arg) => {
-    log('Updates Optimizations Response: ' + arg);
+    log('Updates Optimizations Response: ' + JSON.stringify(arg, null, 2));
     if (updatesStartNotificationId) {
       notifier.dismissNotification(updatesStartNotificationId);
       updatesStartNotificationId = null;
@@ -531,7 +535,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('power-optimizations-response', (event, arg) => {
-    log('Power Optimizations Response: ' + arg);
+    log('Power Optimizations Response: ' + JSON.stringify(arg, null, 2));
     if (powerStartNotificationId) {
       notifier.dismissNotification(powerStartNotificationId);
       powerStartNotificationId = null;
@@ -573,7 +577,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('services-optimizations-response', (event, arg) => {
-    log('Services Optimizations Response: ' + arg);
+    log('Services Optimizations Response: ' + JSON.stringify(arg, null, 2));
     if (servicesStartNotificationId) {
       notifier.dismissNotification(servicesStartNotificationId);
       servicesStartNotificationId = null;
@@ -616,7 +620,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('maintenance-optimizations-response', (event, arg) => {
-    log('Maintenance Optimizations Response: ' + arg);
+    log('Maintenance Optimizations Response: ' + JSON.stringify(arg, null, 2));
     if (maintenanceStartNotificationId) {
       notifier.dismissNotification(maintenanceStartNotificationId);
       maintenanceStartNotificationId = null;
@@ -658,7 +662,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('remove-apps-response', (event, arg) => {
-    log('Remove Apps Response: ' + arg);
+    log('Remove Apps Response: ' + JSON.stringify(arg, null, 2));
     if (removeAppsStartNotificationId) {
       notifier.dismissNotification(removeAppsStartNotificationId);
       removeAppsStartNotificationId = null;
@@ -701,7 +705,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('useless-bloatware-response', (event, arg) => {
-    log('Useless Bloatware Response: ' + arg);
+    log('Useless Bloatware Response: ' + JSON.stringify(arg, null, 2));
     if (bloatwareStartNotificationId) {
       notifier.dismissNotification(bloatwareStartNotificationId);
       bloatwareStartNotificationId = null;
@@ -744,7 +748,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('system-tools-response', (event, arg) => {
-    log('System Tools Response: ' + arg);
+    log('System Tools Response: ' + + JSON.stringify(arg, null, 2));
     if (systemToolsNotificationId) {
       notifier.dismissNotification(systemToolsNotificationId);
       systemToolsNotificationId = null;
@@ -786,7 +790,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('network-tools-response', (event, arg) => {
-    log('Network Tools Response: ' + arg);
+    log('Network Tools Response: ' + JSON.stringify(arg, null, 2));
     if (networkToolsNotificationId) {
       notifier.dismissNotification(networkToolsNotificationId);
       networkToolsNotificationId = null;
@@ -801,55 +805,6 @@ window.addEventListener('DOMContentLoaded', () => {
       notifier.createNotification({
         title: 'Network Tools',
         message: 'Network tools executed successfully.',
-        type: 'success'
-      });
-    }
-  });
-
-  let customCommandNotificationId = null;
-  const executeCustomCommandBtn = document.getElementById('executeCustomCommandBtn');
-  executeCustomCommandBtn.addEventListener('click', () => {
-    const customCommandInput = document.getElementById('customCommandInput');
-    const customCmd = customCommandInput.value;
-    if (!customCmd.trim()) {
-      notifier.createNotification({
-        title: 'Custom Command',
-        message: 'Please enter a command to execute.',
-        type: 'warning'
-      });
-      return;
-    }
-    log('Executing custom command: ' + customCmd);
-
-    customCommandNotificationId = notifier.createNotification({
-      title: 'Custom Command',
-      message: 'Executing custom command...',
-      type: 'info',
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false
-    });
-
-    ipcRenderer.send('execute-custom-command', customCmd);
-  });
-
-  ipcRenderer.on('custom-command-response', (event, arg) => {
-    log('Custom Command Response: ' + arg);
-    if (customCommandNotificationId) {
-      notifier.dismissNotification(customCommandNotificationId);
-      customCommandNotificationId = null;
-    }
-    if (arg && arg.error) {
-      notifier.createNotification({
-        title: 'Custom Command',
-        message: `Error: ${arg.error}`,
-        type: 'danger'
-      });
-    } else {
-      notifier.createNotification({
-        title: 'Custom Command',
-        message: 'Custom command executed successfully.',
         type: 'success'
       });
     }
@@ -879,7 +834,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   ipcRenderer.on('system-tweaks-response', (event, arg) => {
-    log('System Tweaks Response: ' + arg);
+    log('System Tweaks Response: ' + JSON.stringify(arg, null, 2));
     if (systemStartNotificationId) {
       notifier.dismissNotification(systemStartNotificationId);
       systemStartNotificationId = null;
@@ -924,7 +879,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   ipcRenderer.on('network-tweaks-response', (event, arg) => {
-    log('Network Tweaks Response: ' + arg);
+    log('Network Tweaks Response: ' + JSON.stringify(arg, null, 2));
     if (networkStartNotificationId) {
       notifier.dismissNotification(networkStartNotificationId);
       networkStartNotificationId = null;
@@ -967,7 +922,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('windows-fixes-response', (event, arg) => {
-    log('Windows Fixes Response: ' + arg);
+    log('Windows Fixes Response: ' + JSON.stringify(arg, null, 2));
     if (windowsFixesNotificationId) {
       window.EasyNotificationInstance.dismissNotification(windowsFixesNotificationId);
       windowsFixesNotificationId = null;
@@ -1009,7 +964,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('user-windows-features-response', (event, arg) => {
-    log('User Windows Features Response: ' + arg);
+    log('User Windows Features Response: ' + JSON.stringify(arg, null, 2));
     if (userWindowsFeaturesNotificationId) {
       window.EasyNotificationInstance.dismissNotification(userWindowsFeaturesNotificationId);
       userWindowsFeaturesNotificationId = null;
@@ -1052,7 +1007,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   ipcRenderer.on('machine-windows-features-response', (event, arg) => {
-    log('Machine Windows Features Response: ' + arg);
+    log('Machine Windows Features Response: ' + JSON.stringify(arg, null, 2));
     if (machineWindowsFeaturesNotificationId) {
       window.EasyNotificationInstance.dismissNotification(machineWindowsFeaturesNotificationId);
       machineWindowsFeaturesNotificationId = null;
@@ -1071,6 +1026,10 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     }
     checkFeaturesStatus('machineFeaturesSection', 'machineFeatures');
+  });
+
+  document.getElementById('showLogsBtn')?.addEventListener('click', () => {
+    ipcRenderer.send('show-logs');
   });
 });
 

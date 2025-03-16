@@ -40,7 +40,12 @@
 
       <div class="main-content">
         <div class="tab active" id="appsTab">
-          <div class="section" id="removeAppsSection">
+          <div class="sub-tabs">
+            <button class="sub-tab active" data-subtab="removeAppsSection">Remove Windows Apps</button>
+            <button class="sub-tab" data-subtab="uselessBloatwareSection">Useless Bloatware</button>
+          </div>
+
+          <div class="sub-tab-content active" id="removeAppsSection">
             <div class="section-header">
               <h3>Remove Windows Apps</h3>
               <div class="btn-group">
@@ -48,7 +53,7 @@
                 <button class="deselect-all">Deselect All</button>
               </div>
             </div>
-            <div class="section-content active">
+            <div class="section-content">
               <h4 class="sub-section-heading" style="margin-top: 8px !important;">Core Windows Apps</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="apps_calc" checked /> Calculator</label>
@@ -79,7 +84,7 @@
             </div>
           </div>
 
-          <div class="section" id="uselessBloatwareSection" style="margin-bottom: 0 !important">
+          <div class="sub-tab-content" id="uselessBloatwareSection">
             <div class="section-header">
               <h3>Useless Bloatware</h3>
               <div class="btn-group">
@@ -145,7 +150,15 @@
         </div>
 
         <div class="tab" id="optimizationsTab">
-          <div class="section" id="privacySection">
+          <div class="sub-tabs">
+            <button class="sub-tab active" data-subtab="privacySection">Privacy</button>
+            <button class="sub-tab" data-subtab="gamingSection">Gaming</button>
+            <button class="sub-tab" data-subtab="updatesSection">Updates</button>
+            <button class="sub-tab" data-subtab="servicesSection">Services</button>
+            <button class="sub-tab" data-subtab="maintenanceSection">Maintenance</button>
+          </div>
+
+          <div class="sub-tab-content active" id="privacySection">
             <div class="section-header">
               <h3>Privacy Optimizations</h3>
               <div class="btn-group">
@@ -153,7 +166,7 @@
                 <button class="deselect-all">Deselect All</button>
               </div>
             </div>
-            <div class="section-content active">
+            <div class="section-content">
               <h4 class="sub-section-heading" style="margin-top: 8px !important;">Activity &amp; Telemetry</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="privacy1" checked /> Disable Activity History</label>
@@ -207,7 +220,7 @@
             </div>
           </div>
 
-          <div class="section" id="gamingSection">
+          <div class="sub-tab-content" id="gamingSection">
             <div class="section-header">
               <h3>Gaming Optimizations</h3>
               <div class="btn-group">
@@ -250,7 +263,7 @@
             </div>
           </div>
 
-          <div class="section" id="updatesSection">
+          <div class="sub-tab-content" id="updatesSection">
             <div class="section-header">
               <h3>Update Optimizations</h3>
               <div class="btn-group">
@@ -274,7 +287,7 @@
             </div>
           </div>
 
-          <div class="section" id="servicesSection">
+          <div class="sub-tab-content" id="servicesSection">
             <div class="section-header">
               <h3>Windows Services</h3>
               <div class="btn-group">
@@ -307,7 +320,7 @@
             </div>
           </div>
 
-          <div class="section" id="maintenanceSection" style="margin-bottom: 0 !important">
+          <div class="sub-tab-content" id="maintenanceSection">
             <div class="section-header">
               <h3>Cleanup Optimizations</h3>
               <div class="btn-group">
@@ -334,7 +347,15 @@
         </div>
 
         <div class="tab" id="commandsTab">
-          <div class="section" id="systemToolsSection">
+          <div class="sub-tabs">
+            <button class="sub-tab active" data-subtab="systemToolsSection">System Tools</button>
+            <button class="sub-tab" data-subtab="systemTweaksSection">System Tweaks</button>
+            <button class="sub-tab" data-subtab="networkToolsSection">Network Tools</button>
+            <button class="sub-tab" data-subtab="networkTweaksSection">Network Tweaks</button>
+            <button class="sub-tab" data-subtab="powerSection">Power Settings</button>
+          </div>
+
+          <div class="sub-tab-content active" id="systemToolsSection">
             <div class="section-header">
               <h3>System Tools</h3>
               <div class="btn-group">
@@ -342,7 +363,7 @@
                 <button class="deselect-all">Deselect All</button>
               </div>
             </div>
-            <div class="section-content active">
+            <div class="section-content">
               <h4 class="sub-section-heading" style="margin-top: 8px !important;">Maintenance &amp; Repair</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="sys_disk_cleanup" checked /> Run Disk Cleanup</label>
@@ -360,7 +381,7 @@
             </div>
           </div>
 
-          <div class="section" id="systemTweaksSection">
+          <div class="sub-tab-content" id="systemTweaksSection">
             <div class="section-header">
               <h3>System Tweaks</h3>
               <div class="btn-group">
@@ -395,7 +416,7 @@
             </div>
           </div>
 
-          <div class="section" id="networkToolsSection">
+          <div class="sub-tab-content" id="networkToolsSection">
             <div class="section-header">
               <h3>Network Tools</h3>
               <div class="btn-group">
@@ -420,7 +441,7 @@
             </div>
           </div>
 
-          <div class="section" id="networkTweaksSection">
+          <div class="sub-tab-content" id="networkTweaksSection">
             <div class="section-header">
               <h3>Network Tweaks</h3>
               <div class="btn-group">
@@ -454,7 +475,7 @@
             </div>
           </div>
 
-          <div class="section" id="powerSection">
+          <div class="sub-tab-content" id="powerSection">
             <div class="section-header">
               <h3>Power Settings</h3>
               <div class="btn-group">
@@ -487,20 +508,14 @@
               <button class="apply-btn" id="applyPowerBtn"><i class="fa fa-check"></i> Apply Settings</button>
             </div>
           </div>
-
-          <div class="section" id="customCommandSection" style="margin-bottom: 0 !important">
-            <div class="section-header">
-              <h3>Custom Command</h3>
-            </div>
-            <div class="section-content">
-              <input type="text" id="customCommandInput" placeholder="Enter your command here..." style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color);" />
-              <button class="apply-btn" id="executeCustomCommandBtn" style="margin-top: 10px"><i class="fa fa-terminal"></i> Run Command</button>
-            </div>
-          </div>
         </div>
 
         <div class="tab" id="windowsFixesTab">
-          <div class="section" id="windowsFixesSection" style="margin-bottom: 0 !important">
+          <div class="sub-tabs">
+            <button class="sub-tab active" data-subtab="windowsFixesSection">Windows Fixes</button>
+          </div>
+
+          <div class="sub-tab-content active" id="windowsFixesSection">
             <div class="section-header">
               <h3>Windows Fixes</h3>
               <div class="btn-group">
@@ -508,7 +523,7 @@
                 <button class="deselect-all">Deselect All</button>
               </div>
             </div>
-            <div class="section-content active">
+            <div class="section-content">
               <h4 class="sub-section-heading" style="margin-top: 8px !important;">Update &amp; Store</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="reset_windows_update" /> Windows Update Reset</label>
@@ -551,7 +566,12 @@
         </div>
 
         <div class="tab" id="windowsFeaturesTab">
-          <div class="section" id="userFeaturesSection">
+          <div class="sub-tabs">
+            <button class="sub-tab active" data-subtab="userFeaturesSection">User Windows Features</button>
+            <button class="sub-tab" data-subtab="machineFeaturesSection">Machine Windows Features</button>
+          </div>
+
+          <div class="sub-tab-content active" id="userFeaturesSection">
             <div class="section-header">
               <h3>User Windows Features</h3>
               <div class="btn-group">
@@ -559,7 +579,7 @@
                 <button class="deselect-all">Deselect All</button>
               </div>
             </div>
-            <div class="section-content active">
+            <div class="section-content">
               <h4 class="sub-section-heading" style="margin-top: 8px !important;">Privacy & Personalization</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="disable_advertising_id" checked /> Disable Advertising ID</label>
@@ -643,7 +663,7 @@
             </div>
           </div>
 
-          <div class="section" id="machineFeaturesSection" style="margin-bottom: 0 !important">
+          <div class="sub-tab-content" id="machineFeaturesSection">
             <div class="section-header">
               <h3>Machine Windows Features</h3>
               <div class="btn-group">
@@ -730,12 +750,18 @@
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <img src="logo.png" />
-            <p><strong>Version:</strong> 1.6-13</p>
+            <p><strong>Version:</strong> 1.6-14</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>
             <p><strong>Disclaimer:</strong> Use OptiForge at your own risk. Always back up your data before applying any system modifications. The developers are not liable for any adverse effects.</p>
             <p><strong>Contact:</strong> support@alphasystem.dev</p>
+          </div>
+
+          <div class="section-content">
+            <div class="checkbox-group">
+              <button class="apply-btn" id="showLogsBtn"> Show Live Logging </button>
+            </div>
           </div>
         </div>
       </div>

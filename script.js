@@ -375,3 +375,22 @@ copyCommandBtn.addEventListener('click', () => {
     });
   });
 });
+
+document.querySelectorAll('.sub-tab').forEach(tab => {
+  tab.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const parentTab = tab.closest('.tab');
+    const targetId = tab.dataset.subtab;
+
+    parentTab.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+    parentTab.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
+
+    tab.classList.add('active');
+    const targetContent = parentTab.querySelector(`#${targetId}`);
+    if (targetContent) {
+      targetContent.classList.add('active');
+    }
+  });
+});
