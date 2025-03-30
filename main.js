@@ -1,5 +1,5 @@
-const { app, Menu, dialog, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
+const { app, Menu, dialog, BrowserWindow, ipcMain } = require("electron");
+const path = require("node:path");
 
 let mainWindow = null;
 let logWindow = null;
@@ -7,13 +7,13 @@ const logEntries = [];
 
 Menu.setApplicationMenu(null);
 
-function log(message, level = 'info') {
+function log(message, level = "info") {
   const timestamp = new Date().toISOString();
   const entry = { timestamp, message, level };
   logEntries.push(entry);
 
   if (logWindow && !logWindow.isDestroyed()) {
-    logWindow.webContents.send('log-entry', entry);
+    logWindow.webContents.send("log-entry", entry);
   }
 
   const consoleMethod = { info: console.info, warn: console.warn, error: console.error }[level] || console.log;
@@ -23,21 +23,18 @@ function log(message, level = 'info') {
 
 async function checkAdminPrivileges() {
   try {
-    const { default: isElevated } = await import('is-elevated');
+    const { default: isElevated } = await import("is-elevated");
     const elevated = await isElevated();
 
     if (!elevated) {
-      log('Application is not running with administrator privileges', 'warn');
-      dialog.showErrorBox(
-        'Admin Rights Required',
-        'This application requires administrator privileges to run.\nPlease restart as administrator.'
-      );
+      log("Application is not running with administrator privileges", "warn");
+      dialog.showErrorBox("Admin Rights Required", "This application requires administrator privileges to run.\nPlease restart as administrator.");
       app.quit();
     } else {
-      log('Application running with admin privileges', 'info');
+      log("Application running with admin privileges", "info");
     }
   } catch (error) {
-    log(`Admin check error: ${error.message}`, 'error');
+    log(`Admin check error: ${error.message}`, "error");
     app.quit();
   }
 }
@@ -49,28 +46,28 @@ function createMainWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: false
+      devTools: false,
     },
     frame: false,
     resizable: false,
-    backgroundColor: '#282a36'
+    backgroundColor: "#282a36",
   });
 
-  mainWindow.on('closed', () => {
-    log('Main window closed');
+  mainWindow.on("closed", () => {
+    log("Main window closed");
     mainWindow = null;
     if (logWindow && !logWindow.isDestroyed()) {
       logWindow.close();
     }
   });
 
-  mainWindow.loadFile('index.html');
-  log('Main window created');
+  mainWindow.loadFile("index.html");
+  log("Main window created");
 
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.webContents.on("did-finish-load", () => {
     if (logWindow && !logWindow.isDestroyed()) {
-      logEntries.forEach(entry => {
-        logWindow.webContents.send('log-entry', entry);
+      logEntries.forEach((entry) => {
+        logWindow.webContents.send("log-entry", entry);
       });
     }
   });
@@ -84,51 +81,48 @@ function createLogWindow() {
     height: 576,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
     frame: false,
     resizable: false,
     maximizable: false,
     fullscreenable: false,
     autoHideMenuBar: true,
-    backgroundColor: '#1e1e2f',
-    title: 'Application Logs'
+    backgroundColor: "#1e1e2f",
+    title: "Application Logs",
   });
 
-  logWindow.loadFile('logs.html');
-  log('Log window created');
+  logWindow.loadFile("logs.html");
+  log("Log window created");
 
   if (mainWindow && !mainWindow.isDestroyed()) {
     const mainBounds = mainWindow.getBounds();
-    logWindow.setPosition(
-      mainBounds.x + 50,
-      mainBounds.y + 50
-    );
+    logWindow.setPosition(mainBounds.x + 50, mainBounds.y + 50);
   }
 
-  logWindow.on('closed', () => {
+  logWindow.on("closed", () => {
     logWindow = null;
-    log('Log window closed');
+    log("Log window closed");
   });
 }
 
 app.whenReady().then(async () => {
-  log('Application starting');
+  log("Application starting");
   await checkAdminPrivileges();
 
-  ipcMain.on('renderer-log', (_, message, level = 'info') => {
+  ipcMain.on("renderer-log", (_, message, level = "info") => {
     log(`[Renderer] ${message}`, level);
   });
 
-  ipcMain.on('window-minimize', () => {
+  ipcMain.on("window-minimize", () => {
     BrowserWindow.getFocusedWindow()?.minimize();
   });
 
-  ipcMain.on('window-close', () => {
+  ipcMain.on("window-close", () => {
     BrowserWindow.getFocusedWindow()?.close();
   });
 
-  ipcMain.on('show-logs', () => {
+  ipcMain.on("show-logs", () => {
     if (!logWindow || logWindow.isDestroyed()) {
       createLogWindow();
     }
@@ -136,20 +130,20 @@ app.whenReady().then(async () => {
 
   createMainWindow();
 
-  require('./apps');
-  require('./optimizations');
-  require('./commands');
-  require('./fixes');
-  require('./features');
+  require("./apps");
+  require("./optimizations");
+  require("./commands");
+  require("./fixes");
+  require("./features");
 
-  app.on('activate', () => {
+  app.on("activate", () => {
     if (!mainWindow) createMainWindow();
   });
 });
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    log('All windows closed - quitting application');
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    log("All windows closed - quitting application");
     app.quit();
   }
 });
