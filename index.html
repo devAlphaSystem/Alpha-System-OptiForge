@@ -10,6 +10,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
 
     <link rel="stylesheet" href="styles.css">
+    <style>
+      .warning-icon {
+        color: #ffb86c;
+        margin-left: 8px;
+        font-size: 0.9em;
+        cursor: help; 
+      }
+    </style>
   </head>
 
   <body>
@@ -246,16 +254,16 @@
                 <label><input type="checkbox" value="gaming5" checked /> Enable Windowed Optimizations</label>
                 <label><input type="checkbox" value="gaming6" checked /> Enable Nvidia Sharpening</label>
                 <label><input type="checkbox" value="gaming14" checked /> Disable Fullscreen Optimizations</label>
-                <label><input type="checkbox" value="gaming11" checked /> Enable GPU Scheduling</label>
+                <label><input type="checkbox" value="gaming11" /> Enable GPU Scheduling <i class="fa fa-exclamation-triangle warning-icon" title="May cause instability on some systems. Apply and test carefully."></i></label>
               </div>
 
               <h4 class="sub-section-heading">Networking &amp; Performance</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="gaming7" checked /> Improves Multimedia</label>
                 <label><input type="checkbox" value="gaming8" checked /> Adjusts Network</label>
-                <label><input type="checkbox" value="gaming9" checked /> Increases CPU/GPU Priority</label>
-                <label><input type="checkbox" value="gaming10" checked /> Sets High Scheduling</label>
-                <label><input type="checkbox" value="gaming12" checked /> Adjusts Win32 Priority</label>
+                <label><input type="checkbox" value="gaming9" /> Increases CPU/GPU Priority <i class="fa fa-exclamation-triangle warning-icon" title="May cause instability on some systems. Apply and test carefully."></i></label>
+                <label><input type="checkbox" value="gaming10" /> Sets High Scheduling <i class="fa fa-exclamation-triangle warning-icon" title="May cause instability on some systems. Apply and test carefully."></i></label>
+                <label><input type="checkbox" value="gaming12" /> Adjusts Win32 Priority <i class="fa fa-exclamation-triangle warning-icon" title="May cause instability on some systems. Apply and test carefully."></i></label>
                 <label><input type="checkbox" value="gaming13" checked /> Disable Storage Sense</label>
               </div>
 
@@ -298,22 +306,20 @@
             <div class="section-content">
               <h4 class="sub-section-heading" style="margin-top: 8px !important;">Disable Unused Services</h4>
               <div class="checkbox-group">
-                <label><input type="checkbox" value="services1" checked /> Disable AllJoyn</label>
-                <label><input type="checkbox" value="services2" checked /> Disable App Virtualization</label>
-                <label><input type="checkbox" value="services3" checked /> Disable Assigned Access</label>
-                <label><input type="checkbox" value="services4" checked /> Disable Telemetry</label>
-                <label><input type="checkbox" value="services5" checked /> Disable Dialog Blocking</label>
-                <label><input type="checkbox" value="services6" checked /> Disable Net.Tcp Sharing</label>
-                <label><input type="checkbox" value="services7" checked /> Disable Remote Access</label>
-                <label><input type="checkbox" value="services8" checked /> Disable Remote Registry</label>
-                <label><input type="checkbox" value="services9" checked /> Disable UX Virtualization</label>
-                <label><input type="checkbox" value="services10" checked /> Disable Shared Protection</label>
-                <label><input type="checkbox" value="services11" checked /> Disable OpenSSH Agent</label>
-                <label><input type="checkbox" value="services12" checked /> Disable Time Zone Updater</label>
-                <label><input type="checkbox" value="services13" checked /> Disable Update Health</label>
-                <label><input type="checkbox" value="services14" checked /> Disable Print Spooler Service</label>
-                <label><input type="checkbox" value="services15" checked /> Disable Bluetooth Support Service</label>
-                <label><input type="checkbox" value="services16" checked /> Disable Remote Desktop Services</label>
+                <label><input type="checkbox" value="services1" checked /> Disable App Virtualization</label>
+                <label><input type="checkbox" value="services2" checked /> Disable Assigned Access</label>
+                <label><input type="checkbox" value="services3" checked /> Disable Telemetry</label>
+                <label><input type="checkbox" value="services4" checked /> Disable Dialog Blocking</label>
+                <label><input type="checkbox" value="services5" checked /> Disable Net.Tcp Sharing</label>
+                <label><input type="checkbox" value="services6" checked /> Disable Remote Access</label>
+                <label><input type="checkbox" value="services7" checked /> Disable Remote Registry</label>
+                <label><input type="checkbox" value="services8" checked /> Disable UX Virtualization</label>
+                <label><input type="checkbox" value="services9" checked /> Disable Shared Protection</label>
+                <label><input type="checkbox" value="services10" checked /> Disable OpenSSH Agent</label>
+                <label><input type="checkbox" value="services11" checked /> Disable Time Zone Updater</label>
+                <label><input type="checkbox" value="services12" checked /> Disable Print Spooler Service</label>
+                <label><input type="checkbox" value="services13" checked /> Disable Bluetooth Support Service</label>
+                <label><input type="checkbox" value="services14" checked /> Disable Remote Desktop Services</label>
               </div>
 
               <button class="apply-btn" id="applyServicesBtn"><i class="fa fa-check"></i> Apply Services</button>
@@ -750,7 +756,7 @@
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <img src="logo.png" />
-            <p><strong>Version:</strong> 1.6-15</p>
+            <p><strong>Version:</strong> 1.6-16</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>

@@ -1,21 +1,15 @@
 const { ipcMain } = require("electron");
 const { spawn } = require("node:child_process");
 
+/**
+ * Logs a message to the console.
+ * @param {string} message - The message to log.
+ * @param {string} [level="info"] - The log level ('info', 'warn', 'error').
+ */
 function log(message, level = "info") {
   const timestamp = new Date().toISOString();
-  switch (level) {
-    case "info":
-      console.info(`[${timestamp}] INFO: ${message}`);
-      break;
-    case "warn":
-      console.warn(`[${timestamp}] WARN: ${message}`);
-      break;
-    case "error":
-      console.error(`[${timestamp}] ERROR: ${message}`);
-      break;
-    default:
-      console.log(`[${timestamp}] ${message}`);
-  }
+  const consoleMethod = { info: console.info, warn: console.warn, error: console.error }[level] || console.log;
+  consoleMethod(`[${timestamp}] ${level.toUpperCase()}: ${message}`);
 }
 
 const removeAppsOptions = [
@@ -80,7 +74,7 @@ const removeAppsOptions = [
 const uselessBloatwareOptions = [
   {
     id: "apps_ub_mail",
-    command: "Get-AppxPackage -AllUsers -Name *Mail* -ErrorAction SilentlyContinue | Remove-AppxPackage",
+    command: "Get-AppxPackage -AllUsers -Name *communi* -ErrorAction SilentlyContinue | Remove-AppxPackage",
   },
   {
     id: "apps_ub_maps",
@@ -220,14 +214,26 @@ const uselessBloatwareOptions = [
   },
 ];
 
+/**
+ * Replaces logical AND operators (&&) with semicolons (;) for PowerShell compatibility.
+ * @param {string} cmd - The command string.
+ * @returns {string} The command string with replacements.
+ */
 function wrapCommand(cmd) {
   return cmd.replace(/&&/g, ";");
 }
 
+/**
+ * Executes a given command in PowerShell.
+ * @param {string} command - The command to execute.
+ * @returns {Promise<{success: boolean, command: string, message: string}>} A promise resolving with the execution result.
+ */
 function executeCommand(command) {
   return new Promise((resolve) => {
     log(`Executing command: ${command}`);
     let outputData = "";
+    let errorData = "";
+
     const psProcess = spawn("powershell.exe", ["-NoProfile", "-Command", command]);
 
     psProcess.stdout.on("data", (data) => {
@@ -238,22 +244,40 @@ function executeCommand(command) {
 
     psProcess.stderr.on("data", (data) => {
       const errorOutput = data.toString().trim();
-      outputData += `ERROR: ${errorOutput}\n`;
-      log(`Error: ${errorOutput}`, "error");
+      errorData += `${errorOutput}\n`;
+      log(`Error Output: ${errorOutput}`, "warn");
     });
 
     psProcess.on("error", (error) => {
-      log(`Process error: ${error}`, "error");
-      resolve({ success: false, command, message: error.toString() });
+      log(`Process spawn error: ${error.message}`, "error");
+      resolve({
+        success: false,
+        command,
+        message: `Process spawn error: ${error.message}`,
+      });
     });
 
     psProcess.on("close", (code) => {
       log(`Process closed with code: ${code}`);
-      resolve({ success: code === 0, command, message: outputData || `Process exited with code ${code}` });
+      const success = code === 0;
+      let message = outputData.trim();
+      if (errorData.trim()) {
+        message += `\nERRORS:\n${errorData.trim()}`;
+      }
+      if (!message && !success) {
+        message = `Process exited with code ${code}.`;
+      }
+      resolve({ success, command, message });
     });
   });
 }
 
+/**
+ * Executes a list of commands sequentially.
+ * @param {string[]} commands - An array of command strings.
+ * @param {Electron.IpcMainEvent} event - The IPC event object.
+ * @param {string} responseChannel - The channel to send the response back on.
+ */
 async function executeCommands(commands, event, responseChannel) {
   const results = [];
   for (const command of commands) {
@@ -261,47 +285,76 @@ async function executeCommands(commands, event, responseChannel) {
       const result = await executeCommand(command);
       results.push(result);
     } catch (err) {
+      log(`Error executing command "${command}": ${err.message}`, "error");
       results.push({ success: false, command, message: err.toString() });
     }
   }
-  event.reply(responseChannel, results);
+  if (!event.sender.isDestroyed()) {
+    event.reply(responseChannel, results);
+  } else {
+    log(`Window destroyed before sending response on ${responseChannel}`, "warn");
+  }
+}
+
+/**
+ * Gets the commands to execute based on selected IDs and options array.
+ * @param {string[]} selectedIds - Array of selected option IDs.
+ * @param {Array<object>} optionsArray - Array of option objects.
+ * @returns {string[]} Array of command strings to execute.
+ */
+function getCommandsToExecute(selectedIds, optionsArray) {
+  const commands = [];
+  for (const opt of optionsArray) {
+    const isSelected = selectedIds.includes(opt.id);
+    let cmd = null;
+    if (opt.command && isSelected) {
+      cmd = opt.command;
+    }
+    if (cmd) {
+      const wrappedCmd = wrapCommand(cmd);
+      if (wrappedCmd) {
+        commands.push(wrappedCmd);
+      }
+    }
+  }
+  return commands;
 }
 
 ipcMain.on("apply-remove-apps", (event, selectedIds) => {
   log(`Received apply-remove-apps with data: ${JSON.stringify(selectedIds)}`);
-  const commands = removeAppsOptions
-    .map((opt) => {
-      if (opt.command) {
-        return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null;
-      }
-      const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
-      return cmd ? wrapCommand(cmd) : null;
-    })
-    .filter((cmd) => cmd !== null);
+  const commands = getCommandsToExecute(selectedIds, removeAppsOptions);
   executeCommands(commands, event, "remove-apps-response");
 });
 
 ipcMain.on("apply-useless-bloatware", (event, selectedIds) => {
   log(`Received apply-useless-bloatware with data: ${JSON.stringify(selectedIds)}`);
-  const commands = uselessBloatwareOptions
-    .map((opt) => {
-      if (opt.command) {
-        return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null;
-      }
-      const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
-      return cmd ? wrapCommand(cmd) : null;
-    })
-    .filter((cmd) => cmd !== null);
+  const commands = getCommandsToExecute(selectedIds, uselessBloatwareOptions);
   executeCommands(commands, event, "useless-bloatware-response");
 });
 
-ipcMain.handle("check-remove-app-status", async (event, appId) => {
-  const option = removeAppsOptions.find((opt) => opt.id === appId);
-  if (!option) {
+/**
+ * Checks if an AppX package matching a pattern is installed.
+ * @param {string} appId - The internal ID used to find the command.
+ * @param {Array<object>} optionsArray - The array of app options to search within.
+ * @returns {Promise<{installed: boolean}>} Promise resolving with installation status.
+ */
+async function checkAppInstallationStatus(appId, optionsArray) {
+  let option = null;
+  for (const opt of optionsArray) {
+    if (opt.id === appId) {
+      option = opt;
+      break;
+    }
+  }
+
+  if (!option || !option.command) {
+    log(`Option or command not found for app ID: ${appId}`, "warn");
     return { installed: false };
   }
+
   const match = option.command.match(/-Name\s+(['"])?([^\s'"]+)\1/);
-  if (!match) {
+  if (!match || !match[2]) {
+    log(`Could not extract package name from command for app ID: ${appId}`, "warn");
     return { installed: false };
   }
 
@@ -310,57 +363,36 @@ ipcMain.handle("check-remove-app-status", async (event, appId) => {
 
   return new Promise((resolve) => {
     let outputData = "";
+    let errorData = "";
     const psProcess = spawn("powershell.exe", ["-NoProfile", "-Command", checkCmd]);
 
     psProcess.stdout.on("data", (data) => {
-      outputData += data.toString().trim();
+      outputData += data.toString();
     });
 
     psProcess.stderr.on("data", (data) => {
-      outputData += data.toString().trim();
+      errorData += data.toString();
     });
 
-    psProcess.on("close", () => {
-      resolve({ installed: outputData.length > 0 });
+    psProcess.on("close", (code) => {
+      const installed = code === 0 && outputData.trim().length > 0;
+      if (code !== 0) {
+        log(`App check command for "${pattern}" failed with code ${code}. Stderr: ${errorData.trim()}`, "warn");
+      }
+      resolve({ installed });
     });
 
-    psProcess.on("error", () => {
+    psProcess.on("error", (err) => {
+      log(`Error spawning process for app check "${pattern}": ${err.message}`, "error");
       resolve({ installed: false });
     });
   });
+}
+
+ipcMain.handle("check-remove-app-status", async (event, appId) => {
+  return checkAppInstallationStatus(appId, removeAppsOptions);
 });
 
 ipcMain.handle("check-app-status", async (event, appId) => {
-  const option = uselessBloatwareOptions.find((opt) => opt.id === appId);
-  if (!option) {
-    return { installed: false };
-  }
-  const match = option.command.match(/-Name\s+(['"])?([^\s'"]+)\1/);
-  if (!match) {
-    return { installed: false };
-  }
-
-  const pattern = match[2];
-  const checkCmd = `Get-AppxPackage -Name ${pattern} -ErrorAction SilentlyContinue`;
-
-  return new Promise((resolve) => {
-    let outputData = "";
-    const psProcess = spawn("powershell.exe", ["-NoProfile", "-Command", checkCmd]);
-
-    psProcess.stdout.on("data", (data) => {
-      outputData += data.toString().trim();
-    });
-
-    psProcess.stderr.on("data", (data) => {
-      outputData += data.toString().trim();
-    });
-
-    psProcess.on("close", () => {
-      resolve({ installed: outputData.length > 0 });
-    });
-
-    psProcess.on("error", () => {
-      resolve({ installed: false });
-    });
-  });
+  return checkAppInstallationStatus(appId, uselessBloatwareOptions);
 });

@@ -269,22 +269,20 @@ const commandMapping = {
   updates5: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization" /v DODownloadMode /t REG_DWORD /d 0 /f',
   updates6: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsStore" /v AutoDownload /t REG_DWORD /d 2 /f',
   updates7: 'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Appx" /v AllowAutomaticAppArchiving /t REG_DWORD /d 0 /f',
-  services1: 'sc.exe config "AJRouter" start=disabled',
-  services2: 'sc.exe config "AppVClient" start=disabled',
-  services3: 'sc.exe config "AssignedAccessManagerSvc" start=disabled',
-  services4: 'sc.exe config "DiagTrack" start=disabled',
-  services5: 'sc.exe config "DialogBlockingService" start=disabled',
-  services6: 'sc.exe config "NetTcpPortSharing" start=disabled',
-  services7: 'sc.exe config "RemoteAccess" start=disabled',
-  services8: 'sc.exe config "RemoteRegistry" start=disabled',
-  services9: 'sc.exe config "UevAgentService" start=disabled',
-  services10: 'sc.exe config "shpamsvc" start=disabled',
-  services11: 'sc.exe config "ssh-agent" start=disabled',
-  services12: 'sc.exe config "tzautoupdate" start=disabled',
-  services13: 'sc.exe config "uhssvc" start=disabled',
-  services14: 'sc.exe config "Spooler" start=disabled',
-  services15: 'sc.exe config "bthserv" start=disabled',
-  services16: 'sc.exe config "TermService" start=disabled',
+  services1: 'sc.exe config "AppVClient" start=disabled',
+  services2: 'sc.exe config "AssignedAccessManagerSvc" start=disabled',
+  services3: 'sc.exe config "DiagTrack" start=disabled',
+  services4: 'sc.exe config "DialogBlockingService" start=disabled',
+  services5: 'sc.exe config "NetTcpPortSharing" start=disabled',
+  services6: 'sc.exe config "RemoteAccess" start=disabled',
+  services7: 'sc.exe config "RemoteRegistry" start=disabled',
+  services8: 'sc.exe config "UevAgentService" start=disabled',
+  services9: 'sc.exe config "shpamsvc" start=disabled',
+  services10: 'sc.exe config "ssh-agent" start=disabled',
+  services11: 'sc.exe config "tzautoupdate" start=disabled',
+  services12: 'sc.exe config "Spooler" start=disabled',
+  services13: 'sc.exe config "bthserv" start=disabled',
+  services14: 'sc.exe config "TermService" start=disabled',
   maintenance1: 'Remove-Item -Path "$env:TEMP\\*" -Recurse -Force -ErrorAction SilentlyContinue; exit 0',
   maintenance2: 'Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force -ErrorAction SilentlyContinue; exit 0',
   maintenance3: 'Stop-Service wuauserv -ErrorAction SilentlyContinue; Remove-Item -Path "C:\\Windows\\SoftwareDistribution\\Download\\*" -Recurse -Force -ErrorAction SilentlyContinue; Start-Service wuauserv -ErrorAction SilentlyContinue; exit 0',
@@ -295,67 +293,105 @@ const commandMapping = {
   maintenance8: "Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase; exit 0",
 };
 
-document.querySelectorAll(".checkbox-group label").forEach((label) => {
-  const checkbox = label.querySelector('input[type="checkbox"]');
-  if (checkbox && commandMapping[checkbox.value]) {
-    const infoIcon = document.createElement("i");
-    infoIcon.className = "fa fa-code info-icon";
-    infoIcon.setAttribute("data-command", commandMapping[checkbox.value]);
-    label.appendChild(infoIcon);
+document.addEventListener("DOMContentLoaded", () => {
+  const labels = document.querySelectorAll(".checkbox-group label");
+  for (const label of labels) {
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    if (checkbox && commandMapping[checkbox.value]) {
+      const infoIcon = document.createElement("i");
+      infoIcon.className = "fa fa-code info-icon";
+      infoIcon.setAttribute("data-command", commandMapping[checkbox.value]);
+      label.appendChild(infoIcon);
+    }
   }
-});
 
-const modal = document.getElementById("commandModal");
-const commandCodeElem = document.getElementById("commandCode");
+  const modal = document.getElementById("commandModal");
+  const commandCodeElem = document.getElementById("commandCode");
+  const closeBtn = modal?.querySelector(".close");
+  const copyCommandBtn = document.getElementById("copyCommandBtn");
 
-document.querySelectorAll(".info-icon").forEach((icon) => {
-  icon.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const infoIcons = document.querySelectorAll(".info-icon");
+  for (const icon of infoIcons) {
+    icon.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    const command = event.target.getAttribute("data-command");
-    commandCodeElem.textContent = command;
-    modal.style.display = "flex";
-  });
-});
-
-const closeBtn = document.querySelector(".modal .close");
-closeBtn.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
-window.addEventListener("click", (event) => {
-  if (event.target === modal) {
-    modal.style.display = "none";
-  }
-});
-
-const copyCommandBtn = document.getElementById("copyCommandBtn");
-copyCommandBtn.addEventListener("click", () => {
-  navigator.clipboard.writeText(commandCodeElem.textContent).then(() => {
-    window.EasyNotificationInstance.createNotification({
-      title: "Copy Command",
-      message: "Command Copied to Clipboard",
-      type: "success",
+      const command = event.target.getAttribute("data-command");
+      if (commandCodeElem) {
+        commandCodeElem.textContent = command;
+      }
+      if (modal) {
+        modal.style.display = "flex";
+      }
     });
-  });
-});
+  }
 
-document.querySelectorAll(".sub-tab").forEach((tab) => {
-  tab.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      if (modal) {
+        modal.style.display = "none";
+      }
+    });
+  }
 
-    const parentTab = tab.closest(".tab");
-    const targetId = tab.dataset.subtab;
-
-    parentTab.querySelectorAll(".sub-tab").forEach((t) => t.classList.remove("active"));
-    parentTab.querySelectorAll(".sub-tab-content").forEach((c) => c.classList.remove("active"));
-
-    tab.classList.add("active");
-    const targetContent = parentTab.querySelector(`#${targetId}`);
-    if (targetContent) {
-      targetContent.classList.add("active");
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
     }
   });
+
+  if (copyCommandBtn && commandCodeElem) {
+    copyCommandBtn.addEventListener("click", () => {
+      navigator.clipboard
+        .writeText(commandCodeElem.textContent)
+        .then(() => {
+          if (window.EasyNotificationInstance) {
+            window.EasyNotificationInstance.createNotification({
+              title: "Copy Command",
+              message: "Command Copied to Clipboard",
+              type: "success",
+            });
+          } else {
+            alert("Command Copied to Clipboard");
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to copy command: ", err);
+          if (window.EasyNotificationInstance) {
+            window.EasyNotificationInstance.createNotification({
+              title: "Copy Error",
+              message: "Failed to copy command.",
+              type: "danger",
+            });
+          } else {
+            alert("Failed to copy command.");
+          }
+        });
+    });
+  }
+
+  const subTabs = document.querySelectorAll(".sub-tab");
+  for (const tab of subTabs) {
+    tab.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const parentTabContainer = tab.closest(".tab");
+      if (!parentTabContainer) return;
+
+      const targetId = tab.dataset.subtab;
+
+      const currentSubTabs = parentTabContainer.querySelectorAll(".sub-tab");
+      const currentSubContents = parentTabContainer.querySelectorAll(".sub-tab-content");
+
+      for (const t of currentSubTabs) t.classList.remove("active");
+      for (const c of currentSubContents) c.classList.remove("active");
+
+      tab.classList.add("active");
+      const targetContent = parentTabContainer.querySelector(`#${targetId}`);
+      if (targetContent) {
+        targetContent.classList.add("active");
+      }
+    });
+  }
 });

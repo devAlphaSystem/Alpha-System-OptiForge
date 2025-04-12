@@ -1,21 +1,15 @@
 const { ipcMain } = require("electron");
 const { spawn } = require("node:child_process");
 
+/**
+ * Logs a message to the console.
+ * @param {string} message - The message to log.
+ * @param {string} [level="info"] - The log level ('info', 'warn', 'error').
+ */
 function log(message, level = "info") {
   const timestamp = new Date().toISOString();
-  switch (level) {
-    case "info":
-      console.info(`[${timestamp}] INFO: ${message}`);
-      break;
-    case "warn":
-      console.warn(`[${timestamp}] WARN: ${message}`);
-      break;
-    case "error":
-      console.error(`[${timestamp}] ERROR: ${message}`);
-      break;
-    default:
-      console.log(`[${timestamp}] ${message}`);
-  }
+  const consoleMethod = { info: console.info, warn: console.warn, error: console.error }[level] || console.log;
+  consoleMethod(`[${timestamp}] ${level.toUpperCase()}: ${message}`);
 }
 
 const privacyOptions = [
@@ -260,81 +254,71 @@ const updatesOptions = [
 const servicesOptions = [
   {
     id: "services1",
-    commandOn: 'sc.exe config "AJRouter" start=disabled',
-    commandOff: 'sc.exe config "AJRouter" start=auto',
-  },
-  {
-    id: "services2",
     commandOn: 'sc.exe config "AppVClient" start=disabled',
     commandOff: 'sc.exe config "AppVClient" start=auto',
   },
   {
-    id: "services3",
+    id: "services2",
     commandOn: 'sc.exe config "AssignedAccessManagerSvc" start=disabled',
     commandOff: 'sc.exe config "AssignedAccessManagerSvc" start=auto',
   },
   {
-    id: "services4",
+    id: "services3",
     commandOn: 'sc.exe config "DiagTrack" start=disabled',
     commandOff: 'sc.exe config "DiagTrack" start=auto',
   },
   {
-    id: "services5",
+    id: "services4",
     commandOn: 'sc.exe config "DialogBlockingService" start=disabled',
     commandOff: 'sc.exe config "DialogBlockingService" start=auto',
   },
   {
-    id: "services6",
+    id: "services5",
     commandOn: 'sc.exe config "NetTcpPortSharing" start=disabled',
     commandOff: 'sc.exe config "NetTcpPortSharing" start=auto',
   },
   {
-    id: "services7",
+    id: "services6",
     commandOn: 'sc.exe config "RemoteAccess" start=disabled',
     commandOff: 'sc.exe config "RemoteAccess" start=auto',
   },
   {
-    id: "services8",
+    id: "services7",
     commandOn: 'sc.exe config "RemoteRegistry" start=disabled',
     commandOff: 'sc.exe config "RemoteRegistry" start=auto',
   },
   {
-    id: "services9",
+    id: "services8",
     commandOn: 'sc.exe config "UevAgentService" start=disabled',
     commandOff: 'sc.exe config "UevAgentService" start=auto',
   },
   {
-    id: "services10",
+    id: "services9",
     commandOn: 'sc.exe config "shpamsvc" start=disabled',
     commandOff: 'sc.exe config "shpamsvc" start=auto',
   },
   {
-    id: "services11",
+    id: "services10",
     commandOn: 'sc.exe config "ssh-agent" start=disabled',
     commandOff: 'sc.exe config "ssh-agent" start=auto',
   },
   {
-    id: "services12",
+    id: "services11",
     commandOn: 'sc.exe config "tzautoupdate" start=disabled',
     commandOff: 'sc.exe config "tzautoupdate" start=auto',
   },
   {
-    id: "services13",
-    commandOn: 'sc.exe config "uhssvc" start=disabled',
-    commandOff: 'sc.exe config "uhssvc" start=auto',
-  },
-  {
-    id: "services14",
+    id: "services12",
     commandOn: 'sc.exe config "Spooler" start=disabled',
     commandOff: 'sc.exe config "Spooler" start=auto',
   },
   {
-    id: "services15",
+    id: "services13",
     commandOn: 'sc.exe config "bthserv" start=disabled',
     commandOff: 'sc.exe config "bthserv" start=auto',
   },
   {
-    id: "services16",
+    id: "services14",
     commandOn: 'sc.exe config "TermService" start=disabled',
     commandOff: 'sc.exe config "TermService" start=auto',
   },
@@ -383,14 +367,26 @@ const maintenanceOptions = [
   },
 ];
 
+/**
+ * Replaces logical AND operators (&&) with semicolons (;) for PowerShell compatibility.
+ * @param {string} cmd - The command string.
+ * @returns {string} The command string with replacements.
+ */
 function wrapCommand(cmd) {
   return cmd.replace(/&&/g, ";");
 }
 
+/**
+ * Executes a given command in PowerShell.
+ * @param {string} command - The command to execute.
+ * @returns {Promise<{success: boolean, command: string, message: string}>} A promise resolving with the execution result.
+ */
 function executeCommand(command) {
   return new Promise((resolve) => {
     log(`Executing command: ${command}`);
     let outputData = "";
+    let errorData = "";
+
     const psProcess = spawn("powershell.exe", ["-NoProfile", "-Command", command]);
 
     psProcess.stdout.on("data", (data) => {
@@ -401,22 +397,40 @@ function executeCommand(command) {
 
     psProcess.stderr.on("data", (data) => {
       const errorOutput = data.toString().trim();
-      outputData += `ERROR: ${errorOutput}\n`;
-      log(`Error: ${errorOutput}`, "error");
+      errorData += `${errorOutput}\n`;
+      log(`Error Output: ${errorOutput}`, "warn");
     });
 
     psProcess.on("error", (error) => {
-      log(`Process error: ${error}`, "error");
-      resolve({ success: false, command, message: error.toString() });
+      log(`Process spawn error: ${error.message}`, "error");
+      resolve({
+        success: false,
+        command,
+        message: `Process spawn error: ${error.message}`,
+      });
     });
 
     psProcess.on("close", (code) => {
       log(`Process closed with code: ${code}`);
-      resolve({ success: code === 0, command, message: outputData || `Process exited with code ${code}` });
+      const success = code === 0;
+      let message = outputData.trim();
+      if (errorData.trim()) {
+        message += `\nERRORS:\n${errorData.trim()}`;
+      }
+      if (!message && !success) {
+        message = `Process exited with code ${code}.`;
+      }
+      resolve({ success, command, message });
     });
   });
 }
 
+/**
+ * Executes a list of commands sequentially.
+ * @param {string[]} commands - An array of command strings.
+ * @param {Electron.IpcMainEvent} event - The IPC event object.
+ * @param {string} responseChannel - The channel to send the response back on.
+ */
 async function executeCommands(commands, event, responseChannel) {
   const results = [];
   for (const command of commands) {
@@ -424,124 +438,267 @@ async function executeCommands(commands, event, responseChannel) {
       const result = await executeCommand(command);
       results.push(result);
     } catch (err) {
+      log(`Error executing command "${command}": ${err.message}`, "error");
       results.push({ success: false, command, message: err.toString() });
     }
   }
-  event.reply(responseChannel, results);
+  if (!event.sender.isDestroyed()) {
+    event.reply(responseChannel, results);
+  } else {
+    log(`Window destroyed before sending response on ${responseChannel}`, "warn");
+  }
+}
+
+/**
+ * Gets the commands to execute based on selected IDs and options array.
+ * @param {string[]} selectedIds - Array of selected option IDs.
+ * @param {Array<object>} optionsArray - Array of option objects.
+ * @returns {string[]} Array of command strings to execute.
+ */
+function getCommandsToExecute(selectedIds, optionsArray) {
+  const commands = [];
+  for (const opt of optionsArray) {
+    const isSelected = selectedIds.includes(opt.id);
+    let cmd = null;
+    if (opt.command) {
+      if (isSelected) {
+        cmd = opt.command;
+      }
+    } else if (opt.commandOn && opt.commandOff) {
+      cmd = isSelected ? opt.commandOn : opt.commandOff;
+    } else if (opt.commandOn) {
+      if (isSelected) {
+        cmd = opt.commandOn;
+      }
+    }
+    if (cmd) {
+      const wrappedCmd = wrapCommand(cmd);
+      if (wrappedCmd) {
+        commands.push(wrappedCmd);
+      }
+    }
+  }
+  return commands;
 }
 
 ipcMain.on("apply-privacy-optimizations", (event, selectedIds) => {
   log(`Received apply-privacy-optimizations with data: ${JSON.stringify(selectedIds)}`);
-  const commands = privacyOptions
-    .map((opt) => {
-      if (opt.command) {
-        return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null;
-      }
-      const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
-      return cmd ? wrapCommand(cmd) : null;
-    })
-    .filter((cmd) => cmd !== null);
+  const commands = getCommandsToExecute(selectedIds, privacyOptions);
   executeCommands(commands, event, "privacy-optimizations-response");
 });
 
 ipcMain.on("apply-gaming-optimizations", (event, selectedIds) => {
   log(`Received apply-gaming-optimizations with data: ${JSON.stringify(selectedIds)}`);
-  const commands = gamingOptions
-    .map((opt) => {
-      if (opt.command) {
-        return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null;
-      }
-      const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
-      return cmd ? wrapCommand(cmd) : null;
-    })
-    .filter((cmd) => cmd !== null);
+  const commands = getCommandsToExecute(selectedIds, gamingOptions);
   executeCommands(commands, event, "gaming-optimizations-response");
 });
 
 ipcMain.on("apply-updates-optimizations", (event, selectedIds) => {
   log(`Received apply-updates-optimizations with data: ${JSON.stringify(selectedIds)}`);
-  const commands = updatesOptions
-    .map((opt) => {
-      if (opt.command) {
-        return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null;
-      }
-      const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
-      return cmd ? wrapCommand(cmd) : null;
-    })
-    .filter((cmd) => cmd !== null);
+  const commands = getCommandsToExecute(selectedIds, updatesOptions);
   executeCommands(commands, event, "updates-optimizations-response");
 });
 
 ipcMain.on("apply-services-optimizations", (event, selectedIds) => {
   log(`Received apply-services-optimizations with data: ${JSON.stringify(selectedIds)}`);
-  const commands = servicesOptions
-    .map((opt) => {
-      if (opt.command) {
-        return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null;
-      }
-      const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
-      return cmd ? wrapCommand(cmd) : null;
-    })
-    .filter((cmd) => cmd !== null);
+  const commands = getCommandsToExecute(selectedIds, servicesOptions);
   executeCommands(commands, event, "services-optimizations-response");
 });
 
 ipcMain.on("apply-maintenance-optimizations", (event, selectedIds) => {
   log(`Received apply-maintenance-optimizations with data: ${JSON.stringify(selectedIds)}`);
-  const commands = maintenanceOptions
-    .map((opt) => {
-      if (opt.command) {
-        return selectedIds.includes(opt.id) ? wrapCommand(opt.command) : null;
-      }
-      const cmd = selectedIds.includes(opt.id) ? opt.commandOn : opt.commandOff;
-      return cmd ? wrapCommand(cmd) : null;
-    })
-    .filter((cmd) => cmd !== null);
+  const commands = getCommandsToExecute(selectedIds, maintenanceOptions);
   executeCommands(commands, event, "maintenance-optimizations-response");
 });
 
+/**
+ * Checks the state of a registry value.
+ * @param {string} keyPath - The registry key path.
+ * @param {string} valueName - The name of the value.
+ * @param {string} expectedValue - The expected data for the value.
+ * @param {string} valueType - The expected type (e.g., 'REG_DWORD', 'REG_SZ').
+ * @returns {Promise<boolean>} True if the current value matches the expected value.
+ */
+function checkRegistryValue(keyPath, valueName, expectedValue, valueType) {
+  return new Promise((resolve) => {
+    const queryCmd = `reg query "${keyPath}" /v ${valueName}`;
+    let outputData = "";
+    let errorData = "";
+
+    const psProcess = spawn("powershell.exe", ["-NoProfile", "-Command", queryCmd]);
+
+    psProcess.stdout.on("data", (data) => (outputData += data.toString()));
+    psProcess.stderr.on("data", (data) => (errorData += data.toString()));
+
+    psProcess.on("close", (code) => {
+      if (code !== 0) {
+        log(`Registry query failed for "${keyPath}" /v ${valueName}. Code: ${code}. Stderr: ${errorData.trim()}`, "warn");
+        resolve(false);
+        return;
+      }
+
+      const upperValueType = valueType.toUpperCase();
+      let valuePattern;
+
+      if (upperValueType === "REG_DWORD") {
+        const hexExpected = `0x${Number.parseInt(expectedValue).toString(16)}`;
+        valuePattern = new RegExp(`${valueName}\\s+${valueType}\\s+${hexExpected}`, "i");
+      } else if (upperValueType === "REG_SZ" && valueName === "/ve") {
+        valuePattern = new RegExp(`\\(Default\\)\\s+REG_SZ\\s+${expectedValue}`, "i");
+      } else {
+        valuePattern = new RegExp(`${valueName}\\s+${valueType}\\s+${expectedValue}`, "i");
+      }
+
+      const valueMatch = outputData.match(valuePattern);
+      resolve(!!valueMatch);
+    });
+
+    psProcess.on("error", (err) => {
+      log(`Error spawning process for registry query "${keyPath}" /v ${valueName}: ${err.message}`, "error");
+      resolve(false);
+    });
+  });
+}
+
+/**
+ * Checks the start type of a Windows service.
+ * @param {string} serviceName - The name of the service.
+ * @param {string} expectedStartType - The expected start type ('auto', 'disabled', 'demand').
+ * @returns {Promise<boolean>} True if the current start type matches the expected type.
+ */
+function checkServiceStartType(serviceName, expectedStartType) {
+  return new Promise((resolve) => {
+    const checkCmd = `sc qc "${serviceName}"`;
+    let outputData = "";
+    let errorData = "";
+
+    const psProcess = spawn("powershell.exe", ["-NoProfile", "-Command", checkCmd]);
+
+    psProcess.stdout.on("data", (data) => (outputData += data.toString()));
+    psProcess.stderr.on("data", (data) => (errorData += data.toString()));
+
+    psProcess.on("close", (code) => {
+      if (code !== 0) {
+        log(`Service query failed for "${serviceName}". Code: ${code}. Stderr: ${errorData.trim()}`, "warn");
+        resolve(false);
+        return;
+      }
+
+      const startTypeLine = outputData.split("\n").find((line) => line.trim().startsWith("START_TYPE"));
+
+      if (!startTypeLine) {
+        log(`Could not find START_TYPE line for service "${serviceName}"`, "warn");
+        resolve(false);
+        return;
+      }
+
+      const currentTypeMatch = startTypeLine.match(/:\s*\d+\s+([\w_]+)/);
+      if (!currentTypeMatch) {
+        log(`Could not parse START_TYPE line for service "${serviceName}": ${startTypeLine}`, "warn");
+        resolve(false);
+        return;
+      }
+
+      const currentType = currentTypeMatch[1].toLowerCase();
+      const expectedType = expectedStartType.toLowerCase();
+
+      const typeMap = {
+        auto: "auto_start",
+        disabled: "disabled",
+        demand: "demand_start",
+      };
+
+      resolve(currentType === typeMap[expectedType]);
+    });
+
+    psProcess.on("error", (err) => {
+      log(`Error spawning process for service query "${serviceName}": ${err.message}`, "error");
+      resolve(false);
+    });
+  });
+}
+
 ipcMain.handle("check-optimization-state", async (event, category, optionId) => {
-  if (category === "services") {
-    const option = servicesOptions.find((opt) => opt.id === optionId);
-    if (!option?.commandOn) return false;
+  let option = null;
+  let optionsArray = null;
+  let checkType = null;
 
-    const match = option.commandOn.match(/sc\.exe\s+config\s+"([^"]+)"\s+start=(\S+)/i);
-    if (!match) return false;
-
-    const [_, serviceName, expectedState] = match;
-    return new Promise((resolve) => {
-      let output = "";
-      const scProcess = spawn("sc.exe", ["qc", serviceName], { shell: true });
-
-      scProcess.stdout.on("data", (d) => (output += d.toString()));
-      scProcess.stderr.on("data", (d) => (output += d.toString()));
-      scProcess.on("close", () => {
-        const typeMatch = output.match(/START_TYPE\s*:\s*\d+\s+(\w+)/i);
-        resolve(typeMatch?.[1].toLowerCase() === expectedState.toLowerCase() || output.toLowerCase().includes(expectedState.toLowerCase()));
-      });
-      scProcess.on("error", () => resolve(false));
-    });
+  switch (category) {
+    case "privacy":
+      optionsArray = privacyOptions;
+      checkType = "registry";
+      break;
+    case "gaming":
+      optionsArray = gamingOptions;
+      checkType = "registry";
+      break;
+    case "updates":
+      optionsArray = updatesOptions;
+      checkType = "registry";
+      break;
+    case "services":
+      optionsArray = servicesOptions;
+      checkType = "service";
+      break;
+    case "maintenance":
+      return null;
+    default:
+      log(`Unknown category for check-optimization-state: ${category}`, "warn");
+      return null;
   }
 
-  if (["privacy", "gaming", "updates"].includes(category)) {
-    const option = { privacy: privacyOptions, gaming: gamingOptions, updates: updatesOptions }[category]?.find((opt) => opt.id === optionId);
-
-    if (!option?.commandOn) return false;
-
-    const match = option.commandOn.match(/reg add "([^"]+)"\s+\/v\s+(\S+)\s+\/t\s+REG_DWORD\s+\/d\s+(\d+)/i);
-    if (!match) return false;
-
-    const [_, keyPath, valueName, expectedValue] = match;
-    return new Promise((resolve) => {
-      let output = "";
-      const psProcess = spawn("powershell.exe", ["-NoProfile", "-Command", `reg query "${keyPath}" /v ${valueName}`]);
-
-      psProcess.stdout.on("data", (d) => (output += d.toString()));
-      psProcess.stderr.on("data", (d) => (output += d.toString()));
-      psProcess.on("close", () => resolve(output.includes(expectedValue)));
-      psProcess.on("error", () => resolve(false));
-    });
+  for (const opt of optionsArray) {
+    if (opt.id === optionId) {
+      option = opt;
+      break;
+    }
   }
 
+  if (!option) {
+    log(`Option not found for ID: ${optionId} in category: ${category}`, "warn");
+    return null;
+  }
+
+  if (!option.commandOn) {
+    return null;
+  }
+
+  if (checkType === "registry") {
+    const regCommands = option.commandOn
+      .split(";")
+      .map((cmd) => cmd.trim())
+      .filter((cmd) => cmd.startsWith("reg add"));
+
+    if (regCommands.length === 0) {
+      log(`No valid 'reg add' commands found for option ${optionId}`, "warn");
+      return false;
+    }
+
+    for (const command of regCommands) {
+      const regex = /reg add "([^"]+)"\s+\/v\s+(\S+)\s+\/t\s+(\S+)\s+\/d\s+(.+)\s+\/f/i;
+      const match = command.match(regex);
+      if (!match) {
+        log(`Could not parse reg command for state check: ${command}`, "warn");
+        return false;
+      }
+      const [, keyPath, valueName, valueType, expectedValueRaw] = match;
+      const expectedValue = expectedValueRaw.trim();
+      const isMatch = await checkRegistryValue(keyPath, valueName, expectedValue, valueType);
+      if (!isMatch) return false;
+    }
+    return true;
+  }
+
+  if (checkType === "service") {
+    const scMatch = option.commandOn.match(/sc\.exe\s+config\s+"([^"]+)"\s+start=(\w+)/i);
+    if (!scMatch) {
+      log(`Could not parse sc.exe command: ${option.commandOn}`, "warn");
+      return false;
+    }
+    const [, serviceName, expectedStartType] = scMatch;
+    return await checkServiceStartType(serviceName, expectedStartType);
+  }
+
+  log(`Unsupported check type for category ${category}`, "warn");
   return false;
 });

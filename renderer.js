@@ -1,25 +1,20 @@
 const { ipcRenderer } = require("electron");
 const { execSync } = require("node:child_process");
 
+/**
+ * Logs a message via IPC to the main process.
+ * @param {string} message - The message to log.
+ * @param {string} [level="info"] - The log level ('info', 'warn', 'error').
+ */
 function log(message, level = "info") {
-  const timestamp = new Date().toISOString();
   ipcRenderer.send("renderer-log", message, level);
-
-  switch (level) {
-    case "info":
-      console.info(`[${timestamp}] INFO: ${message}`);
-      break;
-    case "warn":
-      console.warn(`[${timestamp}] WARN: ${message}`);
-      break;
-    case "error":
-      console.error(`[${timestamp}] ERROR: ${message}`);
-      break;
-    default:
-      console.log(`[${timestamp}] ${message}`);
-  }
 }
 
+/**
+ * Updates the status indicator for a "Remove Apps" checkbox.
+ * @param {HTMLElement} labelEl - The label element containing the checkbox.
+ * @param {string} appId - The ID of the app option.
+ */
 async function updateRemoveAppsStatus(labelEl, appId) {
   let circle = labelEl.querySelector(".status-circle");
   if (!circle) {
@@ -33,15 +28,22 @@ async function updateRemoveAppsStatus(labelEl, appId) {
     }
   }
 
+  circle.style.backgroundColor = "orange";
   try {
     const result = await ipcRenderer.invoke("check-remove-app-status", appId);
-    log(`${labelEl.innerText}: ${result.installed}`);
+    log(`Remove App Status - ${labelEl.innerText.trim()}: ${result.installed}`);
     circle.style.backgroundColor = result.installed ? "green" : "red";
   } catch (error) {
+    log(`Error checking remove app status for ${appId}: ${error.message}`, "error");
     circle.style.backgroundColor = "gray";
   }
 }
 
+/**
+ * Updates the status indicator for a "Bloatware" checkbox.
+ * @param {HTMLElement} labelEl - The label element containing the checkbox.
+ * @param {string} appId - The ID of the app option.
+ */
 async function updateBloatwareStatus(labelEl, appId) {
   let circle = labelEl.querySelector(".status-circle");
   if (!circle) {
@@ -55,32 +57,41 @@ async function updateBloatwareStatus(labelEl, appId) {
     }
   }
 
+  circle.style.backgroundColor = "orange";
   try {
     const result = await ipcRenderer.invoke("check-app-status", appId);
-    log(`${labelEl.innerText}: ${result.installed}`);
+    log(`Bloatware Status - ${labelEl.innerText.trim()}: ${result.installed}`);
     circle.style.backgroundColor = result.installed ? "green" : "red";
   } catch (error) {
+    log(`Error checking bloatware status for ${appId}: ${error.message}`, "error");
     circle.style.backgroundColor = "gray";
   }
 }
 
+/**
+ * Updates the status indicator for an optimization checkbox.
+ * @param {HTMLElement} labelEl - The label element containing the checkbox.
+ * @param {string} category - The optimization category.
+ * @param {string} optionId - The ID of the optimization option.
+ */
 async function updateOptimizationStatus(labelEl, category, optionId) {
+  let circle = labelEl.querySelector(".status-circle");
+  const checkbox = labelEl.querySelector('input[type="checkbox"]');
+
   try {
     const state = await ipcRenderer.invoke("check-optimization-state", category, optionId);
-    log(`${labelEl.innerText}: ${state}`);
+    log(`Optimization Status [${category}] - ${labelEl.innerText.trim()}: ${state}`);
+
     if (state === null) {
-      const existingCircle = labelEl.querySelector(".status-circle");
-      if (existingCircle) {
-        existingCircle.remove();
+      if (circle) {
+        circle.remove();
       }
       return;
     }
 
-    let circle = labelEl.querySelector(".status-circle");
     if (!circle) {
       circle = document.createElement("span");
       circle.className = "status-circle";
-      const checkbox = labelEl.querySelector('input[type="checkbox"]');
       if (checkbox) {
         checkbox.insertAdjacentElement("afterend", circle);
       } else {
@@ -90,30 +101,42 @@ async function updateOptimizationStatus(labelEl, category, optionId) {
 
     circle.style.backgroundColor = state ? "green" : "red";
   } catch (error) {
-    const circle = labelEl.querySelector(".status-circle");
+    log(`Error checking optimization status for ${category}/${optionId}: ${error.message}`, "error");
     if (circle) {
       circle.style.backgroundColor = "gray";
+    } else if (checkbox) {
+      circle = document.createElement("span");
+      circle.className = "status-circle";
+      circle.style.backgroundColor = "gray";
+      checkbox.insertAdjacentElement("afterend", circle);
     }
   }
 }
 
+/**
+ * Updates the status indicator for a system/network tweak checkbox.
+ * @param {HTMLElement} labelEl - The label element containing the checkbox.
+ * @param {string} category - The tweak category ('systemTweaks' or 'networkTweaks').
+ * @param {string} optionId - The ID of the tweak option.
+ */
 async function updateFixesStatus(labelEl, category, optionId) {
+  let circle = labelEl.querySelector(".status-circle");
+  const checkbox = labelEl.querySelector('input[type="checkbox"]');
+
   try {
     const state = await ipcRenderer.invoke("check-fixes-state", category, optionId);
-    log(`${labelEl.innerText}: ${state}`);
+    log(`Fixes Status [${category}] - ${labelEl.innerText.trim()}: ${state}`);
+
     if (state === null) {
-      const existingCircle = labelEl.querySelector(".status-circle");
-      if (existingCircle) {
-        existingCircle.remove();
+      if (circle) {
+        circle.remove();
       }
       return;
     }
 
-    let circle = labelEl.querySelector(".status-circle");
     if (!circle) {
       circle = document.createElement("span");
       circle.className = "status-circle";
-      const checkbox = labelEl.querySelector('input[type="checkbox"]');
       if (checkbox) {
         checkbox.insertAdjacentElement("afterend", circle);
       } else {
@@ -123,30 +146,42 @@ async function updateFixesStatus(labelEl, category, optionId) {
 
     circle.style.backgroundColor = state ? "green" : "red";
   } catch (error) {
-    const circle = labelEl.querySelector(".status-circle");
+    log(`Error checking fixes status for ${category}/${optionId}: ${error.message}`, "error");
     if (circle) {
       circle.style.backgroundColor = "gray";
+    } else if (checkbox) {
+      circle = document.createElement("span");
+      circle.className = "status-circle";
+      circle.style.backgroundColor = "gray";
+      checkbox.insertAdjacentElement("afterend", circle);
     }
   }
 }
 
+/**
+ * Updates the status indicator for a Windows feature checkbox.
+ * @param {HTMLElement} labelEl - The label element containing the checkbox.
+ * @param {string} category - The feature category ('userFeatures' or 'machineFeatures').
+ * @param {string} optionId - The ID of the feature option.
+ */
 async function updateFeaturesStatus(labelEl, category, optionId) {
+  let circle = labelEl.querySelector(".status-circle");
+  const checkbox = labelEl.querySelector('input[type="checkbox"]');
+
   try {
     const state = await ipcRenderer.invoke("check-features-state", category, optionId);
-    log(`${labelEl.innerText}: ${state}`);
+    log(`Features Status [${category}] - ${labelEl.innerText.trim()}: ${state}`);
+
     if (state === null) {
-      const existingCircle = labelEl.querySelector(".status-circle");
-      if (existingCircle) {
-        existingCircle.remove();
+      if (circle) {
+        circle.remove();
       }
       return;
     }
 
-    let circle = labelEl.querySelector(".status-circle");
     if (!circle) {
       circle = document.createElement("span");
       circle.className = "status-circle";
-      const checkbox = labelEl.querySelector('input[type="checkbox"]');
       if (checkbox) {
         checkbox.insertAdjacentElement("afterend", circle);
       } else {
@@ -156,73 +191,108 @@ async function updateFeaturesStatus(labelEl, category, optionId) {
 
     circle.style.backgroundColor = state ? "green" : "red";
   } catch (error) {
-    const circle = labelEl.querySelector(".status-circle");
+    log(`Error checking features status for ${category}/${optionId}: ${error.message}`, "error");
     if (circle) {
       circle.style.backgroundColor = "gray";
+    } else if (checkbox) {
+      circle = document.createElement("span");
+      circle.className = "status-circle";
+      circle.style.backgroundColor = "gray";
+      checkbox.insertAdjacentElement("afterend", circle);
     }
   }
 }
 
+/**
+ * Checks the status of all "Remove Apps" items.
+ * @returns {Promise<void[]>} A promise that resolves when all checks are complete.
+ */
 function checkRemoveAppsStatus() {
   const removeAppsLabels = document.querySelectorAll("#removeAppsSection .checkbox-group label");
   const promises = [];
-  removeAppsLabels.forEach((label) => {
+  for (const label of removeAppsLabels) {
     const checkbox = label.querySelector('input[type="checkbox"]');
     if (checkbox?.value) {
       promises.push(updateRemoveAppsStatus(label, checkbox.value));
     }
-  });
+  }
   return Promise.all(promises);
 }
 
+/**
+ * Checks the status of all "Bloatware" items.
+ * @returns {Promise<void[]>} A promise that resolves when all checks are complete.
+ */
 function checkBloatwareStatus() {
   const bloatwareLabels = document.querySelectorAll("#uselessBloatwareSection .checkbox-group label");
   const promises = [];
-  bloatwareLabels.forEach((label) => {
+  for (const label of bloatwareLabels) {
     const checkbox = label.querySelector('input[type="checkbox"]');
     if (checkbox?.value) {
       promises.push(updateBloatwareStatus(label, checkbox.value));
     }
-  });
+  }
   return Promise.all(promises);
 }
 
+/**
+ * Checks the status of all optimization items in a given section.
+ * @param {string} sectionId - The ID of the section element.
+ * @param {string} category - The optimization category.
+ * @returns {Promise<void[]>} A promise that resolves when all checks are complete.
+ */
 function checkOptimizationStatus(sectionId, category) {
   const optimizationLabels = document.querySelectorAll(`#${sectionId} .checkbox-group label`);
   const promises = [];
-  optimizationLabels.forEach((label) => {
+  for (const label of optimizationLabels) {
     const checkbox = label.querySelector('input[type="checkbox"]');
     if (checkbox?.value) {
       promises.push(updateOptimizationStatus(label, category, checkbox.value));
     }
-  });
+  }
   return Promise.all(promises);
 }
 
+/**
+ * Checks the status of all fix/tweak items in a given section.
+ * @param {string} sectionId - The ID of the section element.
+ * @param {string} category - The fix/tweak category.
+ * @returns {Promise<void[]>} A promise that resolves when all checks are complete.
+ */
 function checkFixesStatus(sectionId, category) {
   const fixesLabels = document.querySelectorAll(`#${sectionId} .checkbox-group label`);
   const promises = [];
-  fixesLabels.forEach((label) => {
+  for (const label of fixesLabels) {
     const checkbox = label.querySelector('input[type="checkbox"]');
     if (checkbox?.value) {
       promises.push(updateFixesStatus(label, category, checkbox.value));
     }
-  });
+  }
   return Promise.all(promises);
 }
 
+/**
+ * Checks the status of all Windows feature items in a given section.
+ * @param {string} sectionId - The ID of the section element.
+ * @param {string} category - The feature category.
+ * @returns {Promise<void[]>} A promise that resolves when all checks are complete.
+ */
 function checkFeaturesStatus(sectionId, category) {
   const featuresLabels = document.querySelectorAll(`#${sectionId} .checkbox-group label`);
   const promises = [];
-  featuresLabels.forEach((label) => {
+  for (const label of featuresLabels) {
     const checkbox = label.querySelector('input[type="checkbox"]');
     if (checkbox?.value) {
       promises.push(updateFeaturesStatus(label, category, checkbox.value));
     }
-  });
+  }
   return Promise.all(promises);
 }
 
+/**
+ * Updates the text content of the loading overlay's verbose text element.
+ * @param {string} message - The message to display.
+ */
 function updateLoadingText(message) {
   const loadingText = document.querySelector(".verbose-text");
   if (loadingText) {
@@ -230,20 +300,30 @@ function updateLoadingText(message) {
   }
 }
 
+/**
+ * Initializes status checks for all relevant sections after ensuring prerequisites.
+ */
 async function initializeStatusChecks() {
+  const spinner = document.getElementById("loadingSpinner");
+  if (!spinner) return;
+
+  spinner.style.display = "flex";
+
   updateLoadingText("Checking NuGet package provider...");
   try {
     const nugetCheck = execSync(`powershell -ExecutionPolicy Bypass -Command "Get-PackageProvider -Name NuGet -ListAvailable | Where-Object { $_.Version -ge [version]'2.8.5.201' } | Select-Object -First 1"`).toString();
     if (!nugetCheck.trim()) {
       updateLoadingText("Installing NuGet package provider...");
-      log("Installing NuGet package provider...");
+      log("NuGet package provider not found or outdated. Installing...");
       execSync('powershell -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope CurrentUser"');
+      log("NuGet package provider installed.");
     } else {
-      log("NuGet package provider already installed.");
-      updateLoadingText("NuGet package provider already installed.");
+      log("NuGet package provider is up to date.");
+      updateLoadingText("NuGet package provider OK.");
     }
   } catch (error) {
     log(`Error checking/installing NuGet: ${error}`, "error");
+    updateLoadingText("Error checking/installing NuGet.");
   }
 
   updateLoadingText("Checking PSWindowsUpdate module...");
@@ -251,101 +331,105 @@ async function initializeStatusChecks() {
     const pswuCheck = execSync('powershell -ExecutionPolicy Bypass -Command "Get-Module -ListAvailable PSWindowsUpdate | Select-Object -First 1"').toString();
     if (!pswuCheck.trim()) {
       updateLoadingText("Installing PSWindowsUpdate module...");
-      log("Installing PSWindowsUpdate module...");
+      log("PSWindowsUpdate module not found. Installing...");
       execSync('powershell -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-Module PSWindowsUpdate -Force -Scope CurrentUser -SkipPublisherCheck -AllowClobber"');
+      log("PSWindowsUpdate module installed.");
     } else {
       log("PSWindowsUpdate module already installed.");
-      updateLoadingText("PSWindowsUpdate module already installed.");
+      updateLoadingText("PSWindowsUpdate module OK.");
     }
   } catch (error) {
     log(`Error checking/installing PSWindowsUpdate: ${error}`, "error");
+    updateLoadingText("Error checking/installing PSWindowsUpdate.");
   }
 
-  updateLoadingText("Checking remove apps status...");
-  await checkRemoveAppsStatus();
+  const checkTasks = [
+    { text: "Checking remove apps status...", task: checkRemoveAppsStatus },
+    { text: "Checking bloatware status...", task: checkBloatwareStatus },
+    {
+      text: "Checking privacy optimizations...",
+      task: () => checkOptimizationStatus("privacySection", "privacy"),
+    },
+    {
+      text: "Checking gaming optimizations...",
+      task: () => checkOptimizationStatus("gamingSection", "gaming"),
+    },
+    {
+      text: "Checking update optimizations...",
+      task: () => checkOptimizationStatus("updatesSection", "updates"),
+    },
+    {
+      text: "Checking services optimizations...",
+      task: () => checkOptimizationStatus("servicesSection", "services"),
+    },
+    {
+      text: "Checking system tweaks...",
+      task: () => checkFixesStatus("systemTweaksSection", "systemTweaks"),
+    },
+    {
+      text: "Checking network tweaks...",
+      task: () => checkFixesStatus("networkTweaksSection", "networkTweaks"),
+    },
+    {
+      text: "Checking user features status...",
+      task: () => checkFeaturesStatus("userFeaturesSection", "userFeatures"),
+    },
+    {
+      text: "Checking machine features status...",
+      task: () => checkFeaturesStatus("machineFeaturesSection", "machineFeatures"),
+    },
+  ];
 
-  updateLoadingText("Checking bloatware status...");
-  await checkBloatwareStatus();
-
-  updateLoadingText("Checking privacy optimizations...");
-  await checkOptimizationStatus("privacySection", "privacy");
-
-  updateLoadingText("Checking gaming optimizations...");
-  await checkOptimizationStatus("gamingSection", "gaming");
-
-  updateLoadingText("Checking update optimizations...");
-  await checkOptimizationStatus("updatesSection", "updates");
-
-  updateLoadingText("Checking services optimizations...");
-  await checkOptimizationStatus("servicesSection", "services");
-
-  updateLoadingText("Checking system tweaks...");
-  await checkFixesStatus("systemTweaksSection", "systemTweaks");
-
-  updateLoadingText("Checking network tweaks...");
-  await checkFixesStatus("networkTweaksSection", "networkTweaks");
-
-  updateLoadingText("Checking Windows Features status...");
-  await checkFeaturesStatus("userFeaturesSection", "userFeatures");
-  await checkFeaturesStatus("machineFeaturesSection", "machineFeatures");
+  for (const item of checkTasks) {
+    updateLoadingText(item.text);
+    await item.task();
+  }
 
   updateLoadingText("All checks completed!");
-  const spinner = document.getElementById("loadingSpinner");
-  if (spinner) {
-    spinner.classList.add("hidden");
-    setTimeout(() => {
-      spinner.style.display = "none";
-      spinner.classList.remove("hidden");
-    }, 300);
-  }
+  spinner.classList.add("hidden");
+  setTimeout(() => {
+    spinner.style.display = "none";
+    spinner.classList.remove("hidden");
+  }, 300);
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+/**
+ * Sets up event listeners for the main application UI.
+ */
+function setupUIEventListeners() {
   const notifier = window.EasyNotificationInstance;
-
+  if (!notifier) {
+    log("EasyNotificationInstance not found", "error");
+    return;
+  }
   notifier.clearAllNotifications();
-
-  initializeStatusChecks();
 
   const navItems = document.querySelectorAll(".nav a");
   const tabContents = document.querySelectorAll(".tab");
 
-  navItems.forEach((item) => {
+  for (const item of navItems) {
     item.addEventListener("click", (e) => {
       e.preventDefault();
-      log(`Navigating to tab: ${item.getAttribute("data-tab")}`);
+      const targetId = item.getAttribute("data-tab");
+      log(`Navigating to tab: ${targetId}`);
 
-      navItems.forEach((nav) => nav.classList.remove("active"));
-      tabContents.forEach((tab) => tab.classList.remove("active"));
+      for (const nav of navItems) nav.classList.remove("active");
+      for (const tab of tabContents) tab.classList.remove("active");
 
       item.classList.add("active");
-      const targetId = item.getAttribute("data-tab");
       const targetTab = document.getElementById(targetId);
       if (targetTab) {
         targetTab.classList.add("active");
       }
     });
-  });
+  }
 
-  const sections = document.querySelectorAll(".section");
-  sections.forEach((section) => {
-    const header = section.querySelector(".section-header");
-    const content = section.querySelector(".section-content");
-    header.addEventListener("click", (e) => {
-      if (e.target.tagName.toLowerCase() === "button") return;
-      if (content.style.display === "block" || content.classList.contains("active")) {
-        content.style.display = "none";
-        content.classList.remove("active");
-      } else {
-        content.style.display = "block";
-        content.classList.add("active");
-      }
-    });
-  });
+  const sectionsToSetup = ["privacySection", "gamingSection", "updatesSection", "powerSection", "servicesSection", "removeAppsSection", "uselessBloatwareSection", "systemToolsSection", "networkToolsSection", "maintenanceSection", "systemTweaksSection", "networkTweaksSection", "windowsFixesSection", "userFeaturesSection", "machineFeaturesSection"];
 
-  function setupSelectButtons(sectionId) {
+  for (const sectionId of sectionsToSetup) {
     const section = document.getElementById(sectionId);
-    if (!section) return;
+    if (!section) continue;
+
     const selectAllBtn = section.querySelector(".select-all");
     const deselectAllBtn = section.querySelector(".deselect-all");
     const checkboxes = section.querySelectorAll('input[type="checkbox"]');
@@ -353,485 +437,47 @@ window.addEventListener("DOMContentLoaded", () => {
     if (selectAllBtn) {
       selectAllBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        checkboxes.forEach((chk) => {
-          chk.checked = true;
-        });
+        for (const chk of checkboxes) chk.checked = true;
       });
     }
 
     if (deselectAllBtn) {
       deselectAllBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        checkboxes.forEach((chk) => {
-          chk.checked = false;
-        });
+        for (const chk of checkboxes) chk.checked = false;
       });
     }
   }
 
-  const sectionsToSetup = ["privacySection", "gamingSection", "updatesSection", "powerSection", "servicesSection", "removeAppsSection", "uselessBloatwareSection", "systemToolsSection", "networkToolsSection", "maintenanceSection", "systemTweaksSection", "networkTweaksSection", "windowsFixesSection", "userFeaturesSection", "machineFeaturesSection"];
-  sectionsToSetup.forEach(setupSelectButtons);
+  /**
+   * Generic function to handle applying changes for a section.
+   * @param {string} buttonId - The ID of the apply button.
+   * @param {string} sectionSelector - CSS selector for the section content.
+   * @param {string} ipcSendChannel - IPC channel to send selected IDs.
+   * @param {string} ipcResponseChannel - IPC channel to listen for response.
+   * @param {string} notificationTitle - Title for notifications.
+   * @param {Function} [statusCheckFn] - Optional function to re-run status checks.
+   */
+  function setupApplyButton(buttonId, sectionSelector, ipcSendChannel, ipcResponseChannel, notificationTitle, statusCheckFn) {
+    const applyBtn = document.getElementById(buttonId);
+    if (!applyBtn) return;
 
-  let privacyStartNotificationId = null;
-  const applyPrivacyBtn = document.getElementById("applyPrivacyBtn");
-  applyPrivacyBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#privacySection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Privacy Optimizations selected: ${selected}`);
+    let notificationId = null;
 
-    privacyStartNotificationId = notifier.createNotification({
-      title: "Privacy Optimizations",
-      message: "Executing privacy optimizations...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-privacy-optimizations", selected);
-  });
-
-  ipcRenderer.on("privacy-optimizations-response", (event, arg) => {
-    log(`Privacy Optimizations Response: ${JSON.stringify(arg, null, 2)}`);
-    if (privacyStartNotificationId) {
-      notifier.dismissNotification(privacyStartNotificationId);
-      privacyStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Privacy Optimizations",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Privacy Optimizations",
-        message: "Privacy optimizations completed successfully.",
-        type: "success",
-      });
-    }
-    checkOptimizationStatus("privacySection", "privacy");
-  });
-
-  let gamingStartNotificationId = null;
-  const applyGamingBtn = document.getElementById("applyGamingBtn");
-  applyGamingBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#gamingSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Gaming Optimizations selected: ${selected}`);
-
-    gamingStartNotificationId = notifier.createNotification({
-      title: "Gaming Optimizations",
-      message: "Executing gaming optimizations...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-gaming-optimizations", selected);
-  });
-
-  ipcRenderer.on("gaming-optimizations-response", (event, arg) => {
-    log(`Gaming Optimizations Response: ${JSON.stringify(arg, null, 2)}`);
-    if (gamingStartNotificationId) {
-      notifier.dismissNotification(gamingStartNotificationId);
-      gamingStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Gaming Optimizations",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Gaming Optimizations",
-        message: "Gaming optimizations completed successfully.",
-        type: "success",
-      });
-    }
-    checkOptimizationStatus("gamingSection", "gaming");
-  });
-
-  let updatesStartNotificationId = null;
-  const applyUpdatesBtn = document.getElementById("applyUpdatesBtn");
-  applyUpdatesBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#updatesSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Updates Optimizations selected: ${selected}`);
-
-    updatesStartNotificationId = notifier.createNotification({
-      title: "Updates Optimizations",
-      message: "Executing updates optimizations...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-updates-optimizations", selected);
-  });
-
-  ipcRenderer.on("updates-optimizations-response", (event, arg) => {
-    log(`Updates Optimizations Response: ${JSON.stringify(arg, null, 2)}`);
-    if (updatesStartNotificationId) {
-      notifier.dismissNotification(updatesStartNotificationId);
-      updatesStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Updates Optimizations",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Updates Optimizations",
-        message: "Updates optimizations completed successfully.",
-        type: "success",
-      });
-    }
-    checkOptimizationStatus("updatesSection", "updates");
-  });
-
-  let powerStartNotificationId = null;
-  const applyPowerBtn = document.getElementById("applyPowerBtn");
-  applyPowerBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#powerSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Power Optimizations selected: ${selected}`);
-
-    powerStartNotificationId = notifier.createNotification({
-      title: "Power Optimizations",
-      message: "Executing power optimizations...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-power-optimizations", selected);
-  });
-
-  ipcRenderer.on("power-optimizations-response", (event, arg) => {
-    log(`Power Optimizations Response: ${JSON.stringify(arg, null, 2)}`);
-    if (powerStartNotificationId) {
-      notifier.dismissNotification(powerStartNotificationId);
-      powerStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Power Optimizations",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Power Optimizations",
-        message: "Power optimizations completed successfully.",
-        type: "success",
-      });
-    }
-  });
-
-  let servicesStartNotificationId = null;
-  const applyServicesBtn = document.getElementById("applyServicesBtn");
-  applyServicesBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#servicesSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Services Optimizations selected: ${selected}`);
-
-    servicesStartNotificationId = notifier.createNotification({
-      title: "Services Optimizations",
-      message: "Executing services optimizations...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-services-optimizations", selected);
-  });
-
-  ipcRenderer.on("services-optimizations-response", (event, arg) => {
-    log(`Services Optimizations Response: ${JSON.stringify(arg, null, 2)}`);
-    if (servicesStartNotificationId) {
-      notifier.dismissNotification(servicesStartNotificationId);
-      servicesStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Services Optimizations",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Services Optimizations",
-        message: "Services optimizations completed successfully.",
-        type: "success",
-      });
-    }
-    checkOptimizationStatus("servicesSection", "services");
-  });
-
-  let maintenanceStartNotificationId = null;
-  const applyMaintenanceBtn = document.getElementById("applyMaintenanceBtn");
-  applyMaintenanceBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#maintenanceSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Maintenance Optimizations selected: ${selected}`);
-
-    maintenanceStartNotificationId = notifier.createNotification({
-      title: "Maintenance Optimizations",
-      message: "Executing maintenance optimizations...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-maintenance-optimizations", selected);
-  });
-
-  ipcRenderer.on("maintenance-optimizations-response", (event, arg) => {
-    log(`Maintenance Optimizations Response: ${JSON.stringify(arg, null, 2)}`);
-    if (maintenanceStartNotificationId) {
-      notifier.dismissNotification(maintenanceStartNotificationId);
-      maintenanceStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Maintenance Optimizations",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Maintenance Optimizations",
-        message: "Maintenance optimizations completed successfully.",
-        type: "success",
-      });
-    }
-  });
-
-  let removeAppsStartNotificationId = null;
-  const applyRemoveAppsBtn = document.getElementById("applyRemoveAppsBtn");
-  applyRemoveAppsBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#removeAppsSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Remove Apps selected: ${selected}`);
-
-    removeAppsStartNotificationId = notifier.createNotification({
-      title: "Remove Apps",
-      message: "Executing app removal...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-remove-apps", selected);
-  });
-
-  ipcRenderer.on("remove-apps-response", (event, arg) => {
-    log(`Remove Apps Response: ${JSON.stringify(arg, null, 2)}`);
-    if (removeAppsStartNotificationId) {
-      notifier.dismissNotification(removeAppsStartNotificationId);
-      removeAppsStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Remove Apps",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Remove Apps",
-        message: "Apps removed successfully.",
-        type: "success",
-      });
-    }
-    checkRemoveAppsStatus();
-  });
-
-  let bloatwareStartNotificationId = null;
-  const applyUselessBloatwareBtn = document.getElementById("applyUselessBloatwareBtn");
-  applyUselessBloatwareBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#uselessBloatwareSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Useless Bloatware selected: ${selected}`);
-
-    bloatwareStartNotificationId = notifier.createNotification({
-      title: "Useless Bloatware",
-      message: "Executing removal of useless bloatware...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-useless-bloatware", selected);
-  });
-
-  ipcRenderer.on("useless-bloatware-response", (event, arg) => {
-    log(`Useless Bloatware Response: ${JSON.stringify(arg, null, 2)}`);
-    if (bloatwareStartNotificationId) {
-      notifier.dismissNotification(bloatwareStartNotificationId);
-      bloatwareStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Useless Bloatware",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Useless Bloatware",
-        message: "Bloatware removal completed successfully.",
-        type: "success",
-      });
-    }
-    checkBloatwareStatus();
-  });
-
-  let systemToolsNotificationId = null;
-  const applySystemToolsBtn = document.getElementById("applySystemToolsBtn");
-  applySystemToolsBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#systemToolsSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`System Tools selected: ${selected}`);
-
-    systemToolsNotificationId = notifier.createNotification({
-      title: "System Tools",
-      message: "Executing system tools...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-system-tools", selected);
-  });
-
-  ipcRenderer.on("system-tools-response", (event, arg) => {
-    log(`System Tools Response: ${+JSON.stringify(arg, null, 2)}`);
-    if (systemToolsNotificationId) {
-      notifier.dismissNotification(systemToolsNotificationId);
-      systemToolsNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "System Tools",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "System Tools",
-        message: "System tools executed successfully.",
-        type: "success",
-      });
-    }
-  });
-
-  let networkToolsNotificationId = null;
-  const applyNetworkToolsBtn = document.getElementById("applyNetworkToolsBtn");
-  applyNetworkToolsBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#networkToolsSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Network Tools selected: ${selected}`);
-
-    networkToolsNotificationId = notifier.createNotification({
-      title: "Network Tools",
-      message: "Executing network tools...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-network-tools", selected);
-  });
-
-  ipcRenderer.on("network-tools-response", (event, arg) => {
-    log(`Network Tools Response: ${JSON.stringify(arg, null, 2)}`);
-    if (networkToolsNotificationId) {
-      notifier.dismissNotification(networkToolsNotificationId);
-      networkToolsNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Network Tools",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Network Tools",
-        message: "Network tools executed successfully.",
-        type: "success",
-      });
-    }
-  });
-
-  let systemStartNotificationId = null;
-  const applySystemTweaksBtn = document.getElementById("applySystemTweaksBtn");
-  if (applySystemTweaksBtn) {
-    applySystemTweaksBtn.addEventListener("click", () => {
-      const checkboxes = document.querySelectorAll('#systemTweaksSection .section-content input[type="checkbox"]');
+    applyBtn.addEventListener("click", () => {
+      const checkboxes = document.querySelectorAll(`${sectionSelector} input[type="checkbox"]`);
       const selected = [];
-      checkboxes.forEach((chk) => {
-        if (chk.checked) selected.push(chk.value);
-      });
-      log(`System Tweaks selected: ${selected}`);
+      for (const chk of checkboxes) {
+        if (chk.checked) {
+          selected.push(chk.value);
+        }
+      }
+      log(`Applying ${notificationTitle} with selected IDs: ${JSON.stringify(selected)}`);
 
-      systemStartNotificationId = notifier.createNotification({
-        title: "System Tweaks",
-        message: "Executing system tweaks...",
+      if (notificationId) notifier.dismissNotification(notificationId);
+      notificationId = notifier.createNotification({
+        title: notificationTitle,
+        message: `Executing ${notificationTitle.toLowerCase()}...`,
         type: "info",
         displayTime: 0,
         persistent: true,
@@ -839,224 +485,70 @@ window.addEventListener("DOMContentLoaded", () => {
         showTimerBar: false,
       });
 
-      ipcRenderer.send("apply-system-tweaks", selected);
+      ipcRenderer.send(ipcSendChannel, selected);
+    });
+
+    ipcRenderer.on(ipcResponseChannel, (event, results) => {
+      log(`${notificationTitle} Response: ${JSON.stringify(results, null, 2)}`);
+      if (notificationId) {
+        notifier.dismissNotification(notificationId);
+        notificationId = null;
+      }
+
+      const hasError = results.some((res) => !res.success);
+      const messages = results.map((res) => `[${res.success ? "OK" : "FAIL"}] ${res.command}:\n${res.message}`).join("\n---\n");
+
+      notifier.createNotification({
+        title: notificationTitle,
+        message: hasError ? `${notificationTitle} completed with errors. Check logs for details.` : `${notificationTitle} completed successfully.`,
+        type: hasError ? "danger" : "success",
+      });
+
+      if (statusCheckFn) {
+        statusCheckFn();
+      }
     });
   }
 
-  ipcRenderer.on("system-tweaks-response", (event, arg) => {
-    log(`System Tweaks Response: ${JSON.stringify(arg, null, 2)}`);
-    if (systemStartNotificationId) {
-      notifier.dismissNotification(systemStartNotificationId);
-      systemStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "System Tweaks",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "System Tweaks",
-        message: "System tweaks completed successfully.",
-        type: "success",
-      });
-    }
-    checkFixesStatus("systemTweaksSection", "systemTweaks");
-  });
+  setupApplyButton("applyPrivacyBtn", "#privacySection .section-content", "apply-privacy-optimizations", "privacy-optimizations-response", "Privacy Optimizations", () => checkOptimizationStatus("privacySection", "privacy"));
+  setupApplyButton("applyGamingBtn", "#gamingSection .section-content", "apply-gaming-optimizations", "gaming-optimizations-response", "Gaming Optimizations", () => checkOptimizationStatus("gamingSection", "gaming"));
+  setupApplyButton("applyUpdatesBtn", "#updatesSection .section-content", "apply-updates-optimizations", "updates-optimizations-response", "Updates Optimizations", () => checkOptimizationStatus("updatesSection", "updates"));
+  setupApplyButton("applyPowerBtn", "#powerSection .section-content", "apply-power-optimizations", "power-optimizations-response", "Power Optimizations");
+  setupApplyButton("applyServicesBtn", "#servicesSection .section-content", "apply-services-optimizations", "services-optimizations-response", "Services Optimizations", () => checkOptimizationStatus("servicesSection", "services"));
+  setupApplyButton("applyMaintenanceBtn", "#maintenanceSection .section-content", "apply-maintenance-optimizations", "maintenance-optimizations-response", "Maintenance Optimizations");
+  setupApplyButton("applyRemoveAppsBtn", "#removeAppsSection .section-content", "apply-remove-apps", "remove-apps-response", "Remove Apps", checkRemoveAppsStatus);
+  setupApplyButton("applyUselessBloatwareBtn", "#uselessBloatwareSection .section-content", "apply-useless-bloatware", "useless-bloatware-response", "Useless Bloatware", checkBloatwareStatus);
+  setupApplyButton("applySystemToolsBtn", "#systemToolsSection .section-content", "apply-system-tools", "system-tools-response", "System Tools");
+  setupApplyButton("applyNetworkToolsBtn", "#networkToolsSection .section-content", "apply-network-tools", "network-tools-response", "Network Tools");
+  setupApplyButton("applySystemTweaksBtn", "#systemTweaksSection .section-content", "apply-system-tweaks", "system-tweaks-response", "System Tweaks", () => checkFixesStatus("systemTweaksSection", "systemTweaks"));
+  setupApplyButton("applyNetworkTweaksBtn", "#networkTweaksSection .section-content", "apply-network-tweaks", "network-tweaks-response", "Network Tweaks", () => checkFixesStatus("networkTweaksSection", "networkTweaks"));
+  setupApplyButton("applyWindowsFixesBtn", "#windowsFixesSection .section-content", "apply-windows-fixes", "windows-fixes-response", "Windows Fixes");
+  setupApplyButton("applyUserFeaturesBtn", "#userFeaturesSection .section-content", "apply-user-windows-features", "user-windows-features-response", "User Windows Features", () => checkFeaturesStatus("userFeaturesSection", "userFeatures"));
+  setupApplyButton("applyMachineFeaturesBtn", "#machineFeaturesSection .section-content", "apply-machine-windows-features", "machine-windows-features-response", "Machine Windows Features", () => checkFeaturesStatus("machineFeaturesSection", "machineFeatures"));
 
-  let networkStartNotificationId = null;
-  const applyNetworkTweaksBtn = document.getElementById("applyNetworkTweaksBtn");
-  if (applyNetworkTweaksBtn) {
-    applyNetworkTweaksBtn.addEventListener("click", () => {
-      const checkboxes = document.querySelectorAll('#networkTweaksSection .section-content input[type="checkbox"]');
-      const selected = [];
-      checkboxes.forEach((chk) => {
-        if (chk.checked) selected.push(chk.value);
-      });
-      log(`Network Tweaks selected: ${selected}`);
-
-      networkStartNotificationId = notifier.createNotification({
-        title: "Network Tweaks",
-        message: "Executing network tweaks...",
-        type: "info",
-        displayTime: 0,
-        persistent: true,
-        hasProgressBar: false,
-        showTimerBar: false,
-      });
-
-      ipcRenderer.send("apply-network-tweaks", selected);
+  const showLogsBtn = document.getElementById("showLogsBtn");
+  if (showLogsBtn) {
+    showLogsBtn.addEventListener("click", () => {
+      ipcRenderer.send("show-logs");
     });
   }
 
-  ipcRenderer.on("network-tweaks-response", (event, arg) => {
-    log(`Network Tweaks Response: ${JSON.stringify(arg, null, 2)}`);
-    if (networkStartNotificationId) {
-      notifier.dismissNotification(networkStartNotificationId);
-      networkStartNotificationId = null;
-    }
-    if (arg?.error) {
-      notifier.createNotification({
-        title: "Network Tweaks",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      notifier.createNotification({
-        title: "Network Tweaks",
-        message: "Network tweaks completed successfully.",
-        type: "success",
-      });
-    }
-    checkFixesStatus("networkTweaksSection", "networkTweaks");
-  });
-
-  let windowsFixesNotificationId = null;
-  const applyWindowsFixesBtn = document.getElementById("applyWindowsFixesBtn");
-  applyWindowsFixesBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#windowsFixesSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
+  const minimizeButton = document.getElementById("minimize-button");
+  if (minimizeButton) {
+    minimizeButton.addEventListener("click", () => {
+      ipcRenderer.send("window-minimize");
     });
-    log(`Windows Fixes selected: ${selected}`);
+  }
 
-    windowsFixesNotificationId = window.EasyNotificationInstance.createNotification({
-      title: "Windows Fixes",
-      message: "Executing Windows fixes...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
+  const closeButton = document.getElementById("close-button");
+  if (closeButton) {
+    closeButton.addEventListener("click", () => {
+      ipcRenderer.send("window-close");
     });
+  }
+}
 
-    ipcRenderer.send("apply-windows-fixes", selected);
-  });
-
-  ipcRenderer.on("windows-fixes-response", (event, arg) => {
-    log(`Windows Fixes Response: ${JSON.stringify(arg, null, 2)}`);
-    if (windowsFixesNotificationId) {
-      window.EasyNotificationInstance.dismissNotification(windowsFixesNotificationId);
-      windowsFixesNotificationId = null;
-    }
-    if (arg?.error) {
-      window.EasyNotificationInstance.createNotification({
-        title: "Windows Fixes",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      window.EasyNotificationInstance.createNotification({
-        title: "Windows Fixes",
-        message: "Windows fixes executed successfully.",
-        type: "success",
-      });
-    }
-  });
-
-  let userWindowsFeaturesNotificationId = null;
-  const applyUserWindowsFeaturesBtn = document.getElementById("applyUserFeaturesBtn");
-  applyUserWindowsFeaturesBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#userFeaturesSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`User Windows Features selected: ${selected}`);
-
-    userWindowsFeaturesNotificationId = window.EasyNotificationInstance.createNotification({
-      title: "User Windows Features",
-      message: "Executing User Windows features...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-user-windows-features", selected);
-  });
-
-  ipcRenderer.on("user-windows-features-response", (event, arg) => {
-    log(`User Windows Features Response: ${JSON.stringify(arg, null, 2)}`);
-    if (userWindowsFeaturesNotificationId) {
-      window.EasyNotificationInstance.dismissNotification(userWindowsFeaturesNotificationId);
-      userWindowsFeaturesNotificationId = null;
-    }
-    if (arg?.error) {
-      window.EasyNotificationInstance.createNotification({
-        title: "User Windows Features",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      window.EasyNotificationInstance.createNotification({
-        title: "User Windows Features",
-        message: "Windows features executed successfully.",
-        type: "success",
-      });
-    }
-    checkFeaturesStatus("userFeaturesSection", "userFeatures");
-  });
-
-  let machineWindowsFeaturesNotificationId = null;
-  const applyMachineWindowsFeaturesBtn = document.getElementById("applyMachineFeaturesBtn");
-  applyMachineWindowsFeaturesBtn.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll('#machineFeaturesSection .section-content input[type="checkbox"]');
-    const selected = [];
-    checkboxes.forEach((chk) => {
-      if (chk.checked) selected.push(chk.value);
-    });
-    log(`Machine Windows Features selected: ${selected}`);
-
-    machineWindowsFeaturesNotificationId = window.EasyNotificationInstance.createNotification({
-      title: "Machine Windows Features",
-      message: "Executing Machine Windows features...",
-      type: "info",
-      displayTime: 0,
-      persistent: true,
-      hasProgressBar: false,
-      showTimerBar: false,
-    });
-
-    ipcRenderer.send("apply-machine-windows-features", selected);
-  });
-
-  ipcRenderer.on("machine-windows-features-response", (event, arg) => {
-    log(`Machine Windows Features Response: ${JSON.stringify(arg, null, 2)}`);
-    if (machineWindowsFeaturesNotificationId) {
-      window.EasyNotificationInstance.dismissNotification(machineWindowsFeaturesNotificationId);
-      machineWindowsFeaturesNotificationId = null;
-    }
-    if (arg?.error) {
-      window.EasyNotificationInstance.createNotification({
-        title: "Machine Windows Features",
-        message: `Error: ${arg.error}`,
-        type: "danger",
-      });
-    } else {
-      window.EasyNotificationInstance.createNotification({
-        title: "Machine Windows Features",
-        message: "Windows features executed successfully.",
-        type: "success",
-      });
-    }
-    checkFeaturesStatus("machineFeaturesSection", "machineFeatures");
-  });
-
-  document.getElementById("showLogsBtn")?.addEventListener("click", () => {
-    ipcRenderer.send("show-logs");
-  });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("minimize-button")?.addEventListener("click", () => {
-    ipcRenderer.send("window-minimize");
-  });
-
-  document.getElementById("close-button")?.addEventListener("click", () => {
-    ipcRenderer.send("window-close");
-  });
+window.addEventListener("DOMContentLoaded", () => {
+  initializeStatusChecks();
+  setupUIEventListeners();
 });
