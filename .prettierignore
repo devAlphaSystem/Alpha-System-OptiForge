@@ -1,0 +1,9 @@
+# Node modules
+node_modules/*
+
+# Package manager files
+package.json
+package-lock.json
+
+# Markdown
+*.md

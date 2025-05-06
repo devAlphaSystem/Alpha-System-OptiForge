@@ -172,7 +172,9 @@ body {
   padding: 12px 15px;
   border-radius: 12px;
   color: var(--text-color);
-  transition: background 0.3s, transform 0.2s;
+  transition:
+    background 0.3s,
+    transform 0.2s;
 }
 
 .nav li a i {
@@ -539,7 +541,9 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 1;
-  transition: opacity 0.3s ease-out, backdrop-filter 0.3s ease-out;
+  transition:
+    opacity 0.3s ease-out,
+    backdrop-filter 0.3s ease-out;
   z-index: 9999;
 }
 

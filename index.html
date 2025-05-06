@@ -1,6 +1,5 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,13 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <style>
       .warning-icon {
         color: #ffb86c;
         margin-left: 8px;
         font-size: 0.9em;
-        cursor: help; 
+        cursor: help;
       }
     </style>
   </head>
@@ -30,11 +29,14 @@
 
     <div id="loadingSpinner" class="loading-overlay">
       <div class="spinner"></div>
-      <div class="loading-text">Loading all essential components to get your system performing at its peak. <br><br> Please hold on while we work our magic!</div>
+      <div class="loading-text">
+        Loading all essential components to get your system performing at its peak. <br /><br />
+        Please hold on while we work our magic!
+      </div>
       <div class="verbose-text">This may take a while, so please be patient.</div>
     </div>
 
-    <div class="container" style="padding-top: 32px !important;">
+    <div class="container" style="padding-top: 32px !important">
       <div class="sidebar">
         <ul class="nav">
           <li> <a href="#" data-tab="appsTab" class="active"><i class="fa fa-window-maximize"></i> Apps & Bloatware</a> </li>
@@ -62,7 +64,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Core Windows Apps</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Core Windows Apps</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="apps_calc" checked /> Calculator</label>
                 <label><input type="checkbox" value="apps_mstore" checked /> Microsoft Store</label>
@@ -101,7 +103,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Productivity &amp; Communication</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Productivity &amp; Communication</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="apps_ub_mail" checked /> Mail &amp; Calendar</label>
                 <label><input type="checkbox" value="apps_ub_skype" checked /> Skype</label>
@@ -175,7 +177,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Activity &amp; Telemetry</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Activity &amp; Telemetry</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="privacy1" checked /> Disable Activity History</label>
                 <label><input type="checkbox" value="privacy3" checked /> Disable Telemetry</label>
@@ -237,7 +239,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Game Mode</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Game Mode</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="gaming1" checked /> Enable Game Mode</label>
               </div>
@@ -280,7 +282,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Windows Update Management</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Windows Update Management</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="updates1" checked /> Disable Auto Updates</label>
                 <label><input type="checkbox" value="updates2" checked /> Delays Feature Updates</label>
@@ -304,7 +306,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Disable Unused Services</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Disable Unused Services</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="services1" checked /> Disable App Virtualization</label>
                 <label><input type="checkbox" value="services2" checked /> Disable Assigned Access</label>
@@ -335,7 +337,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Cleanup</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Cleanup</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="maintenance1" checked /> Clear Temporary Files</label>
                 <label><input type="checkbox" value="maintenance2" checked /> Clear Prefetch Cache</label>
@@ -370,7 +372,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Maintenance &amp; Repair</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Maintenance &amp; Repair</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="sys_disk_cleanup" checked /> Run Disk Cleanup</label>
                 <label><input type="checkbox" value="sys_sfc" checked /> Run System File Checker (SFC /scannow)</label>
@@ -396,7 +398,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Performance &amp; Services</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Performance &amp; Services</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="adv_sys1" checked /> Enable Fast Boot</label>
                 <label><input type="checkbox" value="adv_sys3" checked /> Disable Superfetch</label>
@@ -431,7 +433,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Network Resets</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Network Resets</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="net_flush_dns" checked /> Flush DNS Cache</label>
                 <label><input type="checkbox" value="net_reset_adapters" checked /> Reset Network Adapters</label>
@@ -456,7 +458,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">QoS &amp; Offloads</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">QoS &amp; Offloads</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="adv_net1" checked /> Enable QoS Packet Scheduler</label>
                 <label><input type="checkbox" value="adv_net4" checked /> Disable Chimney Offload</label>
@@ -490,7 +492,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Power Plan &amp; Hibernate</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Power Plan &amp; Hibernate</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="power1" checked /> Applies Ultimate Power Plan</label>
                 <label><input type="checkbox" value="power2" checked /> Disable Hibernate/Sleep</label>
@@ -530,7 +532,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Update &amp; Store</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Update &amp; Store</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="reset_windows_update" /> Windows Update Reset</label>
                 <label><input type="checkbox" value="reset_windows_store" /> Reset Windows Store</label>
@@ -566,7 +568,7 @@
                 <label><input type="checkbox" value="repair_wsl" /> Repair WSL2</label>
               </div>
 
-              <button class="apply-btn" id="applyWindowsFixesBtn"> <i class="fa fa-check"></i> Apply Windows Fixes </button>
+              <button class="apply-btn" id="applyWindowsFixesBtn"><i class="fa fa-check"></i> Apply Windows Fixes</button>
             </div>
           </div>
         </div>
@@ -586,7 +588,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">Privacy & Personalization</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">Privacy & Personalization</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="disable_advertising_id" checked /> Disable Advertising ID</label>
                 <label><input type="checkbox" value="disable_input_tipc" checked /> Disable Input TIPC</label>
@@ -678,7 +680,7 @@
               </div>
             </div>
             <div class="section-content">
-              <h4 class="sub-section-heading" style="margin-top: 8px !important;">System & Security</h4>
+              <h4 class="sub-section-heading" style="margin-top: 8px !important">System & Security</h4>
               <div class="checkbox-group">
                 <label><input type="checkbox" value="prevent_handwriting_data_sharing" checked /> Prevent Handwriting Data Sharing</label>
                 <label><input type="checkbox" value="prevent_handwriting_error_reports" checked /> Prevent Handwriting Error Reports</label>
@@ -756,7 +758,7 @@
         <div class="tab" id="aboutTab">
           <div class="about-section">
             <img src="logo.png" />
-            <p><strong>Version:</strong> 1.6-16</p>
+            <p><strong>Version:</strong> 1.6-17</p>
             <p><strong>Developed by:</strong> AlphaSystem</p>
             <p><strong>Description:</strong> OptiForge is a system optimization tool designed to streamline Windows performance, enhance privacy, and maximize system efficiency. Leveraging advanced algorithms and real-time monitoring, OptiForge delivers a smoother, faster, and more secure computing experience.</p>
             <p><strong>Why "OptiForge":</strong> The name "OptiForge" is a fusion of two core concepts. <em>Opti</em> stands for "optimization," reflecting our commitment to enhancing system performance, while <em>Forge</em> suggests the craftsmanship and precision of building a robust, finely tuned system—much like a blacksmith forges a reliable tool.</p>
@@ -766,7 +768,7 @@
 
           <div class="section-content">
             <div class="checkbox-group">
-              <button class="apply-btn" id="showLogsBtn"> Show Live Logging </button>
+              <button class="apply-btn" id="showLogsBtn">Show Live Logging</button>
             </div>
           </div>
         </div>
@@ -788,5 +790,4 @@
     <script src="renderer.js"></script>
     <script src="script.js"></script>
   </body>
-
 </html>

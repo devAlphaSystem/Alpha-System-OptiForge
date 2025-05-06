@@ -1,16 +1,18 @@
 {
   "name": "Alpha_System_OptiForge",
-  "version": "1.6.16",
+  "version": "1.6.17",
   "description": "Alpha System OptiForge",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "format": "prettier --write ."
   },
   "packages": {},
   "devDependencies": {
     "electron": "^29.4.6",
-    "electron-builder": "^25.1.8"
+    "electron-builder": "^25.1.8",
+    "prettier": "3.5.3"
   },
   "build": {
     "appId": "com.alpha-system-optiforge.app",
